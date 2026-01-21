@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { useProfileStore } from '@/lib/store';
 import { Sidebar } from '@/components/layout/sidebar';
 import { SectionCard } from '@/components/section-card';
@@ -24,6 +25,9 @@ import {
   Check,
   Save,
   AlertCircle,
+  ArrowRight,
+  GitBranch,
+  Globe,
 } from 'lucide-react';
 import {
   Dialog,
@@ -83,15 +87,22 @@ interface PresetEvent {
 }
 
 const presetEvents: PresetEvent[] = [
-  { id: 'child1', label: '第一子誕生', description: '出産・乳幼児期の費用', icon: <Baby className="h-4 w-4" />, type: 'child_birth', ageOffset: 2, amount: 100, duration: 6, isRecurring: true, category: 'family' },
-  { id: 'child2', label: '第二子誕生', description: '出産・乳幼児期の費用', icon: <Baby className="h-4 w-4" />, type: 'child_birth', ageOffset: 5, amount: 100, duration: 6, isRecurring: true, category: 'family' },
+  // Family
+  { id: 'wedding', label: '結婚式', description: '挙式・披露宴 350万円', icon: <Heart className="h-4 w-4" />, type: 'asset_purchase', ageOffset: 2, amount: 350, duration: 1, isRecurring: false, category: 'family' },
+  { id: 'child1', label: '第一子誕生', description: '出産・乳幼児期の費用', icon: <Baby className="h-4 w-4" />, type: 'child_birth', ageOffset: 3, amount: 100, duration: 6, isRecurring: true, category: 'family' },
+  { id: 'child2', label: '第二子誕生', description: '出産・乳幼児期の費用', icon: <Baby className="h-4 w-4" />, type: 'child_birth', ageOffset: 6, amount: 100, duration: 6, isRecurring: true, category: 'family' },
   { id: 'edu_private_elem', label: '私立小学校', description: '年間約150万円 x 6年', icon: <GraduationCap className="h-4 w-4" />, type: 'education', ageOffset: 8, amount: 150, duration: 6, isRecurring: true, category: 'family' },
   { id: 'edu_private_middle', label: '私立中学校', description: '年間約130万円 x 3年', icon: <GraduationCap className="h-4 w-4" />, type: 'education', ageOffset: 14, amount: 130, duration: 3, isRecurring: true, category: 'family' },
   { id: 'edu_university', label: '大学進学', description: '私立理系で年間約180万円 x 4年', icon: <GraduationCap className="h-4 w-4" />, type: 'education', ageOffset: 20, amount: 180, duration: 4, isRecurring: true, category: 'family' },
+  // Career
   { id: 'promotion', label: '昇進・昇給', description: '年収+100万円を想定', icon: <Briefcase className="h-4 w-4" />, type: 'income_increase', ageOffset: 3, amount: 100, duration: 1, isRecurring: false, category: 'career' },
   { id: 'job_change', label: '転職', description: '年収+150万円を想定', icon: <Briefcase className="h-4 w-4" />, type: 'income_increase', ageOffset: 2, amount: 150, duration: 1, isRecurring: false, category: 'career' },
+  { id: 'overseas_assignment', label: '海外駐在', description: '年収+200万円（手当込み）x 3年', icon: <Globe className="h-4 w-4" />, type: 'income_increase', ageOffset: 3, amount: 200, duration: 3, isRecurring: true, category: 'career' },
   { id: 'side_business', label: '副業開始', description: '年間+50万円を想定', icon: <Sparkles className="h-4 w-4" />, type: 'income_increase', ageOffset: 1, amount: 50, duration: 10, isRecurring: true, category: 'career' },
   { id: 'partial_retire', label: '部分リタイア', description: '労働時間を半分に', icon: <Plane className="h-4 w-4" />, type: 'retirement_partial', ageOffset: 15, amount: 0, duration: 1, isRecurring: false, category: 'career' },
+  // Lifestyle
+  { id: 'world_trip', label: '世界一周', description: '長期旅行 200万円', icon: <Globe className="h-4 w-4" />, type: 'asset_purchase', ageOffset: 5, amount: 200, duration: 1, isRecurring: false, category: 'lifestyle' },
+  { id: 'overseas_relocation', label: '海外移住', description: '移住費用+生活費増 年100万円 x 5年', icon: <Globe className="h-4 w-4" />, type: 'expense_increase', ageOffset: 10, amount: 100, duration: 5, isRecurring: true, category: 'lifestyle' },
   { id: 'car_purchase', label: '車購入', description: '一括購入 300万円', icon: <Car className="h-4 w-4" />, type: 'asset_purchase', ageOffset: 3, amount: 300, duration: 1, isRecurring: false, category: 'lifestyle' },
   { id: 'renovation', label: 'リフォーム', description: '住宅リフォーム 500万円', icon: <Home className="h-4 w-4" />, type: 'asset_purchase', ageOffset: 20, amount: 500, duration: 1, isRecurring: false, category: 'lifestyle' },
   { id: 'travel', label: '海外旅行（年1回）', description: '年間50万円 x 10年', icon: <Plane className="h-4 w-4" />, type: 'expense_increase', ageOffset: 5, amount: 50, duration: 10, isRecurring: true, category: 'lifestyle' },
@@ -102,7 +113,8 @@ const presetEvents: PresetEvent[] = [
 const unsupportedEventTypes: LifeEventType[] = ['retirement_partial'];
 
 export default function TimelinePage() {
-  const { profile, updateProfile, runSimulationAsync, isLoading, saveScenario, scenarios } = useProfileStore();
+  const router = useRouter();
+  const { profile, updateProfile, runSimulationAsync, isLoading, saveScenario, scenarios, deleteScenario, loadScenario } = useProfileStore();
   const [isPresetDialogOpen, setIsPresetDialogOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<PresetEvent | null>(null);
   const [customAge, setCustomAge] = useState<number>(profile.currentAge + 5);
@@ -115,6 +127,9 @@ export default function TimelinePage() {
   // シナリオ保存ダイアログ
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [scenarioName, setScenarioName] = useState('');
+  
+  // 保存完了後のCTA表示
+  const [justSavedScenarioId, setJustSavedScenarioId] = useState<string | null>(null);
 
   const lifeEvents = profile.lifeEvents || [];
   const sortedEvents = [...lifeEvents].sort((a, b) => a.age - b.age);
@@ -141,20 +156,36 @@ export default function TimelinePage() {
   const handleSaveScenario = () => {
     if (!scenarioName.trim()) return;
     
+    const doSave = () => {
+      saveScenario(scenarioName.trim());
+      // 保存後、最新のシナリオIDを取得（scenarios配列の最後）
+      // saveScenario実行後にstateが更新されるので、少し待ってからIDを取得
+      setTimeout(() => {
+        const latestScenarios = useProfileStore.getState().scenarios;
+        const latestScenario = latestScenarios[latestScenarios.length - 1];
+        if (latestScenario) {
+          setJustSavedScenarioId(latestScenario.id);
+        }
+      }, 100);
+      setIsSaveDialogOpen(false);
+      setScenarioName('');
+    };
+    
     // 反映されていない場合は先に反映
     if (!isSynced) {
       runSimulationAsync().then(() => {
-        saveScenario(scenarioName.trim());
         setLastSyncedEventIds(currentEventIds);
         setIsSynced(true);
-        setIsSaveDialogOpen(false);
-        setScenarioName('');
+        doSave();
       });
     } else {
-      saveScenario(scenarioName.trim());
-      setIsSaveDialogOpen(false);
-      setScenarioName('');
+      doSave();
     }
+  };
+  
+  // 世界線比較ページへ遷移
+  const handleGoToComparison = () => {
+    router.push('/v2');
   };
   
   // イベントタイプが未対応かチェック
@@ -491,6 +522,109 @@ export default function TimelinePage() {
             )}
           </SectionCard>
 
+          {/* 保存完了CTA */}
+          {justSavedScenarioId && (
+            <div className="mt-6 rounded-lg border-2 border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-800 dark:bg-emerald-950/30">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900">
+                    <Check className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-emerald-900 dark:text-emerald-100">シナリオを保存しました</p>
+                    <p className="text-sm text-emerald-700 dark:text-emerald-300">世界線比較で現状と比較できます</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={handleGoToComparison}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                >
+                  世界線比較へ
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* 保存済みシナリオ一覧 */}
+          {scenarios.length > 0 && (
+            <SectionCard
+              title="保存済みシナリオ"
+              icon={<GitBranch className="h-5 w-5" />}
+              description="保存したシナリオは世界線比較で使用できます"
+              className="mt-6"
+            >
+              <div className="space-y-3">
+                {scenarios.map((scenario) => (
+                  <div
+                    key={scenario.id}
+                    className={cn(
+                      "flex items-center justify-between rounded-lg border p-4 transition-colors",
+                      justSavedScenarioId === scenario.id
+                        ? "border-emerald-300 bg-emerald-50/50 dark:border-emerald-700 dark:bg-emerald-950/20"
+                        : "hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <GitBranch className="h-4 w-4 text-slate-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{scenario.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(scenario.createdAt).toLocaleString('ja-JP', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                          {scenario.profile.lifeEvents && ` - ${scenario.profile.lifeEvents.length}件のイベント`}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => loadScenario(scenario.id)}
+                        className="bg-transparent"
+                      >
+                        読み込む
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                        onClick={() => {
+                          deleteScenario(scenario.id);
+                          if (justSavedScenarioId === scenario.id) {
+                            setJustSavedScenarioId(null);
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                
+                {/* 世界線比較への誘導 */}
+                <div className="flex items-center justify-center pt-2">
+                  <Button
+                    variant="outline"
+                    onClick={handleGoToComparison}
+                    className="bg-transparent"
+                  >
+                    <GitBranch className="mr-2 h-4 w-4" />
+                    世界線比較で詳しく比較する
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </SectionCard>
+          )}
+
           {/* Guide */}
           <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-900/20">
             <div className="flex items-start gap-3">
@@ -530,11 +664,30 @@ export default function TimelinePage() {
                 <div className="flex items-center gap-2">
                   <Input
                     id="preset-age"
-                    type="number"
-                    min={profile.currentAge}
-                    max={100}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={customAge}
-                    onChange={(e) => setCustomAge(Number.parseInt(e.target.value) || profile.currentAge)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      // 空文字や数字のみ許可
+                      if (val === '' || /^\d+$/.test(val)) {
+                        const num = Number.parseInt(val, 10);
+                        if (!Number.isNaN(num)) {
+                          // 範囲内に収める
+                          setCustomAge(Math.max(profile.currentAge, Math.min(100, num)));
+                        } else if (val === '') {
+                          // 空の場合は現在年齢をセット（一時的に入力をリセット）
+                          setCustomAge(profile.currentAge);
+                        }
+                      }
+                    }}
+                    onBlur={() => {
+                      // フォーカスが外れたときに最小値を保証
+                      if (customAge < profile.currentAge) {
+                        setCustomAge(profile.currentAge);
+                      }
+                    }}
                     className="w-24"
                   />
                   <span className="text-sm text-muted-foreground">歳</span>
@@ -550,11 +703,21 @@ export default function TimelinePage() {
                 <div className="flex items-center gap-2">
                   <Input
                     id="preset-amount"
-                    type="number"
-                    min={0}
-                    max={10000}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={customAmount}
-                    onChange={(e) => setCustomAmount(Number.parseInt(e.target.value) || 0)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d+$/.test(val)) {
+                        const num = Number.parseInt(val, 10);
+                        if (!Number.isNaN(num)) {
+                          setCustomAmount(Math.max(0, Math.min(10000, num)));
+                        } else if (val === '') {
+                          setCustomAmount(0);
+                        }
+                      }
+                    }}
                     className="w-24"
                   />
                   <span className="text-sm text-muted-foreground">万円/年</span>

@@ -98,7 +98,7 @@ export function HousingScenarioCard({
       ownerAnnualCost,
       buyAfterYears,
     };
-    runComparison(params);
+    runComparison(params, null);
   };
 
   // Handle relocate comparison

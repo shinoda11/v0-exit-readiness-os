@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { runHousingScenarios, type HousingScenarioResult, type BuyNowParams } from '@/lib/housing-sim';
+import { runHousingScenarios, type HousingScenarioResult, type BuyNowParams, type RelocateParams } from '@/lib/housing-sim';
 import type { Profile } from '@/lib/types';
 
 export const useHousingScenarios = (profile: Profile) => {
@@ -9,7 +9,10 @@ export const useHousingScenarios = (profile: Profile) => {
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const runComparison = useCallback(async (params: BuyNowParams) => {
+  const runComparison = useCallback(async (
+    buyParams: BuyNowParams | null,
+    relocateParams?: RelocateParams | null
+  ) => {
     setIsRunning(true);
     setError(null);
 
@@ -18,7 +21,7 @@ export const useHousingScenarios = (profile: Profile) => {
       // to allow the UI to update to the 'isRunning' state.
       await new Promise(resolve => setTimeout(resolve, 0));
 
-      const res = runHousingScenarios(profile, params);
+      const res = runHousingScenarios(profile, buyParams, relocateParams);
       setResults(res);
     } catch (e) {
       console.error('Housing scenarios failed', e);

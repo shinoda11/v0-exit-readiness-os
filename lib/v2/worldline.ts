@@ -47,9 +47,20 @@ export type WorldLineResult = {
 };
 
 /**
- * 世界線比較結果
+ * 世界線比較結果（シンプル版 - useWorldLinesで使用）
  */
 export type WorldLineComparison = {
+  fireAgeDiff: number;           // FIRE年齢差
+  assetsAt60Diff: number;        // 60歳資産差
+  survivalRateDiff: number;      // 生存率差
+  midlifeSurplusDiff: number;    // 年間余剰差
+  recommendation: string;        // 推奨メッセージ
+};
+
+/**
+ * 世界線比較結果（詳細版 - 将来の拡張用）
+ */
+export type WorldLineComparisonDetailed = {
   worldLineA: WorldLine;
   worldLineB: WorldLine;
   differences: {

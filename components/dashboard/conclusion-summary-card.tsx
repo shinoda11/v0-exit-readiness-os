@@ -109,17 +109,15 @@ function generateConclusion(
   metrics: KeyMetrics | null,
   targetRetireAge: number
 ): { 
-  stateLine: string;      // 1行目: 結論（いまの状態）
-  reasonLine: string;     // 2行目: 理由（どこがボトルネックか）
-  actionLine: string;     // 3行目: 次の一手
+  stateLine: string;      // 1行目: 現状の評価（ポジティブ・断定しない）
+  actionLine: string;     // 2行目: 次にやること（Top1）
   actionType: ActionType; // Income/Cost/Timing
   effectEstimate: string; // 効果量の目安（1行）
   detailText: string;     // 折りたたみ用の詳細
 } {
   if (!score || !metrics) {
     return {
-      stateLine: '計算中',
-      reasonLine: '',
+      stateLine: 'シミュレーション中です',
       actionLine: '',
       actionType: 'Timing',
       effectEstimate: '',
@@ -144,48 +142,46 @@ function generateConclusion(
   if (status === 'GREEN') {
     const actionType: ActionType = 'Timing';
     return {
-      stateLine: '目標達成の見込み',
-      reasonLine: gap && gap < 0 
-        ? `目標より${Math.abs(gap)}年の余裕あり`
-        : `サバイバル率${survivalRate.toFixed(0)}%で安定`,
-      actionLine: '現状維持でOK',
+      stateLine: gap && gap < 0 
+        ? `目標より${Math.abs(gap)}年の余裕がありそうです`
+        : `現在のペースで目標達成が見えています`,
+      actionLine: '今のまま続けてみましょう',
       actionType,
       effectEstimate: estimateEffect(actionType, metrics, gap),
-      detailText: '想定外の出費にも対応できる余白があります。支出を増やすか、目標を前倒しする選択肢もあります。決めるのはあなたです。',
+      detailText: '想定外の出費にも対応できる余白があります。支出を増やすか、目標を前倒しする選択肢もあります。',
     };
   }
 
   if (status === 'YELLOW') {
-    let reasonLine = '';
     let actionLine = '';
     let actionType: ActionType = 'Cost';
     let detailText = '';
+    let stateLine = '目標に近づいています';
 
     if (bottleneck === 'survival') {
-      reasonLine = '資産の持続性が弱い';
-      actionLine = '貯蓄率+5%、または目標を2年延長';
+      stateLine = 'もう少しで安心ラインに届きそうです';
+      actionLine = 'まずは貯蓄率を少し上げてみる';
       actionType = gap && gap > 0 ? 'Timing' : 'Income';
       detailText = '毎月の貯蓄額を増やすか、働く期間を延ばすことで改善できます。どちらを選ぶかはあなた次第です。';
     } else if (bottleneck === 'lifestyle') {
-      reasonLine = '将来の支出が重い';
-      actionLine = '退職後支出を10%見直し';
+      stateLine = '支出バランスを整えると安心度が上がりそうです';
+      actionLine = '退職後の支出を一度見直してみる';
       actionType = 'Cost';
-      detailText = '退職後の生活費を見直すことで、安心ラインが上がります。最終判断はあなたが行ってください。';
+      detailText = '退職後の生活費を見直すことで、安心ラインが上がります。';
     } else if (bottleneck === 'risk') {
-      reasonLine = '資産変動リスクが高い';
-      actionLine = '安定資産の比率を上げる';
+      stateLine = '資産配分を調整すると安定感が増しそうです';
+      actionLine = '安定資産の比率を検討してみる';
       actionType = 'Cost';
-      detailText = '株式100%から債券や現金を混ぜることで、悲観シナリオが改善します。配分はあなたの判断で。';
+      detailText = '株式100%から債券や現金を混ぜることで、悲観シナリオが改善します。';
     } else {
-      reasonLine = '手元資金が不足気味';
-      actionLine = '生活費6ヶ月分を確保';
+      stateLine = '手元資金を増やすと安心感が高まりそうです';
+      actionLine = '生活費6ヶ月分を目安に確保してみる';
       actionType = 'Cost';
-      detailText = '緊急時に備えて、すぐ使える資金を確保しましょう。金額はあなたの状況に合わせて。';
+      detailText = '緊急時に備えて、すぐ使える資金を確保しましょう。';
     }
 
     return { 
-      stateLine: '改善余地あり', 
-      reasonLine, 
+      stateLine, 
       actionLine, 
       actionType, 
       effectEstimate: estimateEffect(actionType, metrics, gap),
@@ -193,15 +189,16 @@ function generateConclusion(
     };
   }
 
-  // RED
+  // RED - ポジティブなトーンで行動を促す
   const actionType: ActionType = 'Income';
   return {
-    stateLine: '計画の見直しが必要',
-    reasonLine: gap && gap > 0 ? `目標まで${gap}年の不足` : 'サバイバル率が低い',
-    actionLine: '収入増・支出減・目標延長のいずれか',
+    stateLine: '調整すれば改善の余地があります',
+    actionLine: gap && gap > 0 
+      ? 'まずは収入か目標時期を見直してみる' 
+      : '貯蓄ペースを上げる方法を探ってみる',
     actionType,
     effectEstimate: estimateEffect(actionType, metrics, gap),
-    detailText: '現状のままでは目標達成が難しい状況です。どの手を打つかは、あなたの価値観と状況で決めてください。',
+    detailText: 'いくつかの選択肢があります。どの手を打つかは、あなたの価値観と状況で決めてください。',
   };
 }
 
@@ -221,7 +218,7 @@ export function ConclusionSummaryCard({
   
   const config = getStatusConfig(displayStatus);
   
-  const { stateLine, reasonLine, actionLine, actionType, effectEstimate, detailText } = useMemo(
+  const { stateLine, actionLine, actionType, effectEstimate, detailText } = useMemo(
     () => generateConclusion(displayStatus, score, metrics, targetRetireAge),
     [displayStatus, score, metrics, targetRetireAge]
   );
@@ -248,19 +245,19 @@ export function ConclusionSummaryCard({
           前提: {workStyle} / {legacyGoal} / {targetRetireAge}歳目標
         </p>
         
-        {/* 3行固定フォーマット */}
-        <div className="space-y-2">
-          {/* 1行目: 結論（いまの状態） */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold tracking-tight text-gray-900 dark:text-gray-100">
+        {/* 2行固定フォーマット */}
+        <div className="space-y-3">
+          {/* 1行目: 現状の評価 */}
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-base text-foreground leading-snug">
               {stateLine}
-            </h2>
+            </p>
             {score && (
               <span className={cn(
-                "text-2xl font-bold tabular-nums px-3 py-1 rounded-lg",
-                score.overall >= 70 ? "bg-gray-100 text-gray-800" : 
-                score.overall >= 40 ? "bg-gray-100 text-gray-700" : 
-                "bg-gray-200 text-gray-800",
+                "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0",
+                score.overall >= 70 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" : 
+                score.overall >= 40 ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" : 
+                "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
                 isLoading && "opacity-50"
               )}>
                 {score.overall.toFixed(0)}
@@ -268,43 +265,35 @@ export function ConclusionSummaryCard({
             )}
           </div>
           
-          {/* 2行目: 理由（どこがボトルネックか） */}
-          {reasonLine && (
-            <p className="text-sm text-gray-500">
-              {reasonLine}
-            </p>
-          )}
-          
-          {/* 3行目: 次の一手（Income/Cost/Timingタグ付き） */}
+          {/* 2行目: 次にやること（Top1） */}
           {actionLine && (
-            <div className="pt-2 space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                  {actionTypeLabel}
-                </span>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {actionLine}
-                </p>
-              </div>
-              {/* 効果量の目安（1行） */}
-              {effectEstimate && (
-                <p className="text-xs text-gray-400 pl-1">
-                  {effectEstimate}
-                </p>
-              )}
+            <div className="flex items-center gap-2">
+              <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+              <p className="text-sm text-muted-foreground">
+                {actionLine}
+              </p>
             </div>
           )}
         </div>
         
         {/* 詳細は折りたたみ */}
-        {detailText && (
-          <details className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
-            <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+        {(detailText || effectEstimate) && (
+          <details className="mt-3 pt-3 border-t border-border">
+            <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground">
               詳しく見る
             </summary>
-            <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-              {detailText}
-            </p>
+            <div className="mt-2 space-y-1">
+              {effectEstimate && (
+                <p className="text-xs text-muted-foreground">
+                  {effectEstimate}
+                </p>
+              )}
+              {detailText && (
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {detailText}
+                </p>
+              )}
+            </div>
           </details>
         )}
       </CardContent>

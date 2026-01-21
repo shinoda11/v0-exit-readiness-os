@@ -1,9 +1,10 @@
 'use client';
 
 import { useProfileStore } from '@/lib/store';
+import { useV2Store } from '@/lib/v2/store';
 import { useMargin } from '@/hooks/useMargin';
 import { useStrategy } from '@/hooks/useStrategy';
-import { useWorldLines } from '@/hooks/useWorldLines';
+
 import { Sidebar } from '@/components/layout/sidebar';
 import { MoneyMarginCard } from '@/components/v2/MoneyMarginCard';
 import { DecisionHost } from '@/components/v2/DecisionHost';
@@ -37,27 +38,21 @@ const readinessConfig = {
 export default function V2DashboardPage() {
   // v2タブはダッシュボードのSoT（profile/simResult）を参照するだけ
   // 独自のrunSimulationは呼ばない（ストア二重化防止）
-  const { profile, simResult, isLoading } = useProfileStore();
+  const { profile, simResult, isLoading, scenarios, loadScenario } = useProfileStore();
+  
+  // UI状態（比較対象選択）のみv2で管理
+  const { selectedComparisonIds, toggleComparisonId, clearComparisonIds } = useV2Store();
   
   // Calculate margins
   const margins = useMargin({ profile, simResult });
   
-  // Get world lines (SoTを参照、独自計算なし)
-  const { 
-    baselineWorldLine,
-    comparisonWorldLine,
-    savedScenarios,
-    selectedScenarioId,
-    selectScenario,
-    deleteScenario,
-    loadScenario,
-    comparison,
-  } = useWorldLines();
-  
   // 互換性のための変換（既存コンポーネント用）
-  // 互換性のための変換（既存コンポーネント用）
-  const worldLines = [baselineWorldLine, comparisonWorldLine].filter((w): w is NonNullable<typeof w> => w !== null);
-  const activeWorldLine = baselineWorldLine;
+  const worldLines = simResult ? [{ 
+    id: 'baseline', 
+    name: '現在', 
+    profile, 
+    result: simResult 
+  }] : [];
   
   // Get strategy evaluation
   const strategy = useStrategy({
@@ -128,7 +123,7 @@ export default function V2DashboardPage() {
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <span className="text-3xl font-bold">
-                        {simResult?.score.overall.toFixed(0) ?? '--'}
+                        {simResult?.score.overall != null ? simResult.score.overall.toFixed(0) : '—'}
                       </span>
                       <span className="text-xs text-muted-foreground">/ 100</span>
                     </div>
@@ -157,7 +152,7 @@ export default function V2DashboardPage() {
                     </div>
                     <div className="flex items-center gap-1">
                       <Shield className="h-4 w-4" />
-                      <span>生存率: {simResult?.metrics.survivalRate.toFixed(0) ?? '--'}%</span>
+                      <span>生存率: {simResult?.metrics.survivalRate != null ? `${simResult.metrics.survivalRate.toFixed(0)}%` : '—'}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <TrendingUp className="h-4 w-4" />
@@ -322,158 +317,279 @@ export default function V2DashboardPage() {
               />
             </TabsContent>
             
-            {/* World Lines Tab */}
+            {/* World Lines Tab - 表形式で並列比較 */}
             <TabsContent value="worldlines" className="space-y-6">
-              <div className="space-y-6">
-                {/* 保存済みシナリオ選択 */}
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Target className="h-4 w-4" />
-                      シナリオ選択
-                    </CardTitle>
-                    <CardDescription>
-                      タイムラインで保存したシナリオを選択して現状と比較します
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {savedScenarios.length > 0 ? (
-                      <div className="space-y-3">
-                        {savedScenarios.map((scenario) => (
-                          <div 
-                            key={scenario.id}
-                            className={cn(
-                              "flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors",
-                              selectedScenarioId === scenario.id
-                                ? "border-primary bg-primary/5"
-                                : "hover:bg-muted/50"
-                            )}
-                            onClick={() => selectScenario(
-                              selectedScenarioId === scenario.id ? null : scenario.id
-                            )}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
-                                selectScenario(selectedScenarioId === scenario.id ? null : scenario.id);
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Target className="h-4 w-4" />
+                    世界線比較
+                  </CardTitle>
+                  <CardDescription>
+                    現在の状態と保存済みシナリオを並列比較します（最大2つまで選択可能）
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* 比較表 */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-2 font-medium text-muted-foreground w-40">指標</th>
+                          <th className="text-center py-3 px-2 font-medium min-w-32">
+                            <div className="flex flex-col items-center gap-1">
+                              <Badge variant="default" className="bg-primary">現在</Badge>
+                              <span className="text-xs text-muted-foreground">Baseline</span>
+                            </div>
+                          </th>
+                          {scenarios.slice(0, 2).map((scenario) => (
+                            <th key={scenario.id} className="text-center py-3 px-2 font-medium min-w-32">
+                              <div className="flex flex-col items-center gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => toggleComparisonId(scenario.id)}
+                                  className={cn(
+                                    "px-2 py-1 rounded text-xs font-medium transition-colors",
+                                    selectedComparisonIds.includes(scenario.id)
+                                      ? "bg-accent text-accent-foreground"
+                                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                                  )}
+                                >
+                                  {scenario.name}
+                                </button>
+                                <span className="text-xs text-muted-foreground">
+                                  {new Date(scenario.createdAt).toLocaleDateString('ja-JP')}
+                                </span>
+                              </div>
+                            </th>
+                          ))}
+                          {scenarios.length === 0 && (
+                            <th className="text-center py-3 px-2 font-medium min-w-32">
+                              <span className="text-muted-foreground text-xs">シナリオなし</span>
+                            </th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {/* Safe Exit Age */}
+                        <tr className="border-b hover:bg-muted/30">
+                          <td className="py-3 px-2 font-medium">Safe Exit Age</td>
+                          <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                            {(() => {
+                              if (!simResult) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
+                              const age = simResult.metrics.safeWithdrawalAge;
+                              if (age == null || age > 100) return <span className="text-muted-foreground text-xs">未達</span>;
+                              return `${age}歳`;
+                            })()}
+                          </td>
+                          {scenarios.slice(0, 2).map((scenario) => (
+                            <td key={scenario.id} className={cn(
+                              "text-center py-3 px-2 tabular-nums font-semibold",
+                              selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                            )}>
+                              {(() => {
+                                if (!scenario.result) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
+                                const age = scenario.result.metrics.safeWithdrawalAge;
+                                if (age == null || age > 100) return <span className="text-muted-foreground text-xs">未達</span>;
+                                return `${age}歳`;
+                              })()}
+                            </td>
+                          ))}
+                          {scenarios.length === 0 && (
+                            <td className="text-center py-3 px-2 text-muted-foreground text-xs">—</td>
+                          )}
+                        </tr>
+                        
+                        {/* 60歳時点の資産 */}
+                        <tr className="border-b hover:bg-muted/30">
+                          <td className="py-3 px-2 font-medium">60歳時点資産</td>
+                          <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                            {(() => {
+                              if (!simResult?.paths.yearlyData) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
+                              if (profile.currentAge > 60) return <span className="text-muted-foreground text-xs">該当なし</span>;
+                              const idx = Math.min(60 - profile.currentAge, simResult.paths.yearlyData.length - 1);
+                              const assets = simResult.paths.yearlyData[idx]?.assets;
+                              if (assets == null || Number.isNaN(assets)) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
+                              return `${(assets / 10000).toFixed(1)}億`;
+                            })()}
+                          </td>
+                          {scenarios.slice(0, 2).map((scenario) => {
+                            const data = scenario.result?.paths.yearlyData;
+                            if (!data) {
+                              return (
+                                <td key={scenario.id} className={cn(
+                                  "text-center py-3 px-2 text-muted-foreground text-xs",
+                                  selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                                )}>—（未計算）</td>
+                              );
+                            }
+                            if (scenario.profile.currentAge > 60) {
+                              return (
+                                <td key={scenario.id} className={cn(
+                                  "text-center py-3 px-2 text-muted-foreground text-xs",
+                                  selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                                )}>該当なし</td>
+                              );
+                            }
+                            const idx = Math.min(60 - scenario.profile.currentAge, data.length - 1);
+                            const assets = data[idx]?.assets;
+                            if (assets == null || Number.isNaN(assets)) {
+                              return (
+                                <td key={scenario.id} className={cn(
+                                  "text-center py-3 px-2 text-muted-foreground text-xs",
+                                  selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                                )}>—（未計算）</td>
+                              );
+                            }
+                            return (
+                              <td key={scenario.id} className={cn(
+                                "text-center py-3 px-2 tabular-nums font-semibold",
+                                selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                              )}>
+                                {`${(assets / 10000).toFixed(1)}億`}
+                              </td>
+                            );
+                          })}
+                          {scenarios.length === 0 && (
+                            <td className="text-center py-3 px-2 text-muted-foreground text-xs">—</td>
+                          )}
+                        </tr>
+                        
+                        {/* 40-50代平均月次CFマージン - SoTのcashFlow.netCashFlowを参照 */}
+                        <tr className="border-b hover:bg-muted/30">
+                          <td className="py-3 px-2 font-medium">現在の月次CF</td>
+                          <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                            {(() => {
+                              // SoTのcashFlow.netCashFlowを参照（年間値を月次に変換）
+                              const netCF = simResult?.cashFlow?.netCashFlow;
+                              if (netCF == null || Number.isNaN(netCF)) {
+                                return <span className="text-muted-foreground text-xs">—（未計算）</span>;
                               }
-                            }}
-                            role="button"
-                            tabIndex={0}
+                              const monthlyCF = netCF / 12;
+                              return `${monthlyCF.toFixed(0)}万/月`;
+                            })()}
+                          </td>
+                          {scenarios.slice(0, 2).map((scenario) => {
+                            const netCF = scenario.result?.cashFlow?.netCashFlow;
+                            if (netCF == null || Number.isNaN(netCF)) {
+                              return (
+                                <td key={scenario.id} className={cn(
+                                  "text-center py-3 px-2 text-muted-foreground text-xs",
+                                  selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                                )}>—（未計算）</td>
+                              );
+                            }
+                            const monthlyCF = netCF / 12;
+                            return (
+                              <td key={scenario.id} className={cn(
+                                "text-center py-3 px-2 tabular-nums font-semibold",
+                                selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                              )}>
+                                {`${monthlyCF.toFixed(0)}万/月`}
+                              </td>
+                            );
+                          })}
+                          {scenarios.length === 0 && (
+                            <td className="text-center py-3 px-2 text-muted-foreground text-xs">—</td>
+                          )}
+                        </tr>
+                        
+                        {/* Drawdown開始年齢 */}
+                        <tr className="hover:bg-muted/30">
+                          <td className="py-3 px-2 font-medium">Drawdown開始</td>
+                          <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                            {(() => {
+                              if (!simResult?.paths.yearlyData) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
+                              const ddIdx = simResult.paths.yearlyData.findIndex((y, i) => 
+                                i > 0 && y.assets < simResult.paths.yearlyData[i - 1].assets
+                              );
+                              // Drawdownがない = 資産が常に増加している
+                              return ddIdx > 0 
+                                ? `${profile.currentAge + ddIdx}歳` 
+                                : <span className="text-muted-foreground text-xs">なし</span>;
+                            })()}
+                          </td>
+                          {scenarios.slice(0, 2).map((scenario) => {
+                            const data = scenario.result?.paths.yearlyData;
+                            if (!data) {
+                              return (
+                                <td key={scenario.id} className={cn(
+                                  "text-center py-3 px-2 text-muted-foreground text-xs",
+                                  selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                                )}>—（未計算）</td>
+                              );
+                            }
+                            const ddIdx = data.findIndex((y, i) => i > 0 && y.assets < data[i - 1].assets);
+                            return (
+                              <td key={scenario.id} className={cn(
+                                "text-center py-3 px-2",
+                                ddIdx > 0 ? "tabular-nums font-semibold" : "text-muted-foreground text-xs",
+                                selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
+                              )}>
+                                {ddIdx > 0 ? `${scenario.profile.currentAge + ddIdx}歳` : 'なし'}
+                              </td>
+                            );
+                          })}
+                          {scenarios.length === 0 && (
+                            <td className="text-center py-3 px-2 text-muted-foreground text-xs">—</td>
+                          )}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  {/* アクション行 */}
+                  {scenarios.length > 0 && (
+                    <div className="mt-4 pt-4 border-t flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {selectedComparisonIds.length > 0 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={clearComparisonIds}
+                            className="bg-transparent"
                           >
-                            <div>
-                              <p className="font-medium">{scenario.name}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {new Date(scenario.createdAt).toLocaleString('ja-JP')}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {selectedScenarioId === scenario.id && (
-                                <Badge variant="default" className="bg-primary">
-                                  比較中
-                                </Badge>
-                              )}
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  loadScenario(scenario.id);
-                                }}
-                              >
-                                読込
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="text-destructive hover:text-destructive"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  deleteScenario(scenario.id);
-                                }}
-                              >
-                                削除
-                              </Button>
-                            </div>
-                          </div>
+                            選択解除
+                          </Button>
+                        )}
+                        {scenarios.slice(0, 2).map((scenario) => (
+                          <Button
+                            key={scenario.id}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => loadScenario(scenario.id)}
+                          >
+                            「{scenario.name}」を読み込む
+                          </Button>
                         ))}
                       </div>
-                    ) : (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <Info className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                        <p>保存済みシナリオがありません</p>
-                        <p className="text-sm mt-1">
-                          タイムラインタブでライフイベントを追加し、
-                          「シナリオ保存」ボタンで保存してください
-                        </p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* 比較結果 */}
-                {comparison && comparisonWorldLine && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">比較結果</CardTitle>
-                      <CardDescription>
-                        現状と「{comparisonWorldLine.name}」の比較
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        <div className="rounded-lg border p-4 text-center">
-                          <div className={cn(
-                            "text-2xl font-bold tabular-nums",
-                            comparison.fireAgeDiff < 0 ? "text-emerald-700 dark:text-emerald-400" : comparison.fireAgeDiff > 0 ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground"
-                          )}>
-                            {comparison.fireAgeDiff > 0 ? '+' : ''}{comparison.fireAgeDiff}年
-                          </div>
-                          <div className="text-sm text-muted-foreground">FIRE年齢差</div>
-                        </div>
-                        <div className="rounded-lg border p-4 text-center">
-                          <div className={cn(
-                            "text-2xl font-bold tabular-nums",
-                            comparison.survivalRateDiff > 0 ? "text-emerald-700 dark:text-emerald-400" : comparison.survivalRateDiff < 0 ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground"
-                          )}>
-                            {comparison.survivalRateDiff > 0 ? '+' : ''}{comparison.survivalRateDiff.toFixed(1)}%
-                          </div>
-                          <div className="text-sm text-muted-foreground">生存率差</div>
-                        </div>
-                        <div className="rounded-lg border p-4 text-center">
-                          <div className={cn(
-                            "text-2xl font-bold tabular-nums",
-                            comparison.assetsAt60Diff > 0 ? "text-emerald-700 dark:text-emerald-400" : comparison.assetsAt60Diff < 0 ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground"
-                          )}>
-                            {comparison.assetsAt60Diff > 0 ? '+' : ''}{(comparison.assetsAt60Diff / 10000).toFixed(1)}億
-                          </div>
-                          <div className="text-sm text-muted-foreground">60歳資産差</div>
-                        </div>
-                        <div className="rounded-lg border p-4 text-center">
-                          <div className={cn(
-                            "text-2xl font-bold tabular-nums",
-                            comparison.midlifeSurplusDiff > 0 ? "text-emerald-700 dark:text-emerald-400" : comparison.midlifeSurplusDiff < 0 ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground"
-                          )}>
-                            {comparison.midlifeSurplusDiff > 0 ? '+' : ''}{comparison.midlifeSurplusDiff.toFixed(0)}万
-                          </div>
-                          <div className="text-sm text-muted-foreground">年間余剰差</div>
-                        </div>
-                      </div>
-                      <div className="mt-4 p-3 rounded-lg bg-muted/50">
-                        <p className="text-sm font-medium">{comparison.recommendation}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-                
-                {/* 比較結果がない場合のガイド */}
-                {!comparison && savedScenarios.length > 0 && (
-                  <Card className="border-dashed">
-                    <CardContent className="py-8 text-center text-muted-foreground">
-                      <p>上のリストからシナリオを選択すると</p>
-                      <p>現状との比較結果が表示されます</p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+                      <a 
+                        href="/timeline" 
+                        className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                      >
+                        <span>新しいシナリオを作成</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </a>
+                    </div>
+                  )}
+                  
+                  {/* シナリオがない場合 */}
+                  {scenarios.length === 0 && (
+                    <div className="mt-4 pt-4 border-t text-center">
+                      <p className="text-sm text-muted-foreground mb-3">
+                        タイムラインでライフイベントを追加し、シナリオを保存すると比較できます
+                      </p>
+                      <a 
+                        href="/timeline" 
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border hover:bg-muted/50 text-sm font-medium transition-colors"
+                      >
+                        タイムラインでシナリオを作成
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </TabsContent>
             
             {/* Strategy Tab */}

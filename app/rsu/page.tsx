@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useProfileStore } from '@/lib/store';
 import { Sidebar } from '@/components/layout/sidebar';
 import { SectionCard } from '@/components/section-card';
 import { SliderInput } from '@/components/slider-input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,6 +26,9 @@ import {
   DollarSign,
   Calendar,
   PieChart,
+  Check,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
 import {
   LineChart,
@@ -56,7 +60,7 @@ interface VestingEvent {
 }
 
 export default function RSUPage() {
-  const { profile, updateProfile } = useProfileStore();
+  const { profile, updateProfile, runSimulationAsync, isLoading } = useProfileStore();
   const [stockPrice, setStockPrice] = useState(150); // Current stock price
   const [exchangeRate, setExchangeRate] = useState(150); // USD/JPY
   const [grants, setGrants] = useState<RSUGrant[]>([
@@ -76,6 +80,10 @@ export default function RSUPage() {
     vestingSchedule: 'quarterly',
     grantPrice: stockPrice,
   });
+  
+  // 同期状態の追跡
+  const [lastSyncedValue, setLastSyncedValue] = useState<number | null>(null);
+  const [justSynced, setJustSynced] = useState(false);
 
   // Calculate vesting schedule
   const calculateVestingEvents = (): VestingEvent[] => {
@@ -150,10 +158,29 @@ export default function RSUPage() {
   // Calculate annual RSU income in 万円
   const currentYear = new Date().getFullYear();
   const annualRSU = yearlyVesting[currentYear.toString()]?.valueJPY / 10000 || 0;
+  const calculatedRSUValue = Math.round(annualRSU);
+  
+  // 同期状態の判定
+  const isSynced = useMemo(() => {
+    return profile.rsuAnnual === calculatedRSUValue;
+  }, [profile.rsuAnnual, calculatedRSUValue]);
+  
+  // 初回マウント時にlastSyncedValueを設定
+  useEffect(() => {
+    if (lastSyncedValue === null) {
+      setLastSyncedValue(profile.rsuAnnual);
+    }
+  }, [profile.rsuAnnual, lastSyncedValue]);
 
   // Update profile with calculated RSU
-  const syncRSUToProfile = () => {
-    updateProfile({ rsuAnnual: Math.round(annualRSU) });
+  const syncRSUToProfile = async () => {
+    updateProfile({ rsuAnnual: calculatedRSUValue });
+    // シミュレーションを明示的に再実行
+    await runSimulationAsync();
+    setLastSyncedValue(calculatedRSUValue);
+    setJustSynced(true);
+    // 3秒後にフィードバックを消す
+    setTimeout(() => setJustSynced(false), 3000);
   };
 
   // Add new grant
@@ -198,11 +225,58 @@ export default function RSUPage() {
                 RSU (制限付き株式ユニット) のベスティングスケジュールと価値を管理
               </p>
             </div>
-            <Button onClick={syncRSUToProfile}>
-              <TrendingUp className="mr-2 h-4 w-4" />
-              プロファイルに反映
-            </Button>
+            <div className="flex items-center gap-3">
+              {/* 同期状態バッジ */}
+              {justSynced ? (
+                <Badge variant="outline" className="text-emerald-700 border-emerald-300 bg-emerald-50 dark:text-emerald-300 dark:border-emerald-700 dark:bg-emerald-950/30">
+                  <Check className="h-3 w-3 mr-1" />
+                  反映完了
+                </Badge>
+              ) : !isSynced ? (
+                <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50 dark:text-amber-300 dark:border-amber-700 dark:bg-amber-950/30">
+                  <AlertCircle className="h-3 w-3 mr-1" />
+                  未反映
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="text-muted-foreground">
+                  <Check className="h-3 w-3 mr-1" />
+                  同期済み
+                </Badge>
+              )}
+              
+              <Button 
+                onClick={syncRSUToProfile}
+                disabled={isLoading || isSynced}
+                className={!isSynced ? 'bg-amber-600 hover:bg-amber-700' : ''}
+              >
+                {isLoading ? (
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <TrendingUp className="mr-2 h-4 w-4" />
+                )}
+                プロファイルに反映
+              </Button>
+            </div>
           </div>
+          
+          {/* 反映完了メッセージ */}
+          {justSynced && (
+            <div className="mb-6 rounded-lg border-2 border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-800 dark:bg-emerald-950/30">
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900">
+                  <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <p className="font-medium text-emerald-900 dark:text-emerald-100">
+                    RSU収入をプロファイルに反映しました
+                  </p>
+                  <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                    ダッシュボードのシミュレーション結果が更新されました
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Settings Panel */}
@@ -243,15 +317,27 @@ export default function RSUPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={!isSynced ? 'border-amber-300 dark:border-amber-700' : ''}>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">{currentYear}年のRSU収入</CardTitle>
+                  <CardTitle className="text-sm font-medium flex items-center justify-between">
+                    <span>{currentYear}年のRSU収入</span>
+                    {!isSynced && (
+                      <Badge variant="outline" className="text-xs text-amber-700 border-amber-300 bg-amber-50 dark:text-amber-300 dark:border-amber-700 dark:bg-amber-950/30">
+                        未反映
+                      </Badge>
+                    )}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-bold">{annualRSU.toFixed(0)}万円</p>
-                  <p className="text-sm text-muted-foreground">
-                    プロファイルの年間RSU: {profile.rsuAnnual}万円
-                  </p>
+                  <p className="text-3xl font-bold">{calculatedRSUValue}万円</p>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    <span>現在のプロファイル: {profile.rsuAnnual}万円</span>
+                    {!isSynced && (
+                      <span className={`ml-2 font-medium ${calculatedRSUValue > profile.rsuAnnual ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                        ({calculatedRSUValue > profile.rsuAnnual ? '+' : ''}{calculatedRSUValue - profile.rsuAnnual}万円)
+                      </span>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
