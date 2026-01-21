@@ -117,8 +117,15 @@ export default function TimelinePage() {
   const { profile, updateProfile, runSimulationAsync, isLoading, saveScenario, scenarios, deleteScenario, loadScenario } = useProfileStore();
   const [isPresetDialogOpen, setIsPresetDialogOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<PresetEvent | null>(null);
-  const [customAge, setCustomAge] = useState<number>(profile.currentAge + 5);
-  const [customAmount, setCustomAmount] = useState<number>(100);
+  // 入力中の一時的な文字列状態を保持（数値変換はonBlur時に行う）
+  const [customAgeInput, setCustomAgeInput] = useState<string>(String(profile.currentAge + 5));
+  const [customAmountInput, setCustomAmountInput] = useState<string>('100');
+  const [customDurationInput, setCustomDurationInput] = useState<string>('1');
+  
+  // 実際に使用する数値
+  const customAge = Number.parseInt(customAgeInput, 10) || profile.currentAge;
+  const customAmount = Number.parseInt(customAmountInput, 10) || 0;
+  const customDuration = Number.parseInt(customDurationInput, 10) || 1;
   
   // dirty state: イベントが変更されたがまだシミュレーションに反映されていない
   const [isSynced, setIsSynced] = useState(true);
@@ -199,23 +206,24 @@ export default function TimelinePage() {
   // プリセットからイベントを追加
   const addPresetEvent = (preset: PresetEvent) => {
     setSelectedPreset(preset);
-    setCustomAge(profile.currentAge + preset.ageOffset);
-    setCustomAmount(preset.amount);
+    setCustomAgeInput(String(profile.currentAge + preset.ageOffset));
+    setCustomAmountInput(String(preset.amount));
+    setCustomDurationInput(String(preset.duration));
     setIsPresetDialogOpen(true);
   };
 
-  const confirmPresetEvent = () => {
-    if (!selectedPreset) return;
-
-    const event: LifeEvent = {
-      id: `event-${Date.now()}`,
-      type: selectedPreset.type,
-      name: selectedPreset.label,
-      age: customAge,
-      amount: customAmount,
-      duration: selectedPreset.duration,
-      isRecurring: selectedPreset.isRecurring,
-    };
+const confirmPresetEvent = () => {
+  if (!selectedPreset) return;
+  
+  const event: LifeEvent = {
+  id: `event-${Date.now()}`,
+  type: selectedPreset.type,
+  name: selectedPreset.label,
+  age: customAge,
+  amount: customAmount,
+  duration: selectedPreset.isRecurring ? customDuration : 1,
+  isRecurring: selectedPreset.isRecurring,
+  };
 
     updateProfile({
       lifeEvents: [...lifeEvents, event],
@@ -667,83 +675,125 @@ export default function TimelinePage() {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    value={customAge}
+                    value={customAgeInput}
                     onChange={(e) => {
+                      // 数字のみ許可、空文字もOK（入力中の状態を保持）
                       const val = e.target.value;
-                      // 空文字や数字のみ許可
-                      if (val === '' || /^\d+$/.test(val)) {
-                        const num = Number.parseInt(val, 10);
-                        if (!Number.isNaN(num)) {
-                          // 範囲内に収める
-                          setCustomAge(Math.max(profile.currentAge, Math.min(100, num)));
-                        } else if (val === '') {
-                          // 空の場合は現在年齢をセット（一時的に入力をリセット）
-                          setCustomAge(profile.currentAge);
-                        }
+                      if (val === '' || /^\d*$/.test(val)) {
+                        setCustomAgeInput(val);
                       }
                     }}
                     onBlur={() => {
-                      // フォーカスが外れたときに最小値を保証
-                      if (customAge < profile.currentAge) {
-                        setCustomAge(profile.currentAge);
+                      // フォーカスが外れたときに範囲内に収める
+                      const num = Number.parseInt(customAgeInput, 10);
+                      if (Number.isNaN(num) || num < profile.currentAge) {
+                        setCustomAgeInput(String(profile.currentAge));
+                      } else if (num > 100) {
+                        setCustomAgeInput('100');
+                      } else {
+                        setCustomAgeInput(String(num));
                       }
                     }}
                     className="w-24"
                   />
                   <span className="text-sm text-muted-foreground">歳</span>
                   <span className="text-xs text-muted-foreground ml-auto">
-                    (あと{customAge - profile.currentAge}年後)
+                    (あと{Math.max(0, customAge - profile.currentAge)}年後)
                   </span>
                 </div>
               </div>
 
               {/* Amount adjustment */}
               <div className="space-y-2">
-                <Label htmlFor="preset-amount">年間金額</Label>
+                <Label htmlFor="preset-amount">
+                  {selectedPreset.isRecurring ? '年間金額' : '金額（一括）'}
+                </Label>
                 <div className="flex items-center gap-2">
                   <Input
                     id="preset-amount"
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    value={customAmount}
+                    value={customAmountInput}
                     onChange={(e) => {
                       const val = e.target.value;
-                      if (val === '' || /^\d+$/.test(val)) {
-                        const num = Number.parseInt(val, 10);
-                        if (!Number.isNaN(num)) {
-                          setCustomAmount(Math.max(0, Math.min(10000, num)));
-                        } else if (val === '') {
-                          setCustomAmount(0);
-                        }
+                      if (val === '' || /^\d*$/.test(val)) {
+                        setCustomAmountInput(val);
+                      }
+                    }}
+                    onBlur={() => {
+                      const num = Number.parseInt(customAmountInput, 10);
+                      if (Number.isNaN(num) || num < 0) {
+                        setCustomAmountInput('0');
+                      } else if (num > 10000) {
+                        setCustomAmountInput('10000');
+                      } else {
+                        setCustomAmountInput(String(num));
                       }
                     }}
                     className="w-24"
                   />
-                  <span className="text-sm text-muted-foreground">万円/年</span>
+                  <span className="text-sm text-muted-foreground">
+                    {selectedPreset.isRecurring ? '万円/年' : '万円'}
+                  </span>
                 </div>
-                {selectedPreset.duration > 1 && (
-                  <p className="text-xs text-muted-foreground">
-                    期間: {selectedPreset.duration}年間 / 総額: {(customAmount * selectedPreset.duration).toLocaleString()}万円
-                  </p>
-                )}
               </div>
+              
+              {/* Duration adjustment - 継続イベントのみ表示 */}
+              {selectedPreset.isRecurring && (
+                <div className="space-y-2">
+                  <Label htmlFor="preset-duration">期間</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="preset-duration"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={customDurationInput}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '' || /^\d*$/.test(val)) {
+                          setCustomDurationInput(val);
+                        }
+                      }}
+                      onBlur={() => {
+                        const num = Number.parseInt(customDurationInput, 10);
+                        if (Number.isNaN(num) || num < 1) {
+                          setCustomDurationInput('1');
+                        } else if (num > 50) {
+                          setCustomDurationInput('50');
+                        } else {
+                          setCustomDurationInput(String(num));
+                        }
+                      }}
+                      className="w-24"
+                    />
+                    <span className="text-sm text-muted-foreground">年間</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    総額: {(customAmount * customDuration).toLocaleString()}万円
+                  </p>
+                </div>
+              )}
 
               {/* Summary */}
               <div className="rounded-lg bg-slate-50 dark:bg-slate-800/50 p-3">
                 <p className="text-sm">
                   <span className="font-medium">{customAge}歳</span>
-                  {selectedPreset.duration > 1 && <span> 〜 {customAge + selectedPreset.duration - 1}歳</span>}
-                  {'の間、'}
+                  {selectedPreset.isRecurring && customDuration > 1 && (
+                    <span> 〜 {customAge + customDuration - 1}歳</span>
+                  )}
+                  {selectedPreset.isRecurring ? 'の間、' : 'に、'}
                   <span className={cn(
                     'font-medium',
                     selectedPreset.type === 'income_increase' || selectedPreset.type === 'expense_decrease'
-                      ? 'text-slate-700 dark:text-slate-200'
-                      : 'text-slate-500'
+                      ? 'text-emerald-700 dark:text-emerald-400'
+                      : 'text-amber-700 dark:text-amber-400'
                   )}>
                     {selectedPreset.type === 'income_increase' || selectedPreset.type === 'expense_decrease'
-                      ? `+${customAmount.toLocaleString()}万円/年`
-                      : `-${customAmount.toLocaleString()}万円/年`}
+                      ? `+${customAmount.toLocaleString()}万円`
+                      : `-${customAmount.toLocaleString()}万円`}
+                    {selectedPreset.isRecurring ? '/年' : '（一括）'}
                   </span>
                 </p>
               </div>
