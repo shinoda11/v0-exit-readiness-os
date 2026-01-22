@@ -21,7 +21,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { Profile, SimulationResult, Scenario } from './types';
+import type { Profile, SimulationResult, Scenario, LifeEvent } from './types';
 import { runSimulation, createDefaultProfile } from './engine';
 
 // localStorage keys
@@ -81,6 +81,11 @@ interface ProfileStore {
   
   // Scenario actions
   saveScenario: (name: string) => { success: boolean; error?: string; scenario?: SavedScenario };
+  saveAllocationAsScenario: (
+    name: string,
+    baseScenario: SavedScenario | null,
+    allocationEvents: LifeEvent[]
+  ) => { success: boolean; error?: string; scenario?: SavedScenario };
   loadScenario: (id: string) => void;
   deleteScenario: (id: string) => void;
   toggleComparison: (id: string) => void;
@@ -222,6 +227,64 @@ export const useProfileStore = create<ProfileStore>()(
             return { success: true, scenario: newScenario };
           } catch (e) {
             // ストレージ保存失敗時もメモリには保存済み
+            console.error('Failed to persist scenario to storage', e);
+            return { success: true, scenario: newScenario, error: '保存は成功しましたが、永続化に失敗しました。' };
+          }
+        },
+        
+        // Save allocation as a new derived scenario
+        saveAllocationAsScenario: (name, baseScenario, allocationEvents) => {
+          const { profile, simResult, scenarios, isLoading } = get();
+          
+          if (isLoading) {
+            return { success: false, error: '計算中です。完了後に再度お試しください。' };
+          }
+          
+          if (!name.trim()) {
+            return { success: false, error: 'シナリオ名を入力してください。' };
+          }
+          
+          // ベースとなるprofileを決定（selected scenarioがあればそれ、なければ現在のprofile）
+          const baseProfile = baseScenario?.profile ?? profile;
+          const baseResult = baseScenario?.result ?? simResult;
+          
+          if (!baseResult) {
+            return { success: false, error: 'シミュレーション結果がありません。' };
+          }
+          
+          // 既存のlifeEventsに配分イベントを追加
+          const mergedEvents = [
+            ...baseProfile.lifeEvents,
+            ...allocationEvents,
+          ];
+          
+          const id = `scenario-${Date.now()}`;
+          const derivedProfile = {
+            ...baseProfile,
+            lifeEvents: mergedEvents,
+          };
+          
+          // 注意: ここではsimResultを再計算しない（engine呼び出し禁止）
+          // 新シナリオは保存時点のbaseResultを継承（表示用）
+          // 実際に使う際はloadScenarioでrunSimulationAsyncがトリガーされる
+          const newScenario: SavedScenario = {
+            id,
+            name: name.trim(),
+            profile: derivedProfile,
+            result: baseResult, // 暫定: 後でloadScenario時に再計算される
+            createdAt: new Date().toISOString(),
+          };
+          
+          const updatedScenarios = [...scenarios, newScenario];
+          set({
+            scenarios: updatedScenarios,
+            activeScenarioId: id
+          });
+          
+          try {
+            saveScenariosToStorage(updatedScenarios);
+            return { success: true, scenario: newScenario };
+          } catch (e) {
             console.error('Failed to persist scenario to storage', e);
             return { success: true, scenario: newScenario, error: '保存は成功しましたが、永続化に失敗しました。' };
           }
