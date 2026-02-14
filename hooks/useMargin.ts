@@ -139,7 +139,8 @@ export function useMargin(
     };
     
     // リスクの余白を計算（既存データから派生、新規計算なし）
-    const stockRatio = profile.stockRatio ?? 70;
+    const totalAssets = profile.assetCash + profile.assetInvest + profile.assetDefinedContributionJP;
+    const stockRatio = totalAssets > 0 ? (profile.assetInvest / totalAssets) * 100 : 70;
     const volatilityTolerance = Math.max(5, 30 - (stockRatio / 5)); // 株式比率が高いほど許容度が下がる
     const drawdownCapacity = survivalRate >= 90 ? 30 : survivalRate >= 70 ? 20 : 10; // 生存率から許容下落を推定
     const sequenceRisk = survivalRate < 70 ? 0.7 : survivalRate < 85 ? 0.4 : 0.2; // 生存率から逆算

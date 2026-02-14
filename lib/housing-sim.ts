@@ -193,10 +193,17 @@ function runSimulationWithSeed(profile: Profile, seed: number): HousingSimulatio
     allPaths.push(runSingleSimulationSeeded(profile, rng));
   }
   
+  const medianPath = getPercentilePath(allPaths, 50);
+  const upperPath = getPercentilePath(allPaths, 90);
+  const lowerPath = getPercentilePath(allPaths, 10);
+
   const paths: SimulationPath = {
-    yearlyData: getPercentilePath(allPaths, 50),
-    upperPath: getPercentilePath(allPaths, 90),
-    lowerPath: getPercentilePath(allPaths, 10)
+    yearlyData: medianPath,
+    upperPath: upperPath,
+    lowerPath: lowerPath,
+    median: medianPath.map(p => p.assets),
+    optimistic: upperPath.map(p => p.assets),
+    pessimistic: lowerPath.map(p => p.assets),
   };
   
   // Calculate survival rate

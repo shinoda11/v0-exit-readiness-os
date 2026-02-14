@@ -208,7 +208,7 @@ function safeNumber(value: number | null | undefined, fallback: number = 0): num
 export function compareWorldLines(
   worldLineA: WorldLine,
   worldLineB: WorldLine
-): WorldLineComparison | null {
+): WorldLineComparisonDetailed | null {
   const kpisA = worldLineA.result.kpis;
   const kpisB = worldLineB.result.kpis;
   const marginA = worldLineA.result.margin;

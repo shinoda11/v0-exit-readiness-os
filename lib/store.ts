@@ -29,7 +29,7 @@ const PROFILE_STORAGE_KEY = 'exit-readiness-profile';
 const SCENARIOS_STORAGE_KEY = 'exit-readiness-scenarios';
 
 // localStorage helpers
-function loadScenariosFromStorage(): Scenario[] {
+function loadScenariosFromStorage(): SavedScenario[] {
   if (typeof window === 'undefined') return [];
   try {
     const stored = localStorage.getItem(SCENARIOS_STORAGE_KEY);
@@ -42,7 +42,7 @@ function loadScenariosFromStorage(): Scenario[] {
   return [];
 }
 
-function saveScenariosToStorage(scenarios: Scenario[]) {
+function saveScenariosToStorage(scenarios: SavedScenario[]) {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(SCENARIOS_STORAGE_KEY, JSON.stringify(scenarios));

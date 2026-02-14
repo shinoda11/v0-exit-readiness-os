@@ -30,30 +30,30 @@ export function extractKpisFromSimulation(
   const { score, paths, metrics } = result;
   
   // 90%サバイバル率でのFIRE年齢を計算
-  // (paths.pessimistic が90パーセンタイルで資産0を下回る年齢)
+  // (paths.lowerPath が10パーセンタイルで資産0を下回る年齢)
   let safeFireAge: number | null = null;
-  if (paths.pessimistic) {
-    for (let i = 0; i < paths.pessimistic.length; i++) {
-      const point = paths.pessimistic[i];
+  if (paths.lowerPath) {
+    for (let i = 0; i < paths.lowerPath.length; i++) {
+      const point = paths.lowerPath[i];
       if (point.assets <= 0) {
         safeFireAge = point.age - 1;
         break;
       }
     }
-    if (safeFireAge === null && paths.pessimistic.length > 0) {
+    if (safeFireAge === null && paths.lowerPath.length > 0) {
       // 100歳まで資産が持つ場合
       safeFireAge = profile.targetRetireAge;
     }
   }
   
   // 60歳時点の中央値資産
-  const assetsAt60 = paths.median?.find(p => p.age === 60)?.assets ?? 0;
+  const assetsAt60 = paths.yearlyData?.find(p => p.age === 60)?.assets ?? 0;
   
   // 100歳時点の中央値資産
-  const assetsAt100 = paths.median?.[paths.median.length - 1]?.assets ?? 0;
+  const assetsAt100 = paths.yearlyData?.[paths.yearlyData.length - 1]?.assets ?? 0;
   
   // 40-50代の年間余裕額を計算
-  const midlifePoints = paths.median?.filter(p => p.age >= 40 && p.age < 60) ?? [];
+  const midlifePoints = paths.yearlyData?.filter(p => p.age >= 40 && p.age < 60) ?? [];
   let midlifeSurplus = 0;
   if (midlifePoints.length >= 2) {
     const assetGrowth = midlifePoints.reduce((sum, p, i) => {
@@ -144,7 +144,7 @@ export function calculateTimeMargin(profile: Profile): TimeMargin {
   const baseWeeklyFreeHours = 40; // 週40時間の自由時間
   
   // 世帯人数による調整
-  const householdAdjustment = profile.householdMode === 'couple' ? -5 : 0;
+  const householdAdjustment = profile.mode === 'couple' ? -5 : 0;
   
   // キャリア柔軟性スコア（年齢とスキルで概算）
   const ageFactor = profile.currentAge < 40 ? 70 : profile.currentAge < 50 ? 60 : 50;
@@ -166,7 +166,7 @@ export function calculateEnergyMargin(profile: Profile): EnergyMargin {
   
   // ストレスレベルの概算（貯蓄率が低いとストレス高）
   const grossAnnual = profile.grossIncome + (profile.rsuAnnual ?? 0);
-  const expenseAnnual = profile.livingExpenseAnnual + profile.housingCostAnnual;
+  const expenseAnnual = profile.livingCostAnnual + profile.housingCostAnnual;
   const savingsRate = grossAnnual > 0 ? (grossAnnual - expenseAnnual) / grossAnnual : 0;
   const stressLevel = Math.max(20, Math.min(80, 60 - savingsRate * 100));
   

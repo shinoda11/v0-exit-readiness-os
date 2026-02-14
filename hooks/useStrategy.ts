@@ -2,14 +2,38 @@
 
 import { useMemo } from 'react';
 import type { Profile, SimulationResult } from '@/lib/types';
-import type { MoneyMargin, TimeMargin, RiskMargin } from '@/lib/v2/margin';
+import type { MoneyMargin, TimeMargin } from '@/lib/v2/margin';
 import type { WorldLine } from '@/lib/v2/worldline';
-import type { 
-  StrategyRecommendation, 
-  ActionPriority, 
-  ImpactLevel,
-  TimeHorizon 
-} from '@/lib/v2/strategy';
+import type { MoneyMarginV2, TimeMarginV2, RiskMarginV2 } from '@/hooks/useMargin';
+
+// Types used by this hook (not exported from strategy.ts)
+export type ImpactLevel = 'high' | 'medium' | 'low';
+export type TimeHorizon = 'short' | 'medium' | 'long';
+
+export interface StrategyRecommendation {
+  id: string;
+  name: string;
+  description: string;
+  confidence: number;
+  expectedOutcome: {
+    scoreImprovement: number;
+    timeToFire: number | null;
+    riskReduction: number;
+  };
+  requiredActions: string[];
+  assumptions: string[];
+}
+
+export interface ActionPriority {
+  id: string;
+  title: string;
+  description: string;
+  impact: ImpactLevel;
+  effort: string;
+  timeHorizon: TimeHorizon;
+  category: string;
+  estimatedBenefit: string;
+}
 
 // Strategy evaluation result
 export interface StrategyEvaluation {
@@ -39,11 +63,11 @@ interface UseStrategyProps {
   profile: Profile;
   simResult: SimulationResult | null;
   margins: {
-    money: MoneyMargin | null;
-    time: TimeMargin | null;
-    risk: RiskMargin | null;
+    money: MoneyMarginV2 | null;
+    time: TimeMarginV2 | null;
+    risk: RiskMarginV2 | null;
   };
-  worldLines: WorldLine[];
+  worldLines: WorldLine[] | { id: string; name: string; profile: Profile; result: SimulationResult }[];
 }
 
 // Determine readiness level from score
@@ -78,12 +102,12 @@ function generateInsights(
     });
   }
   
-  if (margins.money && margins.money.monthly > 20) {
+  if (margins.money && margins.money.monthlyNetSavings > 20) {
     insights.push({
       id: 'strength-cashflow',
       category: 'strength',
       title: '健全なキャッシュフロー',
-      description: `月${margins.money.monthly.toFixed(0)}万円の余裕があります。`,
+      description: `月${margins.money.monthlyNetSavings.toFixed(0)}万円の余裕があります。`,
       relevance: 90,
     });
   }
@@ -171,11 +195,11 @@ function generateActions(
   }
   
   // Investment optimization
-  if (margins.money && margins.money.monthly > 10 && score.overall < 80) {
+  if (margins.money && margins.money.monthlyNetSavings > 10 && score.overall < 80) {
     actions.push({
       id: 'action-invest-surplus',
       title: '余剰資金の投資',
-      description: `月${Math.floor(margins.money.monthly * 0.7)}万円を長期投資に回しましょう。`,
+      description: `月${Math.floor(margins.money.monthlyNetSavings * 0.7)}万円を長期投資に回しましょう。`,
       impact: 'high' as ImpactLevel,
       effort: 'low',
       timeHorizon: 'medium' as TimeHorizon,
@@ -199,7 +223,7 @@ function generateActions(
   }
   
   // Income increase
-  if (profile.sideIncomeAnnual === 0 && profile.currentAge < 50) {
+  if (profile.sideIncomeNet === 0 && profile.currentAge < 50) {
     actions.push({
       id: 'action-side-income',
       title: '副収入の検討',
@@ -234,7 +258,7 @@ function generatePrimaryStrategy(
   profile: Profile,
   simResult: SimulationResult | null,
   margins: UseStrategyProps['margins'],
-  worldLines: WorldLine[]
+  _worldLines: unknown[]
 ): StrategyRecommendation {
   if (!simResult) {
     return {

@@ -63,6 +63,7 @@ interface V2Actions {
   // 世界線比較
   toggleComparisonId: (id: string) => void;
   clearComparisonIds: () => void;
+  setSelectedComparisonIds: (ids: string[]) => void;
   
   // 配分設定（合計100%を保証）
   setAllocation: (key: 'travel' | 'invest' | 'freeTime', value: number) => void;
@@ -115,6 +116,8 @@ export const useV2Store = create<V2Store>()((set, get) => ({
   },
   
   clearComparisonIds: () => set({ selectedComparisonIds: [] }),
+  
+  setSelectedComparisonIds: (ids) => set({ selectedComparisonIds: ids.slice(0, 2) }),
   
   // 配分設定（合計100%を保証）
   setAllocation: (key, value) => {

@@ -41,14 +41,14 @@ import {
   Minus,
   CheckCircle2
 } from 'lucide-react';
-import type { WorldLine, WorldLineComparison } from '@/lib/v2/worldline';
+import type { WorldLine, WorldLineComparisonDetailed } from '@/lib/v2/worldline';
 import { cn } from '@/lib/utils';
 
 interface WorldLineLensProps {
   worldLines: WorldLine[];
   activeWorldLineId: string | null;
   comparisonWorldLineId: string | null;
-  comparison: WorldLineComparison | null;
+  comparison: WorldLineComparisonDetailed | null;
   onSelectActive: (id: string) => void;
   onSelectComparison: (id: string | null) => void;
 }

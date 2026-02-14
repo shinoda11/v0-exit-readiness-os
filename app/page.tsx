@@ -129,7 +129,7 @@ export default function DashboardPage() {
               metrics={simResult?.metrics ?? null}
               isLoading={isLoading && !simResult}
               targetRetireAge={profile.targetRetireAge}
-              workStyle={profile.income > 1000 ? '高収入' : '会社員'}
+              workStyle={profile.grossIncome > 1000 ? '高収入' : '会社員'}
               legacyGoal="使い切り"
             />
           </div>

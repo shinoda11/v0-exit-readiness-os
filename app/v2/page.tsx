@@ -62,7 +62,7 @@ export default function V2DashboardPage() {
   
   // UI状態（比較対象選択・配分・ブリッジ）のみv2で管理
   const { 
-    selectedComparisonIds, toggleComparisonId, clearComparisonIds, setSelectedComparisonIds, 
+    selectedComparisonIds, toggleComparisonId, clearComparisonIds, setSelectedComparisonIds,
     allocation, setAllocation, allocationDirty, resetAllocation, markAllocationSaved,
     bridges, setHousingBridge, setChildrenBridge, setActiveTab, activeTab
   } = useV2Store();
@@ -974,7 +974,7 @@ export default function V2DashboardPage() {
                           <td className="text-center py-3 px-2 tabular-nums font-semibold">
                             {(() => {
                               if (!simResult) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
-                              const age = simResult.metrics.safeWithdrawalAge;
+                              const age = simResult.metrics.fireAge;
                               if (age == null || age > 100) return <span className="text-muted-foreground text-xs">未達</span>;
                               return `${age}歳`;
                             })()}
@@ -986,7 +986,7 @@ export default function V2DashboardPage() {
                             )}>
                               {(() => {
                                 if (!scenario.result) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
-                                const age = scenario.result.metrics.safeWithdrawalAge;
+                                const age = scenario.result.metrics.fireAge;
                                 if (age == null || age > 100) return <span className="text-muted-foreground text-xs">未達</span>;
                                 return `${age}歳`;
                               })()}
@@ -1259,7 +1259,7 @@ export default function V2DashboardPage() {
                   <div>
                     <h4 className="font-medium mb-3">必要なアクション</h4>
                     <div className="space-y-2">
-                      {strategy.primaryStrategy.requiredActions.map((action, index) => (
+                      {strategy.primaryStrategy.requiredActions.map((action: string, index: number) => (
                         <div key={index} className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
                           <CheckCircle2 className="h-5 w-5 text-muted-foreground" />
                           <span>{action}</span>
@@ -1275,7 +1275,7 @@ export default function V2DashboardPage() {
                       前提条件
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {strategy.primaryStrategy.assumptions.map((assumption, index) => (
+                      {strategy.primaryStrategy.assumptions.map((assumption: string, index: number) => (
                         <Badge key={index} variant="secondary">
                           {assumption}
                         </Badge>

@@ -58,7 +58,7 @@ async function calculateActionImpact(
   const newResult = await runSimulation(modifiedProfile);
   
   return {
-    fireAge: newResult.metrics.fireAge - baseResult.metrics.fireAge,
+    fireAge: (newResult.metrics.fireAge ?? 0) - (baseResult.metrics.fireAge ?? 0),
     survivalRate: newResult.metrics.survivalRate - baseResult.metrics.survivalRate,
     score: newResult.score.overall - baseResult.score.overall,
   };
