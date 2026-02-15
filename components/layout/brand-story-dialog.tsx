@@ -16,39 +16,83 @@ function AnimatedYSymbol() {
   return (
     <>
       <style>{`
-        @keyframes ghost-pulse {
-          0%, 100% { opacity: 0.06; }
-          50% { opacity: 0.15; }
+        /* === Draw-in: lines appear as if being drawn === */
+        @keyframes draw-in {
+          from { stroke-dashoffset: 100; }
+          to   { stroke-dashoffset: 0; }
         }
+        .draw-path {
+          stroke-dasharray: 100;
+          stroke-dashoffset: 100;
+          animation: draw-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .d1 { animation-delay: 0.5s; }  /* left branch */
+        .d2 { animation-delay: 0.7s; }  /* right branch */
+        .d3 { animation-delay: 0.4s; }  /* stem */
+
+        /* === Node pulse: gold node pulsation === */
         @keyframes node-pulse {
-          0%, 100% { r: 5; }
-          50% { r: 7; }
+          0%, 100% { r: 5; opacity: 1; }
+          50%      { r: 7; opacity: 0.4; }
         }
-        .ghost-line {
-          animation: ghost-pulse 4s ease-in-out infinite;
-        }
-        .decision-node {
+        .node-pulse {
           animation: node-pulse 3s ease-in-out infinite;
+        }
+
+        /* === Ghost fade: unchosen path shimmer === */
+        @keyframes ghost-fade {
+          0%, 100% { opacity: 0.08; }
+          50%      { opacity: 0.2; }
+        }
+        .ghost-path {
+          animation: ghost-fade 4s ease-in-out infinite;
+        }
+        .g2 {
+          animation-delay: 1.5s;
+        }
+
+        /* === Hero fade-in: whole visual header entrance === */
+        @keyframes hero-fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.96);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        .hero-enter {
+          animation: hero-fade-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          opacity: 0;
+        }
+        .hero-enter-d1 {
+          animation: hero-fade-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+          opacity: 0;
+        }
+        .hero-enter-d2 {
+          animation: hero-fade-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+          opacity: 0;
         }
       `}</style>
       <svg
-        width={120}
-        height={120}
         viewBox="0 0 180 180"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
-        className="text-foreground"
+        className="h-20 w-20 sm:h-[120px] sm:w-[120px] text-foreground"
       >
         {/* Ghost lines — unchosen paths */}
-        <line x1="90" y1="94" x2="20" y2="160" stroke="currentColor" className="ghost-line" strokeWidth="3" strokeLinecap="round" />
-        <line x1="90" y1="94" x2="160" y2="160" stroke="currentColor" className="ghost-line" strokeWidth="3" strokeLinecap="round" />
-        {/* Main 3 branch lines */}
-        <line x1="90" y1="94" x2="42" y2="34" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-        <line x1="90" y1="94" x2="138" y2="34" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-        <line x1="90" y1="94" x2="90" y2="156" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-        {/* Decision node — Gold, pulsing */}
-        <circle cx="90" cy="94" r="6" fill="#C8B89A" className="decision-node" />
+        <line x1="90" y1="94" x2="20" y2="160" stroke="currentColor" className="ghost-path" strokeWidth="3" strokeLinecap="round" />
+        <line x1="90" y1="94" x2="160" y2="160" stroke="currentColor" className="ghost-path g2" strokeWidth="3" strokeLinecap="round" />
+        {/* Main 3 branch lines — draw-in */}
+        <line x1="90" y1="94" x2="42" y2="34" stroke="currentColor" className="draw-path d1" strokeWidth="5" strokeLinecap="round" />
+        <line x1="90" y1="94" x2="138" y2="34" stroke="currentColor" className="draw-path d2" strokeWidth="5" strokeLinecap="round" />
+        <line x1="90" y1="94" x2="90" y2="156" stroke="currentColor" className="draw-path d3" strokeWidth="5" strokeLinecap="round" />
+        {/* Decision node — Gold, solid */}
+        <circle cx="90" cy="94" r="6" fill="#C8B89A" />
+        {/* Decision node — Gold, pulsing ring */}
+        <circle cx="90" cy="94" r="5" fill="none" stroke="#C8B89A" strokeWidth="1.5" className="node-pulse" />
         {/* Endpoint dots */}
         <circle cx="42" cy="34" r="5" fill="currentColor" />
         <circle cx="138" cy="34" r="5" fill="currentColor" />
@@ -65,17 +109,19 @@ interface BrandStoryDialogProps {
 export function BrandStoryDialog({ open, onOpenChange }: BrandStoryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[480px] p-0 overflow-hidden" showCloseButton={false}>
-        <div className="p-8 space-y-6">
+      <DialogContent className="max-w-[480px] max-h-[90vh] p-0 overflow-hidden" showCloseButton={false}>
+        <div className="p-6 sm:p-8 space-y-6 overflow-y-auto max-h-[90vh]">
           {/* Visual header */}
-          <div className="flex flex-col items-center gap-3">
-            <AnimatedYSymbol />
+          <div className="flex flex-col items-center gap-3 pt-2">
+            <div className="hero-enter">
+              <AnimatedYSymbol />
+            </div>
             <div className="text-center">
-              <p className="text-xl font-bold tracking-tight">
+              <p className="text-xl font-bold tracking-tight hero-enter-d1">
                 <span className="text-foreground">YO</span>
                 <span style={{ color: '#C8B89A' }}>HACK</span>
               </p>
-              <p className="text-sm font-light tracking-[0.25em] text-muted-foreground mt-1">人生に、余白を。</p>
+              <p className="text-sm font-light tracking-[0.25em] text-muted-foreground mt-1 hero-enter-d2">人生に、余白を。</p>
             </div>
           </div>
 
