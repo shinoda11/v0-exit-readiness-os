@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProfileStore } from '@/lib/store';
 import { useMainSimulation } from '@/hooks/useSimulation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -31,6 +31,10 @@ import { MonteCarloSimulatorTab } from '@/components/dashboard/monte-carlo-simul
 // Layout
 import { Sidebar } from '@/components/layout/sidebar';
 
+// Onboarding
+import { WelcomeDialog } from '@/components/dashboard/welcome-dialog';
+import { OnboardingSteps } from '@/components/dashboard/onboarding-steps';
+
 export default function DashboardPage() {
   const {
     profile,
@@ -42,6 +46,16 @@ export default function DashboardPage() {
   } = useProfileStore();
 
   const [activeTab, setActiveTab] = useState('summary');
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  // Check for first-time visit
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const status = localStorage.getItem('yohack-onboarding-complete');
+    if (!status) {
+      setShowWelcome(true);
+    }
+  }, []);
   
   // Advanced settings state (separate from main profile for UI purposes)
   const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
@@ -56,6 +70,13 @@ export default function DashboardPage() {
   // 旧版の強み「即座のフィードバックループ」を実現
   // パラメータ変更後3秒以内に結果が更新される
   useMainSimulation();
+
+  const dismissWelcome = () => {
+    setShowWelcome(false);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('yohack-onboarding-complete', 'welcome-shown');
+    }
+  };
 
   // Handle applying recommended actions
   const handleApplyAction = (updates: Partial<typeof profile>) => {
@@ -122,6 +143,9 @@ export default function DashboardPage() {
 
         {/* Main content */}
         <div className="p-6">
+          {/* Onboarding Steps */}
+          <OnboardingSteps profile={profile} />
+
           {/* Conclusion Summary - Always visible at top */}
           <div className="mb-6">
             <ConclusionSummaryCard
@@ -250,6 +274,13 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* Welcome Dialog for first-time visitors */}
+      <WelcomeDialog
+        open={showWelcome}
+        onStart={dismissWelcome}
+        onSkip={dismissWelcome}
+      />
     </div>
   );
 }
