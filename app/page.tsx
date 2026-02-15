@@ -81,6 +81,21 @@ export default function DashboardPage() {
   // パラメータ変更後3秒以内に結果が更新される
   useMainSimulation();
 
+  // --- Previous metrics for change feedback ---
+  const previousMetrics = useRef(simResult?.metrics ?? null);
+  const previousScore = useRef(simResult?.score ?? null);
+  const [prevMetricsSnapshot, setPrevMetricsSnapshot] = useState(simResult?.metrics ?? null);
+  const [prevScoreSnapshot, setPrevScoreSnapshot] = useState(simResult?.score ?? null);
+
+  useEffect(() => {
+    if (!simResult) return;
+    // Save old values before updating to new ones
+    setPrevMetricsSnapshot(previousMetrics.current);
+    setPrevScoreSnapshot(previousScore.current);
+    previousMetrics.current = simResult.metrics;
+    previousScore.current = simResult.score;
+  }, [simResult]);
+
   // --- Collapsible card state ---
   const [openCards, setOpenCards] = useState<Record<CardKey, boolean>>({
     basicInfo: true,
@@ -199,6 +214,8 @@ export default function DashboardPage() {
             <ConclusionSummaryCard
               score={simResult?.score ?? null}
               metrics={simResult?.metrics ?? null}
+              previousScore={prevScoreSnapshot}
+              previousMetrics={prevMetricsSnapshot}
               isLoading={isLoading && !simResult}
               targetRetireAge={profile.targetRetireAge}
               workStyle={profile.grossIncome > 1000 ? '高収入' : '会社員'}

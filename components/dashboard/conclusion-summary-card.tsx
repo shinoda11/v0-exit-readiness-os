@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle2, AlertTriangle, XCircle, Loader2, ArrowRight } from 'lucide-react';
 import type { ExitScoreDetail, KeyMetrics } from '@/lib/types';
@@ -13,6 +13,8 @@ interface ConclusionSummaryCardProps {
   metrics: KeyMetrics | null;
   isLoading: boolean;
   targetRetireAge: number;
+  previousScore?: ExitScoreDetail | null;
+  previousMetrics?: KeyMetrics | null;
   // Goal Lens前提
   workStyle?: string;
   legacyGoal?: string;
@@ -26,7 +28,6 @@ function getStatus(score: ExitScoreDetail | null): Status {
 }
 
 function getStatusConfig(status: Status) {
-  // Semantic colors using Tailwind standard classes
   switch (status) {
     case 'GREEN':
       return {
@@ -64,26 +65,21 @@ function getStatusConfig(status: Status) {
   }
 }
 
-// 3行固定フォーマット: 結論 / 理由(ボトルネック) / 次の一手(Income/Cost/Timing)
 type ActionType = 'Income' | 'Cost' | 'Timing';
 
-// 効果量の目安を算出（軽量計算、既存metricsから推定）
 function estimateEffect(
   actionType: ActionType,
   metrics: KeyMetrics,
   gap: number | null
 ): string {
-  // 断定を避け、レンジ表現 + 「目安」「前提で変わる」を必ず添える
   const disclaimer = '（前提で変わります）';
-  
+
   if (actionType === 'Income') {
-    // 収入+200万/年 → 年間貯蓄が増え、FIRE年齢が1-2年早まる目安
     const yearsEffect = gap && gap > 0 ? Math.min(Math.ceil(gap / 3), 3) : 1;
     return `手取り+200万/年で目標が${yearsEffect}〜${yearsEffect + 1}年早まる目安${disclaimer}`;
   }
-  
+
   if (actionType === 'Cost') {
-    // 支出-10%で生存率が5-10%改善する目安
     const survivalGap = 90 - metrics.survivalRate;
     if (survivalGap <= 0) {
       return `支出見直しで余裕がさらに広がる目安${disclaimer}`;
@@ -91,15 +87,14 @@ function estimateEffect(
     const rateEffect = Math.min(Math.ceil(survivalGap / 2), 10);
     return `支出-10%で安心度が${rateEffect}〜${rateEffect + 5}pt改善する目安${disclaimer}`;
   }
-  
+
   if (actionType === 'Timing') {
-    // 目標+2年で生存率が5-15%改善する目安
     if (gap && gap > 0) {
       return `目標を2年延ばすと達成確度が上がる目安${disclaimer}`;
     }
     return `変化は小さめ。現状維持で問題なし${disclaimer}`;
   }
-  
+
   return `効果は前提により異なります`;
 }
 
@@ -108,12 +103,12 @@ function generateConclusion(
   score: ExitScoreDetail | null,
   metrics: KeyMetrics | null,
   targetRetireAge: number
-): { 
-  stateLine: string;      // 1行目: 現状の評価（ポジティブ・断定しない）
-  actionLine: string;     // 2行目: 次にやること（Top1）
-  actionType: ActionType; // Income/Cost/Timing
-  effectEstimate: string; // 効果量の目安（1行）
-  detailText: string;     // 折りたたみ用の詳細
+): {
+  stateLine: string;
+  actionLine: string;
+  actionType: ActionType;
+  effectEstimate: string;
+  detailText: string;
 } {
   if (!score || !metrics) {
     return {
@@ -126,10 +121,8 @@ function generateConclusion(
   }
 
   const fireAge = metrics.fireAge;
-  const survivalRate = metrics.survivalRate;
   const gap = fireAge ? fireAge - targetRetireAge : null;
 
-  // ボトルネック特定
   const scores = {
     survival: score.survival,
     lifestyle: score.lifestyle,
@@ -142,7 +135,7 @@ function generateConclusion(
   if (status === 'GREEN') {
     const actionType: ActionType = 'Timing';
     return {
-      stateLine: gap && gap < 0 
+      stateLine: gap && gap < 0
         ? `目標より${Math.abs(gap)}年の余裕がありそうです`
         : `現在のペースで目標達成が見えています`,
       actionLine: '今のまま続けてみましょう',
@@ -180,21 +173,20 @@ function generateConclusion(
       detailText = '緊急時に備えて、すぐ使える資金を確保しましょう。';
     }
 
-    return { 
-      stateLine, 
-      actionLine, 
-      actionType, 
+    return {
+      stateLine,
+      actionLine,
+      actionType,
       effectEstimate: estimateEffect(actionType, metrics, gap),
-      detailText 
+      detailText
     };
   }
 
-  // RED - ポジティブなトーンで行動を促す
   const actionType: ActionType = 'Income';
   return {
     stateLine: '調整すれば改善の余地があります',
-    actionLine: gap && gap > 0 
-      ? 'まずは収入か目標時期を見直してみる' 
+    actionLine: gap && gap > 0
+      ? 'まずは収入か目標時期を見直してみる'
       : '貯蓄ペースを上げる方法を探ってみる',
     actionType,
     effectEstimate: estimateEffect(actionType, metrics, gap),
@@ -202,28 +194,98 @@ function generateConclusion(
   };
 }
 
+// --- Change badge with auto-fade ---
+function ChangeBadge({ value, unit, invertColor = false }: {
+  value: number | null;
+  unit: string;
+  invertColor?: boolean;
+}) {
+  const [visible, setVisible] = useState(false);
+  const [fadingOut, setFadingOut] = useState(false);
+  const prevValue = useRef(value);
+
+  useEffect(() => {
+    // Only show when value actually changes (not on first render)
+    if (value === null || value === prevValue.current) return;
+    prevValue.current = value;
+    setVisible(true);
+    setFadingOut(false);
+
+    const fadeTimer = setTimeout(() => setFadingOut(true), 3000);
+    const hideTimer = setTimeout(() => {
+      setVisible(false);
+      setFadingOut(false);
+    }, 3500);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [value]);
+
+  if (!visible || value === null) return null;
+
+  // invertColor: for fireAge, negative = improvement
+  const isImprovement = invertColor ? value < 0 : value > 0;
+  const sign = value > 0 ? '+' : '';
+  const displayValue = Math.round(value);
+
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-medium transition-opacity duration-500',
+        isImprovement
+          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+          : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+        fadingOut && 'opacity-0'
+      )}
+    >
+      {sign}{displayValue}{unit}
+    </span>
+  );
+}
+
 export function ConclusionSummaryCard({
   score,
   metrics,
   isLoading,
   targetRetireAge,
+  previousScore,
+  previousMetrics,
   workStyle = '会社員',
   legacyGoal = '使い切り',
 }: ConclusionSummaryCardProps) {
-  // ローディング中でも前の値を保持してちらつきを防ぐ
   const displayStatus = useMemo(() => {
     if (!score) return 'CALCULATING';
     return getStatus(score);
   }, [score]);
-  
+
   const config = getStatusConfig(displayStatus);
-  
+
   const { stateLine, actionLine, actionType, effectEstimate, detailText } = useMemo(
     () => generateConclusion(displayStatus, score, metrics, targetRetireAge),
     [displayStatus, score, metrics, targetRetireAge]
   );
 
-  // アクションタイプのラベル
+  // Compute changes from previous result
+  const changes = useMemo(() => {
+    if (!metrics || !previousMetrics) return null;
+
+    const fireAgeDiff = previousMetrics.fireAge && metrics.fireAge
+      ? metrics.fireAge - previousMetrics.fireAge
+      : null;
+    const survivalDiff = metrics.survivalRate - previousMetrics.survivalRate;
+    const scoreDiff = score && previousScore
+      ? score.overall - previousScore.overall
+      : null;
+
+    return {
+      fireAge: fireAgeDiff && Math.abs(fireAgeDiff) >= 1 ? fireAgeDiff : null,
+      survival: Math.abs(survivalDiff) >= 1 ? Math.round(survivalDiff * 10) / 10 : null,
+      score: scoreDiff && Math.abs(scoreDiff) >= 1 ? scoreDiff : null,
+    };
+  }, [metrics, previousMetrics, score, previousScore]);
+
   const actionTypeLabel = {
     Income: '収入',
     Cost: '支出',
@@ -256,14 +318,23 @@ export function ConclusionSummaryCard({
         <p className="text-xs text-gray-400 mb-3">
           前提: {workStyle} / {legacyGoal} / {targetRetireAge}歳目標
         </p>
-        
+
         {/* 2行固定フォーマット */}
         <div className="space-y-3">
-          {/* 1行目: 現状の評価 */}
+          {/* 1行目: 現状の評価 + 変化バッジ */}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-            <p className="text-base text-foreground leading-snug">
-              {stateLine}
-            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-base text-foreground leading-snug">
+                {stateLine}
+              </p>
+              {changes && (
+                <div className="flex items-center gap-1">
+                  <ChangeBadge value={changes.score} unit="pt" />
+                  <ChangeBadge value={changes.fireAge} unit="年" invertColor />
+                  <ChangeBadge value={changes.survival} unit="%" />
+                </div>
+              )}
+            </div>
             {score && (
               <span className={cn(
                 "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0 self-start sm:self-auto",
@@ -276,7 +347,7 @@ export function ConclusionSummaryCard({
               </span>
             )}
           </div>
-          
+
           {/* 2行目: 次にやること（Top1） */}
           {actionLine && (
             <div className="flex items-center gap-2">
@@ -287,7 +358,7 @@ export function ConclusionSummaryCard({
             </div>
           )}
         </div>
-        
+
         {/* 詳細は折りたたみ */}
         {(detailText || effectEstimate) && (
           <details className="mt-3 pt-3 border-t border-border">
