@@ -15,8 +15,7 @@ import { AssetCard } from '@/components/dashboard/asset-card';
 import { InvestmentCard } from '@/components/dashboard/investment-card';
 import { LifeEventsCard } from '@/components/dashboard/life-events-card';
 import { AdvancedInputPanel, type AdvancedSettings } from '@/components/dashboard/advanced-input-panel';
-import { HousingScenarioCard } from '@/components/dashboard/housing-scenario-card';
-import { HousingMultiScenarioCard } from '@/components/dashboard/housing-multi-scenario-card';
+import { HousingPlanCard } from '@/components/dashboard/housing-plan-card';
 
 // Dashboard result cards
 import { ConclusionSummaryCard } from '@/components/dashboard/conclusion-summary-card';
@@ -303,11 +302,8 @@ export default function DashboardPage() {
               {/* Life Events */}
               <LifeEventsCard profile={profile} onUpdate={updateProfile} />
 
-              {/* Housing Scenario - 賃貸 vs 購入比較 */}
-              <HousingScenarioCard profile={profile} onUpdate={updateProfile} />
-
-              {/* Housing Multi-Scenario - 複数プラン同時比較 */}
-              <HousingMultiScenarioCard profile={profile} onUpdate={updateProfile} />
+              {/* 住宅プラン - 賃貸 vs 複数購入プラン比較 */}
+              <HousingPlanCard profile={profile} />
             </div>
 
             {/* Right column: Result cards with tabs */}
