@@ -13,7 +13,7 @@ import { IncomeCard } from '@/components/dashboard/income-card';
 import { ExpenseCard } from '@/components/dashboard/expense-card';
 import { AssetCard } from '@/components/dashboard/asset-card';
 import { InvestmentCard } from '@/components/dashboard/investment-card';
-import { LifeEventsCard } from '@/components/dashboard/life-events-card';
+import { LifeEventsSummaryCard } from '@/components/dashboard/life-events-summary-card';
 import { AdvancedInputPanel, type AdvancedSettings } from '@/components/dashboard/advanced-input-panel';
 import { HousingPlanCard } from '@/components/dashboard/housing-plan-card';
 
@@ -299,8 +299,8 @@ export default function DashboardPage() {
                 onAdvancedUpdate={handleAdvancedUpdate}
               />
 
-              {/* Life Events */}
-              <LifeEventsCard profile={profile} onUpdate={updateProfile} />
+              {/* Life Events - サマリー + ライフプランへのリンク */}
+              <LifeEventsSummaryCard profile={profile} />
 
               {/* 住宅プラン - 賃貸 vs 複数購入プラン比較 */}
               <HousingPlanCard profile={profile} />
