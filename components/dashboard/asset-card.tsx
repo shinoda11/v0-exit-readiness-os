@@ -3,6 +3,7 @@
 import { Wallet } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { SliderInput } from '@/components/slider-input';
+import { FieldError } from '@/components/ui/field-error';
 import type { Profile } from '@/lib/types';
 
 interface AssetCardProps {
@@ -11,9 +12,10 @@ interface AssetCardProps {
     'assetCash' | 'assetInvest' | 'assetDefinedContributionJP' | 'dcContributionAnnual'
   >;
   onUpdate: (updates: Partial<Profile>) => void;
+  getFieldError?: (field: string) => string | undefined;
 }
 
-export function AssetCard({ profile, onUpdate }: AssetCardProps) {
+export function AssetCard({ profile, onUpdate, getFieldError }: AssetCardProps) {
   const totalAssets =
     profile.assetCash +
     profile.assetInvest +
@@ -27,40 +29,49 @@ export function AssetCard({ profile, onUpdate }: AssetCardProps) {
     >
       <div className="space-y-6">
         {/* Cash */}
-        <SliderInput
-          label="現預金"
-          description="普通・定期預金"
-          value={profile.assetCash}
-          onChange={(value) => onUpdate({ assetCash: value })}
-          min={0}
-          max={10000}
-          step={50}
-          unit="万円"
-        />
+        <div>
+          <SliderInput
+            label="現預金"
+            description="普通・定期預金"
+            value={profile.assetCash}
+            onChange={(value) => onUpdate({ assetCash: value })}
+            min={0}
+            max={10000}
+            step={50}
+            unit="万円"
+          />
+          <FieldError message={getFieldError?.('assetCash')} />
+        </div>
 
         {/* Investment assets */}
-        <SliderInput
-          label="投資資産"
-          description="株式、投資信託、NISA等"
-          value={profile.assetInvest}
-          onChange={(value) => onUpdate({ assetInvest: value })}
-          min={0}
-          max={30000}
-          step={100}
-          unit="万円"
-        />
+        <div>
+          <SliderInput
+            label="投資資産"
+            description="株式、投資信託、NISA等"
+            value={profile.assetInvest}
+            onChange={(value) => onUpdate({ assetInvest: value })}
+            min={0}
+            max={30000}
+            step={100}
+            unit="万円"
+          />
+          <FieldError message={getFieldError?.('assetInvest')} />
+        </div>
 
         {/* Defined contribution */}
-        <SliderInput
-          label="確定拠出年金"
-          description="iDeCo、企業型DC"
-          value={profile.assetDefinedContributionJP}
-          onChange={(value) => onUpdate({ assetDefinedContributionJP: value })}
-          min={0}
-          max={5000}
-          step={50}
-          unit="万円"
-        />
+        <div>
+          <SliderInput
+            label="確定拠出年金"
+            description="iDeCo、企業型DC"
+            value={profile.assetDefinedContributionJP}
+            onChange={(value) => onUpdate({ assetDefinedContributionJP: value })}
+            min={0}
+            max={5000}
+            step={50}
+            unit="万円"
+          />
+          <FieldError message={getFieldError?.('assetDefinedContributionJP')} />
+        </div>
 
         {/* DC annual contribution */}
         <SliderInput

@@ -35,6 +35,9 @@ import { Sidebar } from '@/components/layout/sidebar';
 import { WelcomeDialog } from '@/components/dashboard/welcome-dialog';
 import { OnboardingSteps } from '@/components/dashboard/onboarding-steps';
 
+// Validation
+import { useValidation } from '@/hooks/useValidation';
+
 export default function DashboardPage() {
   const {
     profile,
@@ -66,6 +69,8 @@ export default function DashboardPage() {
     workStyleGoal: 'full_fire',
     legacyStance: 'spend_all',
   });
+
+  const { getFieldError } = useValidation(profile);
 
   // 旧版の強み「即座のフィードバックループ」を実現
   // パラメータ変更後3秒以内に結果が更新される
@@ -162,11 +167,11 @@ export default function DashboardPage() {
             {/* Left column: Input cards with Progressive Disclosure */}
             <div className="space-y-6 lg:col-span-1">
               {/* Basic Inputs - Always visible */}
-              <BasicInfoCard profile={profile} onUpdate={updateProfile} />
-              <IncomeCard profile={profile} onUpdate={updateProfile} />
-              <ExpenseCard profile={profile} onUpdate={updateProfile} />
-              <AssetCard profile={profile} onUpdate={updateProfile} />
-              <InvestmentCard profile={profile} onUpdate={updateProfile} />
+              <BasicInfoCard profile={profile} onUpdate={updateProfile} getFieldError={getFieldError} />
+              <IncomeCard profile={profile} onUpdate={updateProfile} getFieldError={getFieldError} />
+              <ExpenseCard profile={profile} onUpdate={updateProfile} getFieldError={getFieldError} />
+              <AssetCard profile={profile} onUpdate={updateProfile} getFieldError={getFieldError} />
+              <InvestmentCard profile={profile} onUpdate={updateProfile} getFieldError={getFieldError} />
               
               {/* Advanced Settings - Progressive Disclosure */}
               <AdvancedInputPanel

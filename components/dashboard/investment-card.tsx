@@ -3,6 +3,7 @@
 import { TrendingUp } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { SliderInput } from '@/components/slider-input';
+import { FieldError } from '@/components/ui/field-error';
 import { TermTooltip } from '@/components/ui/term-tooltip';
 import { glossary } from '@/lib/glossary';
 import type { Profile } from '@/lib/types';
@@ -17,9 +18,10 @@ interface InvestmentCardProps {
     | 'retireSpendingMultiplier'
   >;
   onUpdate: (updates: Partial<Profile>) => void;
+  getFieldError?: (field: string) => string | undefined;
 }
 
-export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
+export function InvestmentCard({ profile, onUpdate, getFieldError }: InvestmentCardProps) {
   const realReturn = profile.expectedReturn - profile.inflationRate;
 
   return (
@@ -30,27 +32,33 @@ export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
     >
       <div className="space-y-6">
         {/* Expected return */}
-        <SliderInput
-          label={<TermTooltip term="期待リターン" description={glossary['期待リターン']} />}
-          description="名目"
-          value={profile.expectedReturn}
-          onChange={(value) => onUpdate({ expectedReturn: value })}
-          min={0}
-          max={15}
-          step={0.5}
-          unit="%"
-        />
+        <div>
+          <SliderInput
+            label={<TermTooltip term="期待リターン" description={glossary['期待リターン']} />}
+            description="名目"
+            value={profile.expectedReturn}
+            onChange={(value) => onUpdate({ expectedReturn: value })}
+            min={0}
+            max={15}
+            step={0.5}
+            unit="%"
+          />
+          <FieldError message={getFieldError?.('expectedReturn')} />
+        </div>
 
         {/* Inflation rate */}
-        <SliderInput
-          label={<TermTooltip term="インフレ率" description={glossary['インフレ率']} />}
-          value={profile.inflationRate}
-          onChange={(value) => onUpdate({ inflationRate: value })}
-          min={0}
-          max={5}
-          step={0.1}
-          unit="%"
-        />
+        <div>
+          <SliderInput
+            label={<TermTooltip term="インフレ率" description={glossary['インフレ率']} />}
+            value={profile.inflationRate}
+            onChange={(value) => onUpdate({ inflationRate: value })}
+            min={0}
+            max={5}
+            step={0.1}
+            unit="%"
+          />
+          <FieldError message={getFieldError?.('inflationRate')} />
+        </div>
 
         {/* Real return display */}
         <div className="rounded-lg bg-muted/50 p-3">
@@ -61,39 +69,48 @@ export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
         </div>
 
         {/* Volatility */}
-        <SliderInput
-          label={<TermTooltip term="ボラティリティ" description={glossary['ボラティリティ']} />}
-          description="標準偏差"
-          value={Math.round(profile.volatility * 100)}
-          onChange={(value) => onUpdate({ volatility: value / 100 })}
-          min={5}
-          max={30}
-          step={1}
-          unit="%"
-        />
+        <div>
+          <SliderInput
+            label={<TermTooltip term="ボラティリティ" description={glossary['ボラティリティ']} />}
+            description="標準偏差"
+            value={Math.round(profile.volatility * 100)}
+            onChange={(value) => onUpdate({ volatility: value / 100 })}
+            min={5}
+            max={30}
+            step={1}
+            unit="%"
+          />
+          <FieldError message={getFieldError?.('volatility')} />
+        </div>
 
         {/* Effective tax rate */}
-        <SliderInput
-          label={<TermTooltip term="実効税率" description={glossary['実効税率']} />}
-          value={profile.effectiveTaxRate}
-          onChange={(value) => onUpdate({ effectiveTaxRate: value })}
-          min={10}
-          max={50}
-          step={1}
-          unit="%"
-        />
+        <div>
+          <SliderInput
+            label={<TermTooltip term="実効税率" description={glossary['実効税率']} />}
+            value={profile.effectiveTaxRate}
+            onChange={(value) => onUpdate({ effectiveTaxRate: value })}
+            min={10}
+            max={50}
+            step={1}
+            unit="%"
+          />
+          <FieldError message={getFieldError?.('effectiveTaxRate')} />
+        </div>
 
         {/* Retirement spending multiplier */}
-        <SliderInput
-          label={<TermTooltip term="退職後支出倍率" description={glossary['退職後支出倍率']} />}
-          description="現役時比"
-          value={Math.round(profile.retireSpendingMultiplier * 100)}
-          onChange={(value) => onUpdate({ retireSpendingMultiplier: value / 100 })}
-          min={50}
-          max={120}
-          step={5}
-          unit="%"
-        />
+        <div>
+          <SliderInput
+            label={<TermTooltip term="退職後支出倍率" description={glossary['退職後支出倍率']} />}
+            description="現役時比"
+            value={Math.round(profile.retireSpendingMultiplier * 100)}
+            onChange={(value) => onUpdate({ retireSpendingMultiplier: value / 100 })}
+            min={50}
+            max={120}
+            step={5}
+            unit="%"
+          />
+          <FieldError message={getFieldError?.('retireSpendingMultiplier')} />
+        </div>
       </div>
     </SectionCard>
   );

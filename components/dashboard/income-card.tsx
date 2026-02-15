@@ -3,6 +3,7 @@
 import { Briefcase } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { SliderInput } from '@/components/slider-input';
+import { FieldError } from '@/components/ui/field-error';
 import type { Profile } from '@/lib/types';
 
 interface IncomeCardProps {
@@ -16,9 +17,10 @@ interface IncomeCardProps {
     | 'partnerRsuAnnual'
   >;
   onUpdate: (updates: Partial<Profile>) => void;
+  getFieldError?: (field: string) => string | undefined;
 }
 
-export function IncomeCard({ profile, onUpdate }: IncomeCardProps) {
+export function IncomeCard({ profile, onUpdate, getFieldError }: IncomeCardProps) {
   const isCouple = profile.mode === 'couple';
 
   return (
@@ -29,16 +31,19 @@ export function IncomeCard({ profile, onUpdate }: IncomeCardProps) {
     >
       <div className="space-y-6">
         {/* Gross income */}
-        <SliderInput
-          label={isCouple ? "あなたの年収" : "年収"}
-          description="額面"
-          value={profile.grossIncome}
-          onChange={(value) => onUpdate({ grossIncome: value })}
-          min={0}
-          max={5000}
-          step={50}
-          unit="万円"
-        />
+        <div>
+          <SliderInput
+            label={isCouple ? "あなたの年収" : "年収"}
+            description="額面"
+            value={profile.grossIncome}
+            onChange={(value) => onUpdate({ grossIncome: value })}
+            min={0}
+            max={5000}
+            step={50}
+            unit="万円"
+          />
+          <FieldError message={getFieldError?.('grossIncome')} />
+        </div>
 
         {/* RSU annual */}
         <SliderInput

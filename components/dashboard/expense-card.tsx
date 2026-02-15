@@ -3,14 +3,16 @@
 import { Receipt } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { SliderInput } from '@/components/slider-input';
+import { FieldError } from '@/components/ui/field-error';
 import type { Profile } from '@/lib/types';
 
 interface ExpenseCardProps {
   profile: Pick<Profile, 'livingCostAnnual' | 'housingCostAnnual'>;
   onUpdate: (updates: Partial<Profile>) => void;
+  getFieldError?: (field: string) => string | undefined;
 }
 
-export function ExpenseCard({ profile, onUpdate }: ExpenseCardProps) {
+export function ExpenseCard({ profile, onUpdate, getFieldError }: ExpenseCardProps) {
   const totalExpense = profile.livingCostAnnual + profile.housingCostAnnual;
 
   return (
@@ -21,28 +23,34 @@ export function ExpenseCard({ profile, onUpdate }: ExpenseCardProps) {
     >
       <div className="space-y-6">
         {/* Living cost */}
-        <SliderInput
-          label="基本生活費"
-          description="食費、光熱費、通信費など"
-          value={profile.livingCostAnnual}
-          onChange={(value) => onUpdate({ livingCostAnnual: value })}
-          min={100}
-          max={1200}
-          step={10}
-          unit="万円"
-        />
+        <div>
+          <SliderInput
+            label="基本生活費"
+            description="食費、光熱費、通信費など"
+            value={profile.livingCostAnnual}
+            onChange={(value) => onUpdate({ livingCostAnnual: value })}
+            min={100}
+            max={1200}
+            step={10}
+            unit="万円"
+          />
+          <FieldError message={getFieldError?.('livingCostAnnual')} />
+        </div>
 
         {/* Housing cost */}
-        <SliderInput
-          label="住居費"
-          description="家賃またはローン返済"
-          value={profile.housingCostAnnual}
-          onChange={(value) => onUpdate({ housingCostAnnual: value })}
-          min={0}
-          max={600}
-          step={10}
-          unit="万円"
-        />
+        <div>
+          <SliderInput
+            label="住居費"
+            description="家賃またはローン返済"
+            value={profile.housingCostAnnual}
+            onChange={(value) => onUpdate({ housingCostAnnual: value })}
+            min={0}
+            max={600}
+            step={10}
+            unit="万円"
+          />
+          <FieldError message={getFieldError?.('housingCostAnnual')} />
+        </div>
 
         {/* Total summary */}
         <div className="rounded-lg bg-muted/50 p-4">

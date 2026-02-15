@@ -3,6 +3,7 @@
 import { User } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { SliderInput } from '@/components/slider-input';
+import { FieldError } from '@/components/ui/field-error';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import type { Profile, HouseholdMode } from '@/lib/types';
@@ -10,9 +11,10 @@ import type { Profile, HouseholdMode } from '@/lib/types';
 interface BasicInfoCardProps {
   profile: Pick<Profile, 'currentAge' | 'targetRetireAge' | 'mode'>;
   onUpdate: (updates: Partial<Profile>) => void;
+  getFieldError?: (field: string) => string | undefined;
 }
 
-export function BasicInfoCard({ profile, onUpdate }: BasicInfoCardProps) {
+export function BasicInfoCard({ profile, onUpdate, getFieldError }: BasicInfoCardProps) {
   return (
     <SectionCard
       icon={<User className="h-5 w-5" />}
@@ -44,27 +46,33 @@ export function BasicInfoCard({ profile, onUpdate }: BasicInfoCardProps) {
         </div>
 
         {/* Current age */}
-        <SliderInput
-          label="現在の年齢"
-          value={profile.currentAge}
-          onChange={(value) => onUpdate({ currentAge: value })}
-          min={20}
-          max={80}
-          step={1}
-          unit="歳"
-        />
+        <div>
+          <SliderInput
+            label="現在の年齢"
+            value={profile.currentAge}
+            onChange={(value) => onUpdate({ currentAge: value })}
+            min={20}
+            max={80}
+            step={1}
+            unit="歳"
+          />
+          <FieldError message={getFieldError?.('currentAge')} />
+        </div>
 
         {/* Target retirement age */}
-        <SliderInput
-          label="目標年齢"
-          description="安心ラインに届きたい年齢"
-          value={profile.targetRetireAge}
-          onChange={(value) => onUpdate({ targetRetireAge: value })}
-          min={Math.max(profile.currentAge + 1, 30)}
-          max={80}
-          step={1}
-          unit="歳"
-        />
+        <div>
+          <SliderInput
+            label="目標年齢"
+            description="安心ラインに届きたい年齢"
+            value={profile.targetRetireAge}
+            onChange={(value) => onUpdate({ targetRetireAge: value })}
+            min={Math.max(profile.currentAge + 1, 30)}
+            max={80}
+            step={1}
+            unit="歳"
+          />
+          <FieldError message={getFieldError?.('targetRetireAge')} />
+        </div>
       </div>
     </SectionCard>
   );
