@@ -119,14 +119,28 @@ export function AssetProjectionChart({
 }: AssetProjectionChartProps) {
   const [showOptimistic, setShowOptimistic] = useState(false);
   
-  if (isLoading || !data) {
+  if (!data) {
     return (
       <SectionCard
         icon={<LineChart className="h-5 w-5" />}
         title="資産推移シミュレーション"
         description="モンテカルロシミュレーションによる将来予測"
       >
-        <Skeleton className="h-80 w-full" />
+        {isLoading ? (
+          <Skeleton className="h-64 w-full sm:h-80" />
+        ) : (
+          <div className="flex h-64 flex-col items-center justify-center gap-3 sm:h-80">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-muted-foreground/30">
+              <line x1="20" y1="4" x2="8" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="20" y1="4" x2="32" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="20" y1="4" x2="20" y2="36" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <circle cx="20" cy="4" r="3" fill="currentColor" opacity="0.5" />
+            </svg>
+            <p className="text-sm text-muted-foreground">
+              データを入力するとここにグラフが表示されます
+            </p>
+          </div>
+        )}
       </SectionCard>
     );
   }
@@ -182,7 +196,12 @@ export function AssetProjectionChart({
       </div>
 
       {/* Chart */}
-      <div className="h-64 sm:h-80">
+      <div className="relative h-64 sm:h-80">
+        {isLoading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/40">
+            <span className="text-xs text-muted-foreground">計算中...</span>
+          </div>
+        )}
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}

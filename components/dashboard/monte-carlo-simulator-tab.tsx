@@ -229,16 +229,32 @@ export function MonteCarloSimulatorTab({
     };
   }, [paths, profile]);
 
-  if (isLoading || !paths) {
+  if (!paths) {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-[400px] w-full" />
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-        </div>
+        {isLoading ? (
+          <>
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-[300px] w-full sm:h-[400px]" />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </div>
+          </>
+        ) : (
+          <div className="flex h-[300px] flex-col items-center justify-center gap-3 rounded-lg border sm:h-[400px]">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-muted-foreground/30">
+              <line x1="20" y1="4" x2="8" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="20" y1="4" x2="32" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="20" y1="4" x2="20" y2="36" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <circle cx="20" cy="4" r="3" fill="currentColor" opacity="0.5" />
+            </svg>
+            <p className="text-sm text-muted-foreground">
+              データを入力するとここにグラフが表示されます
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -318,7 +334,12 @@ export function MonteCarloSimulatorTab({
           実線が最もありそうな推移。帯が広いほど不確実性が高い。下限が0を下回らなければ資産枯渇リスクは低い。
         </p>
         <CardContent>
-          <div className="h-[300px] w-full sm:h-[400px]">
+          <div className="relative h-[300px] w-full sm:h-[400px]">
+            {isLoading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/40">
+                <span className="text-xs text-muted-foreground">計算中...</span>
+              </div>
+            )}
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 5, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />

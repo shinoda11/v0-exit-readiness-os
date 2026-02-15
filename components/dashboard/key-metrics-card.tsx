@@ -88,7 +88,7 @@ export function KeyMetricsCard({
   targetRetireAge,
   isLoading,
 }: KeyMetricsCardProps) {
-  // 初回ロード時のみスケルトン表示、以降は前の値を保持
+  // 初回ロード中はスケルトン、データなし時は空状態
   if (!metrics) {
     return (
       <SectionCard
@@ -96,11 +96,17 @@ export function KeyMetricsCard({
         title="主要指標"
         description="シミュレーション結果のサマリー"
       >
-        <div className="grid gap-4 sm:grid-cols-2">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-16" />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-16" />
+            ))}
+          </div>
+        ) : (
+          <p className="py-8 text-center text-sm text-muted-foreground">
+            プロファイルを入力するとシミュレーション結果が表示されます
+          </p>
+        )}
       </SectionCard>
     );
   }

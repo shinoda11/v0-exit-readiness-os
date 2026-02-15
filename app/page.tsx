@@ -222,7 +222,7 @@ export default function DashboardPage() {
                       metrics={simResult?.metrics ?? null}
                       currentAge={profile.currentAge}
                       targetRetireAge={profile.targetRetireAge}
-                      isLoading={isLoading && !simResult}
+                      isLoading={isLoading}
                     />
                   </div>
 
@@ -231,7 +231,7 @@ export default function DashboardPage() {
                     data={simResult?.paths ?? null}
                     targetRetireAge={profile.targetRetireAge}
                     lifeEvents={profile.lifeEvents}
-                    isLoading={isLoading && !simResult}
+                    isLoading={isLoading}
                   />
 
                   {/* Next Best Actions - With quantified impact */}
@@ -246,7 +246,7 @@ export default function DashboardPage() {
                   {/* Cash flow */}
                   <CashFlowCard
                     cashFlow={simResult?.cashFlow ?? null}
-                    isLoading={isLoading && !simResult}
+                    isLoading={isLoading}
                   />
                 </TabsContent>
 
@@ -255,7 +255,7 @@ export default function DashboardPage() {
                   <MonteCarloSimulatorTab
                     profile={profile}
                     paths={simResult?.paths ?? null}
-                    isLoading={isLoading && !simResult}
+                    isLoading={isLoading}
                     onVolatilityChange={(volatility) => updateProfile({ volatility })}
                   />
                 </TabsContent>
@@ -276,7 +276,7 @@ export default function DashboardPage() {
                       metrics={simResult?.metrics ?? null}
                       currentAge={profile.currentAge}
                       targetRetireAge={profile.targetRetireAge}
-                      isLoading={isLoading && !simResult}
+                      isLoading={isLoading}
                     />
                   </div>
                 </TabsContent>

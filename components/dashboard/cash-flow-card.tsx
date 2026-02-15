@@ -60,14 +60,28 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
 }
 
 export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
-  if (isLoading || !cashFlow) {
+  if (!cashFlow) {
     return (
       <SectionCard
         icon={<ArrowDownUp className="h-5 w-5" />}
         title="退職後キャッシュフロー"
         description="Exit後の年間収支内訳"
       >
-        <Skeleton className="h-48 w-full" />
+        {isLoading ? (
+          <Skeleton className="h-48 w-full" />
+        ) : (
+          <div className="flex h-48 flex-col items-center justify-center gap-3">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-muted-foreground/30">
+              <line x1="20" y1="4" x2="8" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="20" y1="4" x2="32" y2="20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="20" y1="4" x2="20" y2="36" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <circle cx="20" cy="4" r="3" fill="currentColor" opacity="0.5" />
+            </svg>
+            <p className="text-sm text-muted-foreground">
+              データを入力するとここに収支が表示されます
+            </p>
+          </div>
+        )}
       </SectionCard>
     );
   }
@@ -83,8 +97,9 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
       icon={<ArrowDownUp className="h-5 w-5" />}
       title="退職後キャッシュフロー"
       description="Exit後の年間収支内訳"
+      action={isLoading && <span className="text-xs text-gray-400">更新中...</span>}
     >
-      <div className="space-y-4">
+      <div className={cn("space-y-4", isLoading && "opacity-60")}>
         {/* Income section */}
         <div>
           <p className="mb-2 text-sm font-medium">収入</p>
