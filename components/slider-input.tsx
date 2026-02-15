@@ -54,8 +54,8 @@ export function SliderInput({
 
   return (
     <div className={cn('space-y-3', className)}>
-      <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium text-foreground">
+      <div className="flex items-center justify-between gap-2">
+        <Label className="min-w-0 shrink text-sm font-medium text-foreground">
           {label}
           {description && (
             <span className="ml-1 text-xs text-muted-foreground">
@@ -63,7 +63,7 @@ export function SliderInput({
             </span>
           )}
         </Label>
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
           <Input
             type="number"
             value={value}
@@ -72,9 +72,9 @@ export function SliderInput({
             max={max}
             step={step}
             disabled={disabled}
-            className="h-8 w-24 text-right text-sm"
+            className="h-8 w-20 text-right text-sm sm:w-24"
           />
-          <span className="w-10 text-sm text-muted-foreground">{unit}</span>
+          <span className="w-8 text-sm text-muted-foreground sm:w-10">{unit}</span>
         </div>
       </div>
       <Slider

@@ -234,7 +234,7 @@ export function MonteCarloSimulatorTab({
       <div className="space-y-6">
         <Skeleton className="h-12 w-full" />
         <Skeleton className="h-[400px] w-full" />
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Skeleton className="h-24 w-full" />
           <Skeleton className="h-24 w-full" />
           <Skeleton className="h-24 w-full" />
@@ -318,9 +318,9 @@ export function MonteCarloSimulatorTab({
           実線が最もありそうな推移。帯が広いほど不確実性が高い。下限が0を下回らなければ資産枯渇リスクは低い。
         </p>
         <CardContent>
-          <div className="h-[400px] w-full">
+          <div className="h-[300px] w-full sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+              <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: 5, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis
                   dataKey="age"
@@ -411,12 +411,12 @@ export function MonteCarloSimulatorTab({
 
       {/* Summary Cards */}
       {spreadAtRetirement && (
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（楽観）</p>
-                <p className="mt-1 text-3xl font-bold text-gray-700">
+                <p className="mt-1 text-2xl font-bold text-gray-700 sm:text-3xl">
                   {spreadAtRetirement.optimistic.toFixed(2)}億円
                 </p>
                 <Badge variant="secondary" className="mt-2">
@@ -430,7 +430,7 @@ export function MonteCarloSimulatorTab({
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（中央値）</p>
-                <p className="mt-1 text-3xl font-bold text-gray-800">
+                <p className="mt-1 text-2xl font-bold text-gray-800 sm:text-3xl">
                   {spreadAtRetirement.median.toFixed(2)}億円
                 </p>
                 <Badge className="mt-2 bg-gray-700">
@@ -444,7 +444,7 @@ export function MonteCarloSimulatorTab({
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（悲観）</p>
-                <p className="mt-1 text-3xl font-bold text-gray-600">
+                <p className="mt-1 text-2xl font-bold text-gray-600 sm:text-3xl">
                   {spreadAtRetirement.pessimistic.toFixed(2)}億円
                 </p>
                 <Badge variant="secondary" className="mt-2">

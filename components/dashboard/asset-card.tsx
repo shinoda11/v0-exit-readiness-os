@@ -92,7 +92,7 @@ export function AssetCard({ profile, onUpdate, getFieldError }: AssetCardProps) 
               {totalAssets.toLocaleString()}万円
             </span>
           </div>
-          <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+          <div className="mt-2 grid grid-cols-3 gap-1 text-xs sm:gap-2">
             <div className="text-center">
               <div className="font-medium">{Math.round((profile.assetCash / totalAssets) * 100) || 0}%</div>
               <div className="text-muted-foreground">現預金</div>

@@ -96,7 +96,7 @@ export function KeyMetricsCard({
         title="主要指標"
         description="シミュレーション結果のサマリー"
       >
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-16" />
           ))}
@@ -144,7 +144,7 @@ export function KeyMetricsCard({
       description="シミュレーション結果のサマリー"
       action={isLoading && <span className="text-xs text-gray-400">更新中...</span>}
     >
-      <div className={cn("grid gap-2 md:grid-cols-2", isLoading && "opacity-60")}>
+      <div className={cn("grid gap-2 sm:grid-cols-2", isLoading && "opacity-60")}>
         <MetricItem
           icon={<Calendar className="h-5 w-5" />}
           label={<><TermTooltip term="安心ライン" description={glossary['安心ライン']} />到達年齢</>}

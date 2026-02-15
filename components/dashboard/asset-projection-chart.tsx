@@ -182,7 +182,7 @@ export function AssetProjectionChart({
       </div>
 
       {/* Chart */}
-      <div className="h-80">
+      <div className="h-64 sm:h-80">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
@@ -312,7 +312,7 @@ export function AssetProjectionChart({
       </div>
       
       {/* Key Metrics Summary */}
-      <div className="mt-4 grid grid-cols-3 gap-3">
+      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
         <div className="rounded-lg bg-muted/50 p-3 text-center">
           <p className="text-xs text-muted-foreground mb-1">
             {targetRetireAge}歳時点（中央値）

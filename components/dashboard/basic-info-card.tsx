@@ -28,7 +28,7 @@ export function BasicInfoCard({ profile, onUpdate, getFieldError }: BasicInfoCar
           <RadioGroup
             value={profile.mode}
             onValueChange={(value: HouseholdMode) => onUpdate({ mode: value })}
-            className="flex gap-4"
+            className="flex flex-wrap gap-4"
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="solo" id="mode-solo" />

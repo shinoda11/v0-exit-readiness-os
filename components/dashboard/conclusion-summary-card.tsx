@@ -248,15 +248,15 @@ export function ConclusionSummaryCard({
         {/* 2行固定フォーマット */}
         <div className="space-y-3">
           {/* 1行目: 現状の評価 */}
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <p className="text-base text-foreground leading-snug">
               {stateLine}
             </p>
             {score && (
               <span className={cn(
-                "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0",
-                score.overall >= 70 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" : 
-                score.overall >= 40 ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" : 
+                "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0 self-start sm:self-auto",
+                score.overall >= 70 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" :
+                score.overall >= 40 ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" :
                 "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
                 isLoading && "opacity-50"
               )}>

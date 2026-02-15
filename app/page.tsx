@@ -107,7 +107,7 @@ export default function DashboardPage() {
       <main className="min-h-screen pt-14 lg:pt-0 lg:ml-64">
         {/* Header */}
         <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur-sm">
-          <div className="flex h-16 items-center justify-between px-6">
+          <div className="flex h-16 items-center justify-between px-4 sm:px-6">
             <div>
               <h1 className="text-xl font-semibold text-foreground">
                 YOHACK
@@ -147,7 +147,7 @@ export default function DashboardPage() {
         </header>
 
         {/* Main content */}
-        <div className="p-6">
+        <div className="px-4 py-6 sm:px-6">
           {/* Onboarding Steps */}
           <OnboardingSteps profile={profile} />
 
