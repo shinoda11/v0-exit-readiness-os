@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { BrandStoryDialog } from '@/components/layout/brand-story-dialog';
 
 /** Y-branch symbol SVG — shared between mobile header and desktop sidebar */
 function YohackSymbol({ size = 20 }: { size?: number }) {
@@ -83,6 +84,7 @@ const navItems: NavItem[] = [
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
 
   // Close sidebar when route changes (mobile)
   useEffect(() => {
@@ -102,10 +104,14 @@ export function Sidebar() {
     <>
       {/* Mobile Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden">
-        <div className="flex items-center gap-2">
+        <button
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => setIsBrandDialogOpen(true)}
+          aria-label="ブランドストーリーを表示"
+        >
           <YohackSymbol size={20} />
           <YohackWordmark />
-        </div>
+        </button>
         <Button
           variant="ghost"
           size="icon"
@@ -133,13 +139,17 @@ export function Sidebar() {
         "lg:translate-x-0"
       )}>
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-6">
+      <button
+        className="flex h-16 w-full items-center gap-3 border-b border-sidebar-border px-6 cursor-pointer hover:bg-sidebar-accent/50 transition-colors"
+        onClick={() => setIsBrandDialogOpen(true)}
+        aria-label="ブランドストーリーを表示"
+      >
         <YohackSymbol size={24} />
-        <div>
+        <div className="text-left">
           <YohackWordmark />
           <p className="text-xs text-muted-foreground">人生に、余白を。</p>
         </div>
-      </div>
+      </button>
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-4">
@@ -187,6 +197,9 @@ export function Sidebar() {
           </div>
         </div>
       </aside>
+
+      {/* Brand Story Modal */}
+      <BrandStoryDialog open={isBrandDialogOpen} onOpenChange={setIsBrandDialogOpen} />
     </>
   );
 }
