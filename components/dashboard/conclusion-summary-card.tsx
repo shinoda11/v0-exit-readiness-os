@@ -31,26 +31,26 @@ function getStatusConfig(status: Status) {
   switch (status) {
     case 'GREEN':
       return {
-        bgColor: 'bg-emerald-50 dark:bg-emerald-950/30',
-        borderColor: 'border-emerald-300 dark:border-emerald-800',
-        iconColor: 'text-emerald-600 dark:text-emerald-400',
-        textColor: 'text-emerald-800 dark:text-emerald-200',
+        bgColor: 'bg-[#C8B89A]/10 dark:bg-[#C8B89A]/5',
+        borderColor: 'border-[#C8B89A]/30 dark:border-[#C8B89A]/20',
+        iconColor: 'text-[#C8B89A]',
+        textColor: 'text-[#8A7A62] dark:text-[#C8B89A]',
         icon: CheckCircle2,
       };
     case 'YELLOW':
       return {
-        bgColor: 'bg-amber-50 dark:bg-amber-950/30',
-        borderColor: 'border-amber-300 dark:border-amber-800',
-        iconColor: 'text-amber-600 dark:text-amber-400',
-        textColor: 'text-amber-800 dark:text-amber-200',
+        bgColor: 'bg-[#5A5550]/10 dark:bg-[#5A5550]/10',
+        borderColor: 'border-[#5A5550]/30 dark:border-[#5A5550]/20',
+        iconColor: 'text-[#5A5550] dark:text-[#DDD0B8]',
+        textColor: 'text-[#5A5550] dark:text-[#DDD0B8]',
         icon: AlertTriangle,
       };
     case 'RED':
       return {
-        bgColor: 'bg-red-50 dark:bg-red-950/30',
-        borderColor: 'border-red-300 dark:border-red-800',
-        iconColor: 'text-red-600 dark:text-red-400',
-        textColor: 'text-red-800 dark:text-red-200',
+        bgColor: 'bg-red-50/80 dark:bg-red-950/20',
+        borderColor: 'border-red-300/60 dark:border-red-800/40',
+        iconColor: 'text-red-500 dark:text-red-400',
+        textColor: 'text-red-700 dark:text-red-300',
         icon: XCircle,
       };
     case 'CALCULATING':
@@ -338,9 +338,9 @@ export function ConclusionSummaryCard({
             {score && (
               <span className={cn(
                 "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0 self-start sm:self-auto",
-                score.overall >= 70 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300" :
-                score.overall >= 40 ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" :
-                "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+                score.overall >= 70 ? "bg-[#C8B89A]/20 text-[#8A7A62] dark:bg-[#C8B89A]/10 dark:text-[#C8B89A]" :
+                score.overall >= 40 ? "bg-[#5A5550]/15 text-[#5A5550] dark:bg-[#5A5550]/15 dark:text-[#DDD0B8]" :
+                "bg-red-100/80 text-red-700 dark:bg-red-900/20 dark:text-red-300",
                 isLoading && "opacity-50"
               )}>
                 {score.overall.toFixed(0)}

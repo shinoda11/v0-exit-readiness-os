@@ -173,21 +173,19 @@ export function getScoreLevel(score: number): ScoreLevel {
 }
 
 export function getScoreColor(level: ScoreLevel): string {
-  // 彩度を抑えた落ち着いたトーン
   switch (level) {
-    case 'GREEN': return 'text-gray-700';
-    case 'YELLOW': return 'text-gray-600';
-    case 'ORANGE': return 'text-gray-600';
-    case 'RED': return 'text-gray-700';
+    case 'GREEN': return 'text-[#8A7A62]';
+    case 'YELLOW': return 'text-[#5A5550]';
+    case 'ORANGE': return 'text-[#5A5550]';
+    case 'RED': return 'text-red-700';
   }
 }
 
 export function getScoreBgColor(level: ScoreLevel): string {
-  // 彩度を大幅に下げ、グレー寄りの落ち着いた色に
   switch (level) {
-    case 'GREEN': return 'bg-gray-700';
-    case 'YELLOW': return 'bg-gray-500';
-    case 'ORANGE': return 'bg-gray-400';
-    case 'RED': return 'bg-gray-600';
+    case 'GREEN': return 'bg-[#C8B89A]';
+    case 'YELLOW': return 'bg-[#5A5550]';
+    case 'ORANGE': return 'bg-[#5A5550]';
+    case 'RED': return 'bg-red-600';
   }
 }
