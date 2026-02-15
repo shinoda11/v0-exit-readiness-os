@@ -12,5 +12,5 @@ export function setPlan(plan: PlanType): void {
 }
 
 export function isPro(): boolean {
-  return getCurrentPlan() === 'pro';
+  return true;
 }

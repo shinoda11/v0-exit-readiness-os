@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
-function PlaceholderField({ label }: { label: string }) {
+function PendingField() {
   return (
-    <span className="inline-block rounded bg-amber-50 border border-amber-200 text-amber-800 text-sm px-2 py-0.5 font-medium">
-      {label}
+    <span className="text-sm text-muted-foreground">
+      準備中 — お問い合わせは support@yohack.app まで
     </span>
   );
 }
@@ -29,13 +29,6 @@ export default function CommercialPage() {
           <h1 className="text-2xl font-bold">特定商取引法に基づく表記</h1>
         </div>
 
-        {/* 警告 */}
-        <div className="rounded-lg bg-amber-50 border border-amber-200 p-4">
-          <p className="text-sm text-amber-800 font-medium">
-            以下の項目には仮の情報が含まれています。サービス公開前に正しい情報へ差し替えてください。
-          </p>
-        </div>
-
         {/* テーブル */}
         <div className="rounded-lg border overflow-hidden">
           <table className="w-full text-sm">
@@ -43,25 +36,25 @@ export default function CommercialPage() {
               <tr>
                 <td className="bg-muted/50 px-4 py-3 font-medium w-[40%]">販売事業者</td>
                 <td className="px-4 py-3">
-                  <PlaceholderField label="事業者名を入力してください" />
+                  <PendingField />
                 </td>
               </tr>
               <tr>
                 <td className="bg-muted/50 px-4 py-3 font-medium">運営統括責任者</td>
                 <td className="px-4 py-3">
-                  <PlaceholderField label="氏名を入力してください" />
+                  <PendingField />
                 </td>
               </tr>
               <tr>
                 <td className="bg-muted/50 px-4 py-3 font-medium">所在地</td>
                 <td className="px-4 py-3">
-                  <PlaceholderField label="住所を入力してください" />
+                  <PendingField />
                 </td>
               </tr>
               <tr>
                 <td className="bg-muted/50 px-4 py-3 font-medium">電話番号</td>
                 <td className="px-4 py-3">
-                  <PlaceholderField label="電話番号を入力してください" />
+                  <PendingField />
                 </td>
               </tr>
               <tr>

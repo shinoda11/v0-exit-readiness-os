@@ -8,9 +8,7 @@ import {
   LayoutDashboard,
   CalendarDays,
   Settings,
-  User,
   Sparkles,
-  CreditCard,
   Menu,
   X,
 } from 'lucide-react';
@@ -177,20 +175,8 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Pricing & Settings */}
+      {/* Settings */}
       <div className="border-t border-sidebar-border p-4 space-y-1">
-        <Link
-          href="/pricing"
-          className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-            pathname === '/pricing'
-              ? 'bg-sidebar-accent text-sidebar-primary'
-              : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground'
-          )}
-        >
-          <CreditCard className="h-5 w-5" />
-          料金プラン
-        </Link>
         <Link
           href="/settings"
           className={cn(
@@ -204,19 +190,6 @@ export function Sidebar() {
           設定
         </Link>
       </div>
-
-        {/* User profile */}
-        <div className="border-t border-sidebar-border p-4">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sidebar-accent">
-              <User className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">ゲストユーザー</p>
-              <p className="text-xs text-muted-foreground">無料プラン</p>
-            </div>
-          </div>
-        </div>
       </aside>
 
       {/* Brand Story Modal */}
