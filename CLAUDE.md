@@ -25,14 +25,18 @@ FIRE達成可能性をモンテカルロシミュレーションで計算し、�
 app/
   page.tsx          ← シミュレーション（プロファイル入力 + 結果表示）
   plan/page.tsx     ← ライフプラン（ライフイベント + RSU タブ切替）
-  v2/page.tsx       ← 世界線比較（⚠️ 1421行、分割リファクタ予定）
+  v2/page.tsx       ← 世界線比較（157行、分割済み・10コンポーネント）
+  settings/         ← 設定（データ管理・バージョン情報）
+  legal/            ← 利用規約・プライバシーポリシー・特商法
   timeline/         ← /plan へリダイレクト
   rsu/              ← /plan?tab=rsu へリダイレクト
 
+middleware.ts       ← Basic認証（SITE_PASSWORD）
+
 components/
-  dashboard/        ← ダッシュボード用（18コンポーネント）
+  dashboard/        ← ダッシュボード用（22コンポーネント）
   plan/             ← ライフプラン用（timeline-content, rsu-content）
-  v2/               ← 世界線比較用（7コンポーネント）
+  v2/               ← 世界線比較用（10コンポーネント）
   layout/sidebar.tsx ← サイドバーナビゲーション
   ui/               ← shadcn/ui コンポーネント
 
@@ -63,8 +67,12 @@ hooks/
 - カラーパレットは落ち着いたグレートーン（`globals.css` の CSS 変数参照）
 - コンポーネントファイルは `'use client'` ディレクティブ必須
 
+## テスト
+- `lib/__tests__/` に3件（adapter, engine, housing-sim）。vitest 使用
+- `pnpm test` — テスト実行、`pnpm test:watch` — ウォッチモード
+
 ## 重要な注意点
-- `app/v2/page.tsx` が 1,421行 — 今後分割予定、新規追加時は既存構造に合わせる
+- Pro/Free レイヤー（`lib/plan.ts`）は現在 `isPro()=true` で全機能開放中。Phase 2 で Supabase 認証に置き換え予定
+- `typescript.ignoreBuildErrors: true` が有効（`next.config.mjs`）
 - localStorage でプロファイルとシナリオを永続化している
 - シミュレーションは profile 変更時に自動で debounce 実行される
-- テストはまだない — vitest での追加を予定
