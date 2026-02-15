@@ -5,9 +5,7 @@ import { useV2Store } from '@/lib/v2/store';
 import { useMargin } from '@/hooks/useMargin';
 import { useStrategy } from '@/hooks/useStrategy';
 import { useToast } from '@/hooks/use-toast';
-import { usePlan } from '@/hooks/usePlan';
 import { readinessConfig } from '@/lib/v2/readinessConfig';
-import { ProGate } from '@/components/pro-gate';
 
 import { Sidebar } from '@/components/layout/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -20,7 +18,6 @@ export default function V2DashboardPage() {
   // 独自のrunSimulationは呼ばない（ストア二重化防止）
   const { profile, simResult, isLoading, scenarios, loadScenario, saveAllocationAsScenario } = useProfileStore();
   const { toast } = useToast();
-  const { isPro } = usePlan();
 
   // UI状態（比較対象選択・配分・ブリッジ）のみv2で管理
   const {
@@ -118,61 +115,41 @@ export default function V2DashboardPage() {
                 余白で比較し、次の一手を決める
               </p>
             </div>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#C8B89A]/20 text-[#C8B89A] font-medium">
-              Pro
-            </span>
           </div>
 
           {/* Overall Assessment Hero + Current World Line */}
           <V2ResultSection {...resultProps} renderMode="hero" />
 
           {/* Main Content Tabs */}
-          {isPro ? (
-            <Tabs
-              value={activeTab}
-              onValueChange={(v) => setActiveTab(v as 'margins' | 'allocation' | 'decision' | 'worldlines' | 'strategy')}
-              className="space-y-6"
-            >
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="margins" className="text-xs sm:text-sm">余白</TabsTrigger>
-                <TabsTrigger value="allocation" className="text-xs sm:text-sm">使い道</TabsTrigger>
-                <TabsTrigger value="decision" className="text-xs sm:text-sm">意思決定</TabsTrigger>
-                <TabsTrigger value="worldlines" className="text-xs sm:text-sm">世界線</TabsTrigger>
-                <TabsTrigger value="strategy" className="text-xs sm:text-sm">戦略</TabsTrigger>
-              </TabsList>
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as 'margins' | 'allocation' | 'decision' | 'worldlines' | 'strategy')}
+            className="space-y-6"
+          >
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="margins" className="text-xs sm:text-sm">余白</TabsTrigger>
+              <TabsTrigger value="allocation" className="text-xs sm:text-sm">使い道</TabsTrigger>
+              <TabsTrigger value="decision" className="text-xs sm:text-sm">意思決定</TabsTrigger>
+              <TabsTrigger value="worldlines" className="text-xs sm:text-sm">世界線</TabsTrigger>
+              <TabsTrigger value="strategy" className="text-xs sm:text-sm">戦略</TabsTrigger>
+            </TabsList>
 
-              <TabsContent value="margins" className="space-y-6">
-                <V2ResultSection {...resultProps} renderMode="margins" />
-              </TabsContent>
-              <TabsContent value="allocation" className="space-y-6">
-                <V2InputSection {...inputProps} renderMode="allocation" />
-              </TabsContent>
-              <TabsContent value="decision" className="space-y-6">
-                <V2InputSection {...inputProps} renderMode="decision" />
-              </TabsContent>
-              <TabsContent value="worldlines" className="space-y-6">
-                <V2ComparisonView {...comparisonProps} />
-              </TabsContent>
-              <TabsContent value="strategy" className="space-y-6">
-                <V2ResultSection {...resultProps} renderMode="strategy" />
-              </TabsContent>
-            </Tabs>
-          ) : (
-            <ProGate feature="世界線比較">
-              <Tabs value="margins" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="margins" className="text-xs sm:text-sm">余白</TabsTrigger>
-                  <TabsTrigger value="allocation" className="text-xs sm:text-sm">使い道</TabsTrigger>
-                  <TabsTrigger value="decision" className="text-xs sm:text-sm">意思決定</TabsTrigger>
-                  <TabsTrigger value="worldlines" className="text-xs sm:text-sm">世界線</TabsTrigger>
-                  <TabsTrigger value="strategy" className="text-xs sm:text-sm">戦略</TabsTrigger>
-                </TabsList>
-                <TabsContent value="margins" className="space-y-6">
-                  <V2ResultSection {...resultProps} renderMode="margins" />
-                </TabsContent>
-              </Tabs>
-            </ProGate>
-          )}
+            <TabsContent value="margins" className="space-y-6">
+              <V2ResultSection {...resultProps} renderMode="margins" />
+            </TabsContent>
+            <TabsContent value="allocation" className="space-y-6">
+              <V2InputSection {...inputProps} renderMode="allocation" />
+            </TabsContent>
+            <TabsContent value="decision" className="space-y-6">
+              <V2InputSection {...inputProps} renderMode="decision" />
+            </TabsContent>
+            <TabsContent value="worldlines" className="space-y-6">
+              <V2ComparisonView {...comparisonProps} />
+            </TabsContent>
+            <TabsContent value="strategy" className="space-y-6">
+              <V2ResultSection {...resultProps} renderMode="strategy" />
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
     </div>

@@ -77,7 +77,6 @@ const navItems: NavItemWithBadge[] = [
     href: '/v2',
     label: '世界線比較',
     icon: <Sparkles className="h-5 w-5" />,
-    badge: 'Pro',
   },
 ];
 
