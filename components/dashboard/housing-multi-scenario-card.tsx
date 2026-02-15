@@ -166,7 +166,7 @@ export function HousingMultiScenarioCard({
   return (
     <SectionCard
       icon={<Home className="h-5 w-5" />}
-      title="Rent vs Buy 比較"
+      title="賃貸 vs 購入 比較"
       description="賃貸継続と購入の比較"
     >
       <div className="space-y-4">

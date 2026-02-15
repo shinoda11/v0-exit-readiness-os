@@ -165,10 +165,10 @@ export default function DashboardPage() {
           <div className="flex h-16 items-center justify-between px-4 sm:px-6">
             <div>
               <h1 className="text-xl font-semibold text-foreground">
-                YOHACK
+                シミュレーション
               </h1>
               <p className="text-sm text-muted-foreground">
-                人生に、余白を。
+                現在の条件でのシミュレーション結果
               </p>
             </div>
             <div className="flex items-center gap-3">

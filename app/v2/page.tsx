@@ -9,8 +9,6 @@ import { readinessConfig } from '@/lib/v2/readinessConfig';
 
 import { Sidebar } from '@/components/layout/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-
 import { V2ResultSection } from '@/components/v2/V2ResultSection';
 import { V2InputSection } from '@/components/v2/V2InputSection';
 import { V2ComparisonView } from '@/components/v2/V2ComparisonView';
@@ -112,14 +110,14 @@ export default function V2DashboardPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">YOHACK v2</h1>
+              <h1 className="text-3xl font-bold tracking-tight">世界線比較</h1>
               <p className="text-muted-foreground mt-1">
                 余白で比較し、次の一手を決める
               </p>
             </div>
-            <Badge variant="outline" className="text-sm">
-              Beta
-            </Badge>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#C8B89A]/20 text-[#C8B89A] font-medium">
+              Pro
+            </span>
           </div>
 
           {/* Overall Assessment Hero + Current World Line */}

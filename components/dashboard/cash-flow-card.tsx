@@ -66,7 +66,7 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
       <SectionCard
         icon={<ArrowDownUp className="h-5 w-5" />}
         title="退職後キャッシュフロー"
-        description="Exit後の年間収支内訳"
+        description="退職後の年間収支内訳"
       >
         {isLoading ? (
           <Skeleton className="h-48 w-full" />

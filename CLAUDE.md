@@ -23,13 +23,15 @@ FIRE達成可能性をモンテカルロシミュレーションで計算し、�
 ### ディレクトリ構造
 ```
 app/
-  page.tsx          ← ダッシュボード（プロファイル入力 + 結果表示）
+  page.tsx          ← シミュレーション（プロファイル入力 + 結果表示）
+  plan/page.tsx     ← ライフプラン（ライフイベント + RSU タブ切替）
   v2/page.tsx       ← 世界線比較（⚠️ 1421行、分割リファクタ予定）
-  timeline/         ← ライフイベント管理
-  rsu/              ← RSU管理
+  timeline/         ← /plan へリダイレクト
+  rsu/              ← /plan?tab=rsu へリダイレクト
 
 components/
   dashboard/        ← ダッシュボード用（18コンポーネント）
+  plan/             ← ライフプラン用（timeline-content, rsu-content）
   v2/               ← 世界線比較用（7コンポーネント）
   layout/sidebar.tsx ← サイドバーナビゲーション
   ui/               ← shadcn/ui コンポーネント

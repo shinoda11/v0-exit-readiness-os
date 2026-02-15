@@ -84,38 +84,90 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
       description="目標達成度の総合評価"
     >
       <div className="flex flex-col items-center">
-        {/* Main score - Semantic colors using Tailwind */}
-        <div className="relative">
-          <div
-            className={cn(
-              "flex h-36 w-36 flex-col items-center justify-center rounded-full border-2",
-              score.level === 'GREEN' && "border-[#C8B89A]/40 bg-[#C8B89A]/10 dark:border-[#C8B89A]/20 dark:bg-[#C8B89A]/5",
-              score.level === 'YELLOW' && "border-[#5A5550]/30 bg-[#5A5550]/10 dark:border-[#5A5550]/20 dark:bg-[#5A5550]/10",
-              score.level === 'ORANGE' && "border-[#5A5550]/40 bg-[#5A5550]/15 dark:border-[#5A5550]/25 dark:bg-[#5A5550]/10",
-              score.level === 'RED' && "border-red-300/60 bg-red-50/80 dark:border-red-800/40 dark:bg-red-950/20",
-            )}
-          >
-            <span className={cn(
-              "text-5xl font-bold tabular-nums",
-              score.level === 'GREEN' && "text-[#8A7A62] dark:text-[#C8B89A]",
-              score.level === 'YELLOW' && "text-[#5A5550] dark:text-[#DDD0B8]",
-              score.level === 'ORANGE' && "text-[#5A5550] dark:text-[#DDD0B8]",
-              score.level === 'RED' && "text-red-600 dark:text-red-400",
-            )}>{score.overall}</span>
-            <span className="text-sm text-muted-foreground">/100</span>
-          </div>
-          <div
-            className={cn(
-              "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold border",
-              score.level === 'GREEN' && "bg-[#C8B89A] text-[#1A1916] border-[#C8B89A]",
-              score.level === 'YELLOW' && "bg-[#5A5550] text-white border-[#5A5550]",
-              score.level === 'ORANGE' && "bg-[#5A5550] text-white border-[#5A5550]",
-              score.level === 'RED' && "bg-red-600 text-white border-red-600",
-            )}
-          >
-            {levelText[score.level]}
-          </div>
-        </div>
+        {/* Main score - SVG Progress Ring */}
+        {(() => {
+          const radius = 58;
+          const strokeWidth = 8;
+          const circumference = 2 * Math.PI * radius;
+          const progress = Math.min(Math.max(score.overall, 0), 100);
+          const offset = circumference - (progress / 100) * circumference;
+          const strokeColor = {
+            GREEN: '#C8B89A',
+            YELLOW: '#5A5550',
+            ORANGE: '#5A5550',
+            RED: '#DC2626',
+          }[score.level];
+
+          return (
+            <div className="relative">
+              <svg width="144" height="144" viewBox="0 0 144 144">
+                {/* Background ring */}
+                <circle
+                  cx="72"
+                  cy="72"
+                  r={radius}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={strokeWidth}
+                  className="text-muted/60"
+                />
+                {/* Progress ring */}
+                <circle
+                  cx="72"
+                  cy="72"
+                  r={radius}
+                  fill="none"
+                  stroke={strokeColor}
+                  strokeWidth={strokeWidth}
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  className="transition-all duration-700 ease-out"
+                  style={{ transform: 'rotate(-90deg)', transformOrigin: '72px 72px' }}
+                />
+                {/* Center text */}
+                <text
+                  x="72"
+                  y="66"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  className={cn(
+                    "text-5xl font-bold tabular-nums",
+                    score.level === 'GREEN' && "fill-[#8A7A62] dark:fill-[#C8B89A]",
+                    score.level === 'YELLOW' && "fill-[#5A5550] dark:fill-[#DDD0B8]",
+                    score.level === 'ORANGE' && "fill-[#5A5550] dark:fill-[#DDD0B8]",
+                    score.level === 'RED' && "fill-red-600 dark:fill-red-400",
+                  )}
+                  fontSize="48"
+                  fontWeight="bold"
+                >
+                  {score.overall}
+                </text>
+                <text
+                  x="72"
+                  y="96"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  className="fill-muted-foreground"
+                  fontSize="14"
+                >
+                  /100
+                </text>
+              </svg>
+              <div
+                className={cn(
+                  "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold border",
+                  score.level === 'GREEN' && "bg-[#C8B89A] text-[#1A1916] border-[#C8B89A]",
+                  score.level === 'YELLOW' && "bg-[#5A5550] text-white border-[#5A5550]",
+                  score.level === 'ORANGE' && "bg-[#5A5550] text-white border-[#5A5550]",
+                  score.level === 'RED' && "bg-red-600 text-white border-red-600",
+                )}
+              >
+                {levelText[score.level]}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Level description */}
         <p className={cn(

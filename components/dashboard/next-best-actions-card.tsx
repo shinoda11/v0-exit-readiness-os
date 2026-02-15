@@ -75,7 +75,7 @@ function generatePotentialActions(
   if (score.survival < 85) {
     actions.push({
       id: 'delay-retirement-3',
-      title: 'Exit目標を3年延長',
+      title: '目標を3年延長',
       description: `目標を${profile.targetRetireAge}歳から${profile.targetRetireAge + 3}歳に延長`,
       priority: 'high',
       category: 'timeline',
@@ -141,7 +141,7 @@ function generatePotentialActions(
   if (score.survival >= 85 && score.survival < 95) {
     actions.push({
       id: 'delay-retirement-1',
-      title: 'Exit目標を1年延長',
+      title: '目標を1年延長',
       description: `目標を${profile.targetRetireAge}歳から${profile.targetRetireAge + 1}歳に`,
       priority: 'low',
       category: 'timeline',
@@ -352,7 +352,7 @@ export function NextBestActionsCard({
                     ) : (
                       <>
                         <Play className="h-3 w-3" />
-                        Apply & See
+                        適用して確認
                       </>
                     )}
                   </Button>

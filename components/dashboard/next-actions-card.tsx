@@ -37,7 +37,7 @@ function generateActions(
   if (score.survival < 80) {
     actions.push({
       id: 'delay-retirement',
-      title: 'Exit目標年齢を3年延長',
+      title: '目標年齢を3年延長',
       description: `目標を${profile.targetRetireAge + 3}歳に延長すると、サバイバル率が大幅に改善します`,
       impact: 'high',
       category: 'timeline',

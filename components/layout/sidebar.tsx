@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   CalendarDays,
-  BarChart3,
   Settings,
   User,
   Sparkles,
@@ -58,26 +57,26 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-const navItems: NavItem[] = [
+interface NavItemWithBadge extends NavItem {
+  badge?: string;
+}
+
+const navItems: NavItemWithBadge[] = [
+  {
+    href: '/plan',
+    label: 'ライフプラン',
+    icon: <CalendarDays className="h-5 w-5" />,
+  },
   {
     href: '/',
-    label: 'ダッシュボード',
+    label: 'シミュレーション',
     icon: <LayoutDashboard className="h-5 w-5" />,
   },
   {
     href: '/v2',
     label: '世界線比較',
     icon: <Sparkles className="h-5 w-5" />,
-  },
-  {
-    href: '/timeline',
-    label: 'タイムライン',
-    icon: <CalendarDays className="h-5 w-5" />,
-  },
-  {
-    href: '/rsu',
-    label: 'RSU管理',
-    icon: <BarChart3 className="h-5 w-5" />,
+    badge: 'Pro',
   },
 ];
 
@@ -168,6 +167,11 @@ export function Sidebar() {
             >
               {item.icon}
               {item.label}
+              {item.badge && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#C8B89A]/20 text-[#C8B89A] font-medium">
+                  {item.badge}
+                </span>
+              )}
             </Link>
           );
         })}

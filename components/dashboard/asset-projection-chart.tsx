@@ -289,7 +289,7 @@ export function AssetProjectionChart({
               strokeWidth={2}
               strokeDasharray="5 5"
               label={{
-                value: `Exit ${targetRetireAge}歳`,
+                value: `目標 ${targetRetireAge}歳`,
                 position: 'insideTopLeft',
                 fill: 'hsl(var(--primary))',
                 fontSize: 11,
