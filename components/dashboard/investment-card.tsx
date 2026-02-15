@@ -3,6 +3,8 @@
 import { TrendingUp } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { SliderInput } from '@/components/slider-input';
+import { TermTooltip } from '@/components/ui/term-tooltip';
+import { glossary } from '@/lib/glossary';
 import type { Profile } from '@/lib/types';
 
 interface InvestmentCardProps {
@@ -29,7 +31,7 @@ export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
       <div className="space-y-6">
         {/* Expected return */}
         <SliderInput
-          label="期待リターン"
+          label={<TermTooltip term="期待リターン" description={glossary['期待リターン']} />}
           description="名目"
           value={profile.expectedReturn}
           onChange={(value) => onUpdate({ expectedReturn: value })}
@@ -41,7 +43,7 @@ export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
 
         {/* Inflation rate */}
         <SliderInput
-          label="インフレ率"
+          label={<TermTooltip term="インフレ率" description={glossary['インフレ率']} />}
           value={profile.inflationRate}
           onChange={(value) => onUpdate({ inflationRate: value })}
           min={0}
@@ -60,7 +62,7 @@ export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
 
         {/* Volatility */}
         <SliderInput
-          label="ボラティリティ"
+          label={<TermTooltip term="ボラティリティ" description={glossary['ボラティリティ']} />}
           description="標準偏差"
           value={Math.round(profile.volatility * 100)}
           onChange={(value) => onUpdate({ volatility: value / 100 })}
@@ -72,7 +74,7 @@ export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
 
         {/* Effective tax rate */}
         <SliderInput
-          label="実効税率"
+          label={<TermTooltip term="実効税率" description={glossary['実効税率']} />}
           value={profile.effectiveTaxRate}
           onChange={(value) => onUpdate({ effectiveTaxRate: value })}
           min={10}
@@ -83,7 +85,7 @@ export function InvestmentCard({ profile, onUpdate }: InvestmentCardProps) {
 
         {/* Retirement spending multiplier */}
         <SliderInput
-          label="退職後支出倍率"
+          label={<TermTooltip term="退職後支出倍率" description={glossary['退職後支出倍率']} />}
           description="現役時比"
           value={Math.round(profile.retireSpendingMultiplier * 100)}
           onChange={(value) => onUpdate({ retireSpendingMultiplier: value / 100 })}

@@ -5,6 +5,8 @@ import React from "react"
 import { Gauge, Calendar, PiggyBank, ShieldCheck } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TermTooltip } from '@/components/ui/term-tooltip';
+import { glossary } from '@/lib/glossary';
 import type { KeyMetrics } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +19,7 @@ interface KeyMetricsCardProps {
 
 interface MetricItemProps {
   icon: React.ReactNode;
-  label: string;
+  label: React.ReactNode;
   value: string | number;
   subValue?: string;
   highlight?: 'success' | 'warning' | 'danger' | 'neutral';
@@ -145,14 +147,14 @@ export function KeyMetricsCard({
       <div className={cn("grid gap-2 md:grid-cols-2", isLoading && "opacity-60")}>
         <MetricItem
           icon={<Calendar className="h-5 w-5" />}
-          label="安心ライン到達年齢"
+          label={<><TermTooltip term="安心ライン" description={glossary['安心ライン']} />到達年齢</>}
           value={goalAgeText}
           subValue={yearsToGoalText}
           highlight={goalHighlight}
         />
         <MetricItem
           icon={<ShieldCheck className="h-5 w-5" />}
-          label="余白維持率"
+          label={<TermTooltip term="余白維持率" description={glossary['余白維持率']} />}
           value={`${metrics.survivalRate.toFixed(1)}%`}
           subValue="100歳まで余白が続く確率"
           highlight={survivalHighlight}

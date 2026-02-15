@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 interface SliderInputProps {
-  label: string;
+  label: React.ReactNode;
   value: number;
   onChange: (value: number) => void;
   min: number;

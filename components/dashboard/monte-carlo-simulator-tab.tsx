@@ -15,6 +15,8 @@ import {
   ComposedChart,
 } from 'recharts';
 import { Activity, TrendingUp, AlertTriangle, Info } from 'lucide-react';
+import { TermTooltip } from '@/components/ui/term-tooltip';
+import { glossary } from '@/lib/glossary';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
@@ -249,7 +251,7 @@ export function MonteCarloSimulatorTab({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-base">ボラティリティ（標準偏差）</CardTitle>
+              <CardTitle className="text-base"><TermTooltip term="ボラティリティ" description={glossary['ボラティリティ']} />（標準偏差）</CardTitle>
             </div>
             <HoverCard>
               <HoverCardTrigger asChild>
@@ -305,7 +307,7 @@ export function MonteCarloSimulatorTab({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            モンテカルロシミュレーション結果
+            <TermTooltip term="モンテカルロ" description={glossary['モンテカルロ']} />シミュレーション結果
           </CardTitle>
           <CardDescription>
             1,000回のシミュレーションに基づく資産推移の予測範囲
