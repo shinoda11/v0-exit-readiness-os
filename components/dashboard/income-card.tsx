@@ -5,6 +5,7 @@ import { SectionCard } from '@/components/section-card';
 import { CollapsibleCard } from '@/components/ui/collapsible-card';
 import { SliderInput } from '@/components/slider-input';
 import { FieldError } from '@/components/ui/field-error';
+import { formatCurrency } from '@/lib/types';
 import type { Profile } from '@/lib/types';
 
 interface IncomeCardProps {
@@ -103,14 +104,14 @@ export function IncomeCard({ profile, onUpdate, getFieldError, open, onOpenChang
   );
 
   if (open !== undefined && onOpenChange) {
-    const parts = [`年収 ${profile.grossIncome.toLocaleString()}万円`];
-    if (profile.rsuAnnual > 0) parts.push(`RSU ${profile.rsuAnnual.toLocaleString()}万円`);
-    if (isCouple) parts.push(`パートナー ${profile.partnerGrossIncome.toLocaleString()}万円`);
+    const parts = [`年収 ${formatCurrency(profile.grossIncome)}`];
+    if (profile.rsuAnnual > 0) parts.push(`RSU ${formatCurrency(profile.rsuAnnual)}`);
+    if (isCouple) parts.push(`パートナー ${formatCurrency(profile.partnerGrossIncome)}`);
     const summary = (
       <>
-        <span className="font-medium text-foreground">年収 {profile.grossIncome.toLocaleString()}万円</span>
-        {profile.rsuAnnual > 0 && ` / RSU ${profile.rsuAnnual.toLocaleString()}万円`}
-        {isCouple && ` / パートナー ${profile.partnerGrossIncome.toLocaleString()}万円`}
+        <span className="font-medium text-foreground">年収 {formatCurrency(profile.grossIncome)}</span>
+        {profile.rsuAnnual > 0 && ` / RSU ${formatCurrency(profile.rsuAnnual)}`}
+        {isCouple && ` / パートナー ${formatCurrency(profile.partnerGrossIncome)}`}
       </>
     );
     return (

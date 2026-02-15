@@ -7,6 +7,7 @@ import { SectionCard } from '@/components/section-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TermTooltip } from '@/components/ui/term-tooltip';
 import { glossary } from '@/lib/glossary';
+import { formatCurrency, formatPercent } from '@/lib/types';
 import type { KeyMetrics } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -136,8 +137,8 @@ export function KeyMetricsCard({
   // Format asset at 100
   const assetAt100Text =
     metrics.assetAt100 >= 0
-      ? `${metrics.assetAt100.toLocaleString()}万円`
-      : `${Math.abs(metrics.assetAt100).toLocaleString()}万円の不足`;
+      ? formatCurrency(metrics.assetAt100)
+      : `${formatCurrency(Math.abs(metrics.assetAt100))}の不足`;
   const assetHighlight = metrics.assetAt100 >= 0 ? 'success' : 'danger';
 
   // Years until target retirement
@@ -161,7 +162,7 @@ export function KeyMetricsCard({
         <MetricItem
           icon={<ShieldCheck className="h-5 w-5" />}
           label={<TermTooltip term="余白維持率" description={glossary['余白維持率']} />}
-          value={`${metrics.survivalRate.toFixed(1)}%`}
+          value={formatPercent(metrics.survivalRate)}
           subValue="100歳まで余白が続く確率"
           highlight={survivalHighlight}
         />

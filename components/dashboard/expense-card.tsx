@@ -5,6 +5,7 @@ import { SectionCard } from '@/components/section-card';
 import { CollapsibleCard } from '@/components/ui/collapsible-card';
 import { SliderInput } from '@/components/slider-input';
 import { FieldError } from '@/components/ui/field-error';
+import { formatCurrency } from '@/lib/types';
 import type { Profile } from '@/lib/types';
 
 interface ExpenseCardProps {
@@ -57,11 +58,11 @@ export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChan
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">年間支出合計</span>
           <span className="text-lg font-semibold">
-            {totalExpense.toLocaleString()}万円
+            {formatCurrency(totalExpense)}
           </span>
         </div>
         <div className="mt-1 text-xs text-muted-foreground">
-          月額: 約{Math.round(totalExpense / 12).toLocaleString()}万円
+          月額: 約{formatCurrency(Math.round(totalExpense / 12))}
         </div>
       </div>
     </div>

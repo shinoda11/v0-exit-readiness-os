@@ -16,6 +16,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from 'recharts';
+import { formatCurrency } from '@/lib/types';
 import type { Profile } from '@/lib/types';
 import { computeMonthlyPaymentManYen } from '@/lib/housing-sim';
 import { cn } from '@/lib/utils';
@@ -155,9 +156,9 @@ export function HousingMultiScenarioCard({
   const conclusion = useMemo(() => {
     const diff60 = metrics.rentAt60 - metrics.buyAt60;
     if (diff60 > 0) {
-      return `60歳時点で購入が${Math.round(diff60).toLocaleString()}万円有利`;
+      return `60歳時点で購入が${formatCurrency(Math.round(diff60))}有利`;
     } else if (diff60 < 0) {
-      return `60歳時点で賃貸が${Math.round(Math.abs(diff60)).toLocaleString()}万円有利`;
+      return `60歳時点で賃貸が${formatCurrency(Math.round(Math.abs(diff60)))}有利`;
     }
     return '60歳時点でほぼ同等';
   }, [metrics]);

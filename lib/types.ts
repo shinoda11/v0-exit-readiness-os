@@ -154,15 +154,21 @@ export interface VestingEvent {
 }
 
 // Format helpers
-export function formatCurrency(value: number): string {
-  if (value >= 10000) {
-    return `${(value / 10000).toFixed(1)}億円`;
+export function formatCurrency(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(value)) return '—';
+  if (value === 0) return '0万円';
+  const sign = value < 0 ? '-' : '';
+  const abs = Math.abs(value);
+  if (abs >= 10000) {
+    const oku = abs / 10000;
+    return `${sign}${oku % 1 === 0 ? oku.toFixed(0) : oku.toFixed(1)}億円`;
   }
-  return `${value.toLocaleString()}万円`;
+  return `${sign}${abs.toLocaleString()}万円`;
 }
 
-export function formatPercent(value: number): string {
-  return `${value.toFixed(1)}%`;
+export function formatPercent(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(value)) return '—';
+  return value % 1 === 0 ? `${Math.round(value)}%` : `${value.toFixed(1)}%`;
 }
 
 export function getScoreLevel(score: number): ScoreLevel {

@@ -31,6 +31,7 @@ import {
   ReferenceLine,
   ReferenceDot,
 } from 'recharts';
+import { formatCurrency } from '@/lib/types';
 import type { Profile, HomeStatus } from '@/lib/types';
 import { useHousingScenarios } from '@/hooks/useHousingScenarios';
 import { computeMonthlyPaymentManYen, type BuyNowParams, type RelocateParams } from '@/lib/housing-sim';
@@ -185,7 +186,7 @@ export function HousingScenarioCard({
                 月額家賃: <span className="font-semibold text-foreground">{(profile.housingCostAnnual / 12).toFixed(1)}万円</span>
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                40年間の総支出: <span className="font-semibold text-foreground">{(profile.housingCostAnnual * 40).toLocaleString()}万円</span>
+                40年間の総支出: <span className="font-semibold text-foreground">{formatCurrency(profile.housingCostAnnual * 40)}</span>
               </p>
             </div>
           </TabsContent>
@@ -606,7 +607,7 @@ export function HousingScenarioCard({
                     "text-xl font-bold",
                     rentResult.totalCost40Years <= buyResult.totalCost40Years && "text-gray-800 dark:text-gray-200"
                   )}>
-                    {Math.round(rentResult.totalCost40Years).toLocaleString()}万円
+                    {formatCurrency(Math.round(rentResult.totalCost40Years))}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">40年間の総支出</p>
                 </div>
@@ -624,7 +625,7 @@ export function HousingScenarioCard({
                     "text-xl font-bold",
                     buyResult.totalCost40Years < rentResult.totalCost40Years && "text-gray-800 dark:text-gray-200"
                   )}>
-                    {Math.round(buyResult.totalCost40Years).toLocaleString()}万円
+                    {formatCurrency(Math.round(buyResult.totalCost40Years))}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">40年間の総支出</p>
                 </div>
@@ -694,10 +695,10 @@ export function HousingScenarioCard({
                   <TableRow>
                     <TableCell className="font-medium">60歳時点の資産</TableCell>
                     <TableCell className="text-center">
-                      {Math.round(rentResult.assetsAt60).toLocaleString()}万円
+                      {formatCurrency(Math.round(rentResult.assetsAt60))}
                     </TableCell>
                     <TableCell className="text-center">
-                      {Math.round(buyResult.assetsAt60).toLocaleString()}万円
+                      {formatCurrency(Math.round(buyResult.assetsAt60))}
                     </TableCell>
                     <TableCell className="text-center">
                       {(() => {
@@ -713,10 +714,10 @@ export function HousingScenarioCard({
                   <TableRow>
                     <TableCell className="font-medium">40年間の総支出</TableCell>
                     <TableCell className="text-center">
-                      {Math.round(rentResult.totalCost40Years).toLocaleString()}万円
+                      {formatCurrency(Math.round(rentResult.totalCost40Years))}
                     </TableCell>
                     <TableCell className="text-center">
-                      {Math.round(buyResult.totalCost40Years).toLocaleString()}万円
+                      {formatCurrency(Math.round(buyResult.totalCost40Years))}
                     </TableCell>
                     <TableCell className="text-center">
                       {(() => {

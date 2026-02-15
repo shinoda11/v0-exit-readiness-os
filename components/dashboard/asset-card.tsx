@@ -5,6 +5,7 @@ import { SectionCard } from '@/components/section-card';
 import { CollapsibleCard } from '@/components/ui/collapsible-card';
 import { SliderInput } from '@/components/slider-input';
 import { FieldError } from '@/components/ui/field-error';
+import { formatCurrency } from '@/lib/types';
 import type { Profile } from '@/lib/types';
 
 interface AssetCardProps {
@@ -90,7 +91,7 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">資産合計</span>
           <span className="text-lg font-semibold">
-            {totalAssets.toLocaleString()}万円
+            {formatCurrency(totalAssets)}
           </span>
         </div>
         <div className="mt-2 grid grid-cols-3 gap-1 text-xs sm:gap-2">
@@ -115,7 +116,7 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
     const summary = (
       <>
         {'総資産 '}
-        <span className="font-medium text-foreground">{totalAssets.toLocaleString()}万円</span>
+        <span className="font-medium text-foreground">{formatCurrency(totalAssets)}</span>
         {`（現金${profile.assetCash.toLocaleString()} / 投資${profile.assetInvest.toLocaleString()} / DC${profile.assetDefinedContributionJP.toLocaleString()}）`}
       </>
     );

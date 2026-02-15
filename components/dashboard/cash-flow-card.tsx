@@ -4,6 +4,7 @@ import { ArrowDownUp, ArrowUp, ArrowDown } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
+import { formatCurrency, formatPercent } from '@/lib/types';
 import type { CashFlowBreakdown } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -42,7 +43,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
       <div className="flex items-center gap-2">
         {percentage !== undefined && (
           <span className="text-xs text-muted-foreground">
-            {percentage.toFixed(0)}%
+            {formatPercent(percentage)}
           </span>
         )}
         <span
@@ -52,7 +53,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
           )}
         >
           {isIncome ? '+' : '-'}
-          {Math.abs(amount).toLocaleString()}万円
+          {formatCurrency(Math.abs(amount))}
         </span>
       </div>
     </div>
@@ -132,7 +133,7 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
           <div className="mt-2 flex items-center justify-between border-t pt-2">
             <span className="text-sm font-medium">収入合計</span>
             <span className="font-bold text-gray-800 tabular-nums">
-              +{totalIncome.toLocaleString()}万円
+              +{formatCurrency(totalIncome)}
             </span>
           </div>
         </div>
@@ -164,13 +165,13 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
               )}
               <span className="text-xl font-bold text-gray-800 tabular-nums">
                 {cashFlow.netCashFlow >= 0 ? '+' : ''}
-                {cashFlow.netCashFlow.toLocaleString()}万円
+                {formatCurrency(cashFlow.netCashFlow)}
               </span>
             </div>
           </div>
           {!netCashFlowPositive && (
             <p className="mt-2 text-sm text-gray-600">
-              年間{Math.abs(cashFlow.netCashFlow).toLocaleString()}万円の
+              年間{formatCurrency(Math.abs(cashFlow.netCashFlow))}の
               余白を使う必要があります
             </p>
           )}
@@ -181,10 +182,11 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
           <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>収入カバー率</span>
             <span>
-              {cashFlow.expenses > 0
-                ? ((totalIncome / cashFlow.expenses) * 100).toFixed(0)
-                : 0}
-              %
+              {formatPercent(
+                cashFlow.expenses > 0
+                  ? (totalIncome / cashFlow.expenses) * 100
+                  : 0
+              )}
             </span>
           </div>
           <Progress
