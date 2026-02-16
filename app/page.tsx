@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useProfileStore } from '@/lib/store';
 import { useMainSimulation } from '@/hooks/useSimulation';
+import { worldlineTemplates } from '@/lib/worldline-templates';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, X, Save, Check } from 'lucide-react';
@@ -61,7 +63,11 @@ export default function DashboardPage() {
   const [savingFromSummary, setSavingFromSummary] = useState(false);
   const [summaryScenarioName, setSummaryScenarioName] = useState('');
   const [savedFromSummary, setSavedFromSummary] = useState(false);
-  const { saveScenario } = useProfileStore();
+  const { saveScenario, scenarios } = useProfileStore();
+
+  // Worldline template flow
+  const router = useRouter();
+  const [creatingWorldline, setCreatingWorldline] = useState<string | null>(null);
 
   // Check for first-time visit
   useEffect(() => {
@@ -201,6 +207,30 @@ export default function DashboardPage() {
     setAdvancedSettings(prev => ({ ...prev, ...updates }));
   };
 
+  // Handle worldline template selection
+  const handleStartWorldlineComparison = async (templateId: string) => {
+    const template = worldlineTemplates.find(t => t.id === templateId);
+    if (!template) return;
+
+    setCreatingWorldline(templateId);
+
+    // 1. Save current profile as baseline
+    saveScenario(template.baselineName);
+
+    // 2. Apply variant changes
+    const variantChanges = template.createVariant(profile);
+    updateProfile(variantChanges);
+
+    // 3. Wait for simulation to complete (debounce + run)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // 4. Save variant
+    saveScenario(template.variantName);
+
+    // 5. Navigate to /v2
+    router.push('/v2');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
@@ -289,6 +319,10 @@ export default function DashboardPage() {
               targetRetireAge={profile.targetRetireAge}
               workStyle={profile.grossIncome > 1000 ? '高収入' : '会社員'}
               legacyGoal="使い切り"
+              profile={profile}
+              onStartWorldlineComparison={handleStartWorldlineComparison}
+              hasScenarios={scenarios.length > 0}
+              creatingWorldline={creatingWorldline}
             />
           </div>
 

@@ -1,9 +1,11 @@
 'use client';
 
 import { useMemo, useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle2, AlertTriangle, XCircle, Loader2, ArrowRight } from 'lucide-react';
-import type { ExitScoreDetail, KeyMetrics } from '@/lib/types';
+import { CheckCircle2, AlertTriangle, XCircle, Loader2, ArrowRight, GitBranch } from 'lucide-react';
+import type { ExitScoreDetail, KeyMetrics, Profile } from '@/lib/types';
+import { worldlineTemplates } from '@/lib/worldline-templates';
 import { cn } from '@/lib/utils';
 
 type Status = 'GREEN' | 'YELLOW' | 'RED' | 'CALCULATING';
@@ -18,6 +20,11 @@ interface ConclusionSummaryCardProps {
   // Goal Lens前提
   workStyle?: string;
   legacyGoal?: string;
+  // 世界線導線
+  profile?: Profile;
+  onStartWorldlineComparison?: (templateId: string) => void;
+  hasScenarios?: boolean;
+  creatingWorldline?: string | null;
 }
 
 function getStatus(score: ExitScoreDetail | null): Status {
@@ -254,6 +261,10 @@ export function ConclusionSummaryCard({
   previousMetrics,
   workStyle = '会社員',
   legacyGoal = '使い切り',
+  profile,
+  onStartWorldlineComparison,
+  hasScenarios = false,
+  creatingWorldline = null,
 }: ConclusionSummaryCardProps) {
   const displayStatus = useMemo(() => {
     if (!score) return 'CALCULATING';
@@ -378,6 +389,57 @@ export function ConclusionSummaryCard({
               )}
             </div>
           </details>
+        )}
+
+        {/* 世界線比較への導線 */}
+        {score && profile && onStartWorldlineComparison && (
+          <div className="mt-4 pt-4 border-t border-border">
+            {hasScenarios ? (
+              <Link href="/v2" className="flex items-center gap-2 text-sm text-[#8A7A62] hover:text-[#C8B89A] dark:text-[#C8B89A] dark:hover:text-[#C8B89A]/80 transition-colors">
+                <GitBranch className="h-4 w-4" />
+                世界線比較を見る
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            ) : (
+              <div className="space-y-2.5">
+                <div>
+                  <p className="text-sm text-foreground">別の選択をしたら、この結果はどう変わるか。</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">比較パターンを選ぶと、2つの世界線が自動で作成されます。</p>
+                </div>
+                <div className="space-y-1.5">
+                  {worldlineTemplates
+                    .filter((t) => t.isRelevant(profile))
+                    .slice(0, 3)
+                    .map((t) => {
+                      const isCreating = creatingWorldline === t.id;
+                      const isDisabled = creatingWorldline !== null;
+                      return (
+                        <button
+                          key={t.id}
+                          onClick={() => onStartWorldlineComparison(t.id)}
+                          disabled={isDisabled}
+                          className={cn(
+                            'flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-colors',
+                            'bg-transparent border-[#C8B89A]/30 text-[#8A7A62] dark:text-[#C8B89A] dark:border-[#C8B89A]/20',
+                            isDisabled
+                              ? 'opacity-50 cursor-not-allowed'
+                              : 'hover:bg-[#C8B89A]/10 hover:border-[#C8B89A]/50',
+                          )}
+                        >
+                          <span className="text-base leading-none">{t.icon}</span>
+                          <span className="flex-1 truncate">{t.label}</span>
+                          {isCreating ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin flex-shrink-0" />
+                          ) : (
+                            <ArrowRight className="h-3.5 w-3.5 flex-shrink-0 opacity-50" />
+                          )}
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </CardContent>
     </Card>
