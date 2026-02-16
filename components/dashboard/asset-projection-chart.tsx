@@ -32,6 +32,13 @@ interface ChartDataPoint {
   median: number;
   upper: number;
   lower: number;
+  p25: number;
+  p75: number;
+  // Stacked band data
+  p10base: number;
+  p10p90band: number;
+  p25base: number;
+  p25p75band: number;
 }
 
 function formatYAxis(value: number): string {
@@ -69,6 +76,8 @@ function CustomTooltip({
   const median = payload.find((p) => p.dataKey === 'median')?.value ?? 0;
   const upper = payload.find((p) => p.dataKey === 'upper')?.value ?? 0;
   const lower = payload.find((p) => p.dataKey === 'lower')?.value ?? 0;
+  const p75 = payload.find((p) => p.dataKey === 'p75')?.value ?? 0;
+  const p25 = payload.find((p) => p.dataKey === 'p25')?.value ?? 0;
 
   return (
     <div className="rounded-lg border bg-background p-3 shadow-lg min-w-[200px]">
@@ -83,12 +92,20 @@ function CustomTooltip({
             <span className="font-medium">{formatValue(upper)}</span>
           </div>
         )}
+        <div className="flex items-center justify-between gap-4 text-xs">
+          <span className="text-gray-500">75%</span>
+          <span className="font-medium">{formatValue(p75)}</span>
+        </div>
         <div className="flex items-center justify-between gap-4 py-1 border-y">
           <span className="text-gray-700 flex items-center gap-1 font-medium">
             <div className="h-2 w-2 rounded-full bg-gray-700" />
             中央値
           </span>
           <span className="font-bold text-base">{formatValue(median)}</span>
+        </div>
+        <div className="flex items-center justify-between gap-4 text-xs">
+          <span className="text-gray-500">25%</span>
+          <span className="font-medium">{formatValue(p25)}</span>
         </div>
         <div className="flex items-center justify-between gap-4">
           <span className="text-gray-600 flex items-center gap-1">
@@ -146,12 +163,25 @@ export function AssetProjectionChart({
   }
 
   // Transform data for Recharts
-  const chartData: ChartDataPoint[] = data.yearlyData.map((point, index) => ({
-    age: point.age,
-    median: point.assets,
-    upper: data.upperPath[index]?.assets ?? point.assets,
-    lower: data.lowerPath[index]?.assets ?? point.assets,
-  }));
+  const chartData: ChartDataPoint[] = data.yearlyData.map((point, index) => {
+    const p10 = data.lowerPath[index]?.assets ?? point.assets;
+    const p25 = data.p25Path?.[index]?.assets ?? point.assets;
+    const p75 = data.p75Path?.[index]?.assets ?? point.assets;
+    const p90 = data.upperPath[index]?.assets ?? point.assets;
+    return {
+      age: point.age,
+      median: point.assets,
+      upper: p90,
+      lower: p10,
+      p25,
+      p75,
+      // Stacked band data for Recharts
+      p10base: p10,
+      p10p90band: Math.max(0, p90 - p10),
+      p25base: p25,
+      p25p75band: Math.max(0, p75 - p25),
+    };
+  });
 
   // Find key metrics
   const retirementData = chartData.find(d => d.age === targetRetireAge);
@@ -159,9 +189,9 @@ export function AssetProjectionChart({
   const zeroLineData = chartData.find(d => d.lower <= 0);
   
   // Calculate Y axis domain based on visibility
-  const relevantValues = showOptimistic 
-    ? chartData.flatMap((d) => [d.upper, d.lower, d.median])
-    : chartData.flatMap((d) => [d.lower, d.median]);
+  const relevantValues = showOptimistic
+    ? chartData.flatMap((d) => [d.upper, d.lower, d.median, d.p25, d.p75])
+    : chartData.flatMap((d) => [d.lower, d.median, d.p25, d.p75]);
   
   const minValue = Math.min(...relevantValues);
   const maxValue = Math.max(...relevantValues);
@@ -239,7 +269,39 @@ export function AssetProjectionChart({
             />
             <Tooltip content={<CustomTooltip showOptimistic={showOptimistic} />} />
             
-            {/* Optimistic area (conditional) */}
+            {/* p10-p90 band (outer, lighter) */}
+            <Area
+              type="monotone"
+              dataKey="p10base"
+              stackId="bandOuter"
+              stroke="none"
+              fill="transparent"
+            />
+            <Area
+              type="monotone"
+              dataKey="p10p90band"
+              stackId="bandOuter"
+              stroke="none"
+              fill="rgba(200,184,154,0.08)"
+            />
+
+            {/* p25-p75 band (inner, darker) */}
+            <Area
+              type="monotone"
+              dataKey="p25base"
+              stackId="bandInner"
+              stroke="none"
+              fill="transparent"
+            />
+            <Area
+              type="monotone"
+              dataKey="p25p75band"
+              stackId="bandInner"
+              stroke="none"
+              fill="rgba(200,184,154,0.15)"
+            />
+
+            {/* Optimistic line (conditional) */}
             {showOptimistic && (
               <Area
                 type="monotone"
@@ -247,11 +309,11 @@ export function AssetProjectionChart({
                 stroke="#9ca3af"
                 strokeWidth={1.5}
                 strokeDasharray="4 4"
-                fill="url(#colorOptimistic)"
+                fill="none"
               />
             )}
-            
-            {/* Median line with gradient fill */}
+
+            {/* Median line */}
             <Area
               type="monotone"
               dataKey="median"
@@ -259,14 +321,19 @@ export function AssetProjectionChart({
               strokeWidth={2.5}
               fill="url(#colorMedian)"
             />
-            
+
+            {/* Hidden p25/p75 lines for tooltip data */}
+            <Area type="monotone" dataKey="p25" stroke="none" fill="none" />
+            <Area type="monotone" dataKey="p75" stroke="none" fill="none" />
+
             {/* Pessimistic line */}
             <Area
               type="monotone"
               dataKey="lower"
               stroke="#6b7280"
               strokeWidth={2}
-              fill="url(#colorPessimistic)"
+              strokeDasharray="4 4"
+              fill="none"
             />
             
             {/* Zero line (important reference) */}
@@ -377,7 +444,11 @@ export function AssetProjectionChart({
           <span className="text-muted-foreground">中央値</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-1 w-5 rounded bg-gray-500" />
+          <div className="h-3 w-5 rounded" style={{ backgroundColor: 'rgba(200,184,154,0.3)' }} />
+          <span className="text-muted-foreground">25-75%</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-0.5 w-5 border-t-2 border-dashed border-gray-500" />
           <span className="text-muted-foreground">悲観 (10%)</span>
         </div>
         {showOptimistic && (
@@ -386,18 +457,14 @@ export function AssetProjectionChart({
             <span className="text-muted-foreground">楽観 (90%)</span>
           </div>
         )}
-        <div className="flex items-center gap-2">
-          <div className="h-1 w-5 rounded bg-gray-400" />
-          <span className="text-muted-foreground">資産枯渇ライン</span>
-        </div>
       </div>
       
       {/* Reading guide */}
       <div className="mt-4 rounded-lg bg-muted/30 p-3 text-xs text-muted-foreground">
         <p>
-          <strong>見方:</strong> 中央値（青線）は最も可能性の高い推移を示します。
-          悲観シナリオ（黄線）は下位10%の場合の推移で、これが0円を下回ると資産枯渇リスクがあります。
-          楽観シナリオは参考値として非表示がおすすめです。
+          <strong>見方:</strong> 中央値（実線）は最も可能性の高い推移を示します。
+          ゴールドの帯は25〜75%の範囲で、半数のシナリオがこの範囲に入ります。
+          悲観シナリオ（点線）は下位10%の場合の推移で、これが0円を下回ると資産枯渇リスクがあります。
         </p>
       </div>
     </SectionCard>

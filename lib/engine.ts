@@ -534,11 +534,15 @@ export async function runSimulation(profile: Profile): Promise<SimulationResult>
     const medianPath = getPercentilePath(allPaths, 50);
     const optimisticPath = getPercentilePath(allPaths, 90);
     const pessimisticPath = getPercentilePath(allPaths, 10);
+    const p25Path = getPercentilePath(allPaths, 25);
+    const p75Path = getPercentilePath(allPaths, 75);
 
     const paths: SimulationPath = {
       yearlyData: medianPath,
       upperPath: optimisticPath,
       lowerPath: pessimisticPath,
+      p25Path,
+      p75Path,
       // Number arrays for chart components
       median: medianPath.map(p => p.assets),
       optimistic: optimisticPath.map(p => p.assets),
@@ -553,6 +557,12 @@ export async function runSimulation(profile: Profile): Promise<SimulationResult>
       point.assets = safeNum(point.assets);
     }
     for (const point of paths.lowerPath) {
+      point.assets = safeNum(point.assets);
+    }
+    for (const point of paths.p25Path) {
+      point.assets = safeNum(point.assets);
+    }
+    for (const point of paths.p75Path) {
       point.assets = safeNum(point.assets);
     }
 

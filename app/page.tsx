@@ -408,9 +408,12 @@ export default function DashboardPage() {
                     onApplyAction={handleApplyAction}
                   />
 
-                  {/* Cash flow */}
+                  {/* Cash flow + withdrawal simulation */}
                   <CashFlowCard
                     cashFlow={simResult?.cashFlow ?? null}
+                    paths={simResult?.paths ?? null}
+                    metrics={simResult?.metrics ?? null}
+                    targetRetireAge={profile.targetRetireAge}
                     isLoading={isLoading}
                   />
                 </TabsContent>

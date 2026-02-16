@@ -233,11 +233,15 @@ function runSimulationWithSeed(profile: Profile, seed: number): HousingSimulatio
   const medianPath = getPercentilePath(allPaths, 50);
   const upperPath = getPercentilePath(allPaths, 90);
   const lowerPath = getPercentilePath(allPaths, 10);
+  const p25Path = getPercentilePath(allPaths, 25);
+  const p75Path = getPercentilePath(allPaths, 75);
 
   const paths: SimulationPath = {
     yearlyData: medianPath,
     upperPath: upperPath,
     lowerPath: lowerPath,
+    p25Path,
+    p75Path,
     median: medianPath.map(p => p.assets),
     optimistic: upperPath.map(p => p.assets),
     pessimistic: lowerPath.map(p => p.assets),

@@ -89,6 +89,8 @@ export interface SimulationPath {
   yearlyData: AssetPoint[];
   upperPath: AssetPoint[]; // 90th percentile
   lowerPath: AssetPoint[]; // 10th percentile
+  p25Path: AssetPoint[];   // 25th percentile
+  p75Path: AssetPoint[];   // 75th percentile
   // Aliases for component compatibility
   median: number[];
   optimistic: number[];

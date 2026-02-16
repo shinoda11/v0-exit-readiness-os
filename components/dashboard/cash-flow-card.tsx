@@ -1,15 +1,28 @@
 'use client';
 
-import { ArrowDownUp, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowDownUp, ArrowUp, ArrowDown, TrendingDown } from 'lucide-react';
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { SectionCard } from '@/components/section-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
 import { formatCurrency, formatPercent } from '@/lib/types';
-import type { CashFlowBreakdown } from '@/lib/types';
+import type { CashFlowBreakdown, SimulationPath, KeyMetrics } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface CashFlowCardProps {
   cashFlow: CashFlowBreakdown | null;
+  paths?: SimulationPath | null;
+  metrics?: KeyMetrics | null;
+  targetRetireAge?: number;
   isLoading?: boolean;
 }
 
@@ -29,7 +42,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
         <div
           className={cn(
             'flex h-6 w-6 items-center justify-center rounded-full',
-            isIncome ? 'bg-gray-100 text-gray-500' : 'bg-gray-100 text-gray-500'
+            'bg-gray-100 text-gray-500'
           )}
         >
           {isIncome ? (
@@ -46,12 +59,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
             {formatPercent(percentage)}
           </span>
         )}
-        <span
-          className={cn(
-            'font-semibold tabular-nums',
-            isIncome ? 'text-gray-700' : 'text-gray-700'
-          )}
-        >
+        <span className="font-semibold tabular-nums text-gray-700">
           {isIncome ? '+' : '-'}
           {formatCurrency(Math.abs(amount))}
         </span>
@@ -60,7 +68,31 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
   );
 }
 
-export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
+function formatYAxis(value: number): string {
+  if (Math.abs(value) >= 10000) {
+    return `${(value / 10000).toFixed(1)}億`;
+  }
+  if (Math.abs(value) >= 1000) {
+    return `${(value / 1000).toFixed(0)}千万`;
+  }
+  return `${value}万`;
+}
+
+function formatValue(value: number): string {
+  if (Math.abs(value) >= 10000) {
+    return `${(value / 10000).toFixed(2)}億円`;
+  }
+  return `${value.toLocaleString()}万円`;
+}
+
+interface RetirementChartPoint {
+  age: number;
+  median: number;
+  p25base: number;
+  p25p75band: number;
+}
+
+export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoading }: CashFlowCardProps) {
   if (!cashFlow) {
     return (
       <SectionCard
@@ -92,6 +124,43 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
     totalIncome > 0 ? (amount / totalIncome) * 100 : 0;
 
   const netCashFlowPositive = cashFlow.netCashFlow >= 0;
+
+  // Withdrawal simulation data
+  const retireAge = targetRetireAge ?? 55;
+  const hasWithdrawalData = paths && metrics && !netCashFlowPositive;
+
+  // Compute retirement chart data from paths
+  const retirementChartData: RetirementChartPoint[] = [];
+  let medianAssetAtRetire = 0;
+  let depletionAge: number | null = null;
+
+  if (paths) {
+    const startIndex = paths.yearlyData.findIndex(p => p.age === retireAge);
+    if (startIndex >= 0) {
+      medianAssetAtRetire = paths.yearlyData[startIndex]?.assets ?? 0;
+      for (let i = startIndex; i < paths.yearlyData.length; i++) {
+        const age = paths.yearlyData[i].age;
+        const median = paths.yearlyData[i].assets;
+        const p25 = paths.p25Path?.[i]?.assets ?? median;
+        const p75 = paths.p75Path?.[i]?.assets ?? median;
+        retirementChartData.push({
+          age,
+          median,
+          p25base: p25,
+          p25p75band: Math.max(0, p75 - p25),
+        });
+        if (depletionAge === null && median <= 0) {
+          depletionAge = age;
+        }
+      }
+    }
+  }
+
+  const annualWithdrawal = Math.abs(cashFlow.netCashFlow);
+  const withdrawalWithPension = cashFlow.pension > 0
+    ? annualWithdrawal
+    : Math.max(0, annualWithdrawal - (cashFlow.pension || 0));
+  const depletionProb = metrics ? Math.round(100 - metrics.survivalRate) : null;
 
   return (
     <SectionCard
@@ -152,7 +221,7 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
         <div
           className={cn(
             'rounded-lg p-4 border',
-            netCashFlowPositive ? 'bg-gray-50 border-gray-200' : 'bg-gray-50 border-gray-200'
+            'bg-gray-50 border-gray-200'
           )}
         >
           <div className="flex items-center justify-between">
@@ -197,6 +266,136 @@ export function CashFlowCard({ cashFlow, isLoading }: CashFlowCardProps) {
             className="h-2"
           />
         </div>
+
+        {/* Withdrawal simulation section */}
+        {hasWithdrawalData && (
+          <div className="space-y-4 border-t pt-4">
+            <div className="flex items-center gap-2">
+              <TrendingDown className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm font-medium">資産の取り崩しシミュレーション</p>
+            </div>
+
+            {/* Withdrawal summary */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-lg bg-muted/50 p-3">
+                <p className="text-xs text-muted-foreground">退職時の推定資産</p>
+                <p className="text-base font-bold tabular-nums">{formatCurrency(Math.round(medianAssetAtRetire))}</p>
+              </div>
+              <div className="rounded-lg bg-muted/50 p-3">
+                <p className="text-xs text-muted-foreground">年間取り崩し額</p>
+                <p className="text-base font-bold tabular-nums">{formatCurrency(Math.round(annualWithdrawal))}</p>
+              </div>
+              <div className="rounded-lg bg-muted/50 p-3">
+                <p className="text-xs text-muted-foreground">資産枯渇年齢</p>
+                <p className="text-base font-bold tabular-nums">
+                  {depletionAge ? `${depletionAge}歳` : '枯渇なし'}
+                </p>
+              </div>
+              <div className="rounded-lg bg-muted/50 p-3">
+                <p className="text-xs text-muted-foreground">枯渇確率（100歳まで）</p>
+                <p className={cn(
+                  "text-base font-bold tabular-nums",
+                  depletionProb !== null && depletionProb > 20 && "text-red-600"
+                )}>
+                  {depletionProb !== null ? `${depletionProb}%` : '—'}
+                </p>
+              </div>
+            </div>
+
+            {/* Retirement mini chart */}
+            {retirementChartData.length > 0 && (
+              <div className="h-[200px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={retirementChartData}
+                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <XAxis
+                      dataKey="age"
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 10 }}
+                      tickFormatter={(v) => `${v}歳`}
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 10 }}
+                      tickFormatter={formatYAxis}
+                      width={50}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload?.length) return null;
+                        const median = payload.find(p => p.dataKey === 'median')?.value as number ?? 0;
+                        return (
+                          <div className="rounded-lg border bg-background p-2 shadow-lg text-xs">
+                            <p className="font-medium mb-1">{label}歳</p>
+                            <p className="tabular-nums">資産: {formatValue(Math.round(median))}</p>
+                          </div>
+                        );
+                      }}
+                    />
+
+                    {/* p25-p75 band */}
+                    <Area
+                      type="monotone"
+                      dataKey="p25base"
+                      stackId="band"
+                      stroke="none"
+                      fill="transparent"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="p25p75band"
+                      stackId="band"
+                      stroke="none"
+                      fill="rgba(200,184,154,0.2)"
+                    />
+
+                    {/* Median line */}
+                    <Area
+                      type="monotone"
+                      dataKey="median"
+                      stroke="#374151"
+                      strokeWidth={2}
+                      fill="none"
+                    />
+
+                    {/* Zero line */}
+                    <ReferenceLine
+                      y={0}
+                      stroke="hsl(var(--destructive))"
+                      strokeWidth={1.5}
+                      strokeDasharray="4 4"
+                    />
+
+                    {/* Pension age marker */}
+                    {retireAge < 65 && (
+                      <ReferenceLine
+                        x={65}
+                        stroke="#9ca3af"
+                        strokeWidth={1}
+                        strokeDasharray="3 3"
+                        label={{
+                          value: '年金開始',
+                          position: 'insideTopRight',
+                          fill: '#9ca3af',
+                          fontSize: 9,
+                        }}
+                      />
+                    )}
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+
+            <p className="text-xs text-muted-foreground">
+              退職後の資産推移（中央値）。ゴールドの帯は25〜75%の範囲。
+            </p>
+          </div>
+        )}
       </div>
     </SectionCard>
   );
