@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { User, Wallet, PiggyBank } from 'lucide-react';
+import type { HouseholdMode, Profile } from '@/lib/types';
 import {
   Dialog,
   DialogContent,
@@ -9,6 +10,8 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 /** Simple Y-branch symbol (no animation) */
 function YSymbol() {
@@ -32,7 +35,7 @@ function YSymbol() {
   );
 }
 
-const steps = [
+const introSteps = [
   {
     icon: <User className="h-5 w-5" />,
     label: '基本情報',
@@ -40,8 +43,8 @@ const steps = [
   },
   {
     icon: <Wallet className="h-5 w-5" />,
-    label: '収入と支出',
-    description: '年収・生活費・住居費',
+    label: '収入と住居',
+    description: '年収・家賃',
   },
   {
     icon: <PiggyBank className="h-5 w-5" />,
@@ -52,69 +55,302 @@ const steps = [
 
 interface WelcomeDialogProps {
   open: boolean;
-  onStart: () => void;
+  onComplete: (profileData: Partial<Profile>) => void;
   onSkip: () => void;
 }
 
-export function WelcomeDialog({ open, onStart, onSkip }: WelcomeDialogProps) {
+interface FormData {
+  currentAge: number;
+  mode: HouseholdMode;
+  targetRetireAge: number;
+  grossIncome: number;
+  partnerGrossIncome: number;
+  housingCostMonthly: number;
+  totalAssets: number;
+}
+
+const defaultFormData: FormData = {
+  currentAge: 30,
+  mode: 'couple',
+  targetRetireAge: 50,
+  grossIncome: 800,
+  partnerGrossIncome: 400,
+  housingCostMonthly: 15,
+  totalAssets: 800,
+};
+
+function StepIndicator({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="flex items-center justify-center gap-2 mb-2">
+      {Array.from({ length: total }, (_, i) => (
+        <div
+          key={i}
+          className={`h-2 w-2 rounded-full transition-colors ${
+            i + 1 <= current ? 'bg-[#C8B89A]' : 'bg-muted-foreground/20'
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) {
+  const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState<FormData>(defaultFormData);
+
+  const handleComplete = () => {
+    onComplete({
+      currentAge: formData.currentAge,
+      mode: formData.mode,
+      targetRetireAge: formData.targetRetireAge,
+      grossIncome: formData.grossIncome,
+      partnerGrossIncome: formData.mode === 'couple' ? formData.partnerGrossIncome : 0,
+      housingCostAnnual: formData.housingCostMonthly * 12,
+      assetCash: Math.round(formData.totalAssets * 0.3),
+      assetInvest: Math.round(formData.totalAssets * 0.7),
+    });
+  };
+
+  const update = (field: keyof FormData, value: number | HouseholdMode) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) onSkip(); }}>
       <DialogContent className="max-w-lg p-0 overflow-hidden" showCloseButton={false}>
         <div className="p-6 sm:p-8 space-y-6">
-          {/* Header */}
-          <div className="flex flex-col items-center gap-2 text-center">
-            <YSymbol />
-            <DialogTitle className="text-xl font-bold">
-              YOHACK へようこそ
-            </DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground tracking-[0.25em]">
-              人生に、余白を。
-            </DialogDescription>
-          </div>
+          {/* Step 0: Welcome intro */}
+          {step === 0 && (
+            <>
+              <div className="flex flex-col items-center gap-2 text-center">
+                <YSymbol />
+                <DialogTitle className="text-xl font-bold">
+                  YOHACK へようこそ
+                </DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground tracking-[0.25em]">
+                  人生に、余白を。
+                </DialogDescription>
+              </div>
 
-          {/* Description */}
-          <p className="text-sm text-muted-foreground text-center leading-relaxed">
-            3つのステップであなたの人生シミュレーションが始まります。<br />
-            まずは基本情報を入力してみましょう。
-          </p>
+              <p className="text-sm text-muted-foreground text-center leading-relaxed">
+                3つのステップであなたの人生シミュレーションが始まります。<br />
+                まずは基本情報を入力してみましょう。
+              </p>
 
-          {/* Steps */}
-          <div className="grid gap-3 sm:grid-cols-3">
-            {steps.map((step, i) => (
-              <div
-                key={step.label}
-                className="flex flex-row sm:flex-col items-center gap-3 sm:gap-2 rounded-lg border p-3 sm:p-4 sm:text-center"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C8B89A]/15 text-[#C8B89A]">
-                  {step.icon}
+              <div className="grid gap-3 sm:grid-cols-3">
+                {introSteps.map((s, i) => (
+                  <div
+                    key={s.label}
+                    className="flex flex-row sm:flex-col items-center gap-3 sm:gap-2 rounded-lg border p-3 sm:p-4 sm:text-center"
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C8B89A]/15 text-[#C8B89A]">
+                      {s.icon}
+                    </div>
+                    <div className="sm:space-y-1">
+                      <p className="text-sm font-medium">
+                        <span className="text-muted-foreground mr-1">{i + 1}.</span>
+                        {s.label}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{s.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col items-center gap-2">
+                <Button
+                  className="w-full sm:w-auto px-8"
+                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  onClick={() => setStep(1)}
+                >
+                  はじめる
+                </Button>
+                <button
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  onClick={onSkip}
+                >
+                  スキップ
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* Steps 1-3: Form wizard */}
+          {step >= 1 && (
+            <>
+              <DialogTitle className="sr-only">プロフィール入力</DialogTitle>
+              <DialogDescription className="sr-only">ステップ {step} / 3</DialogDescription>
+              <StepIndicator current={step} total={3} />
+            </>
+          )}
+
+          {/* Step 1: Basic info */}
+          {step === 1 && (
+            <>
+              <h2 className="text-lg font-semibold text-center">基本情報</h2>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="onb-age">現在の年齢</Label>
+                  <Input
+                    id="onb-age"
+                    type="number"
+                    value={formData.currentAge}
+                    onChange={(e) => update('currentAge', Number(e.target.value))}
+                    min={18}
+                    max={80}
+                    className="mt-1"
+                  />
                 </div>
-                <div className="sm:space-y-1">
-                  <p className="text-sm font-medium">
-                    <span className="text-muted-foreground mr-1">{i + 1}.</span>
-                    {step.label}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{step.description}</p>
+                <div>
+                  <Label>世帯タイプ</Label>
+                  <div className="flex gap-2 mt-1">
+                    {(['solo', 'couple'] as const).map(m => (
+                      <button
+                        key={m}
+                        type="button"
+                        className={`flex-1 rounded-md border px-4 py-2 text-sm transition-colors ${
+                          formData.mode === m
+                            ? 'border-[#C8B89A] bg-[#C8B89A]/15 text-foreground font-medium'
+                            : 'border-border text-muted-foreground hover:border-foreground/30'
+                        }`}
+                        onClick={() => update('mode', m)}
+                      >
+                        {m === 'solo' ? '個人' : 'カップル / 夫婦'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="onb-retire">目標リタイア年齢</Label>
+                  <Input
+                    id="onb-retire"
+                    type="number"
+                    value={formData.targetRetireAge}
+                    onChange={(e) => update('targetRetireAge', Number(e.target.value))}
+                    min={formData.currentAge + 1}
+                    max={80}
+                    className="mt-1"
+                  />
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="flex justify-between pt-2">
+                <Button variant="ghost" onClick={() => setStep(0)}>戻る</Button>
+                <Button
+                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  onClick={() => setStep(2)}
+                >
+                  次へ
+                </Button>
+              </div>
+            </>
+          )}
 
-          {/* Actions */}
-          <div className="flex flex-col items-center gap-2">
-            <Button
-              className="w-full sm:w-auto px-8"
-              style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
-              onClick={onStart}
-            >
-              はじめる
-            </Button>
-            <button
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-              onClick={onSkip}
-            >
-              スキップ
-            </button>
-          </div>
+          {/* Step 2: Income & Housing */}
+          {step === 2 && (
+            <>
+              <h2 className="text-lg font-semibold text-center">収入・住居</h2>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="onb-income">年収（税込）</Label>
+                  <div className="relative mt-1">
+                    <Input
+                      id="onb-income"
+                      type="number"
+                      value={formData.grossIncome}
+                      onChange={(e) => update('grossIncome', Number(e.target.value))}
+                      min={0}
+                      className="pr-12"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">万円</span>
+                  </div>
+                </div>
+                {formData.mode === 'couple' && (
+                  <div>
+                    <Label htmlFor="onb-partner-income">パートナー年収（税込）</Label>
+                    <div className="relative mt-1">
+                      <Input
+                        id="onb-partner-income"
+                        type="number"
+                        value={formData.partnerGrossIncome}
+                        onChange={(e) => update('partnerGrossIncome', Number(e.target.value))}
+                        min={0}
+                        className="pr-12"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">万円</span>
+                    </div>
+                  </div>
+                )}
+                <div>
+                  <Label htmlFor="onb-rent">月額家賃</Label>
+                  <div className="relative mt-1">
+                    <Input
+                      id="onb-rent"
+                      type="number"
+                      value={formData.housingCostMonthly}
+                      onChange={(e) => update('housingCostMonthly', Number(e.target.value))}
+                      min={0}
+                      className="pr-12"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">万円</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between pt-2">
+                <Button variant="ghost" onClick={() => setStep(1)}>戻る</Button>
+                <Button
+                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  onClick={() => setStep(3)}
+                >
+                  次へ
+                </Button>
+              </div>
+            </>
+          )}
+
+          {/* Step 3: Assets */}
+          {step === 3 && (
+            <>
+              <h2 className="text-lg font-semibold text-center">資産</h2>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="onb-assets">総資産（現金 + 投資）</Label>
+                  <div className="relative mt-1">
+                    <Input
+                      id="onb-assets"
+                      type="number"
+                      value={formData.totalAssets}
+                      onChange={(e) => update('totalAssets', Number(e.target.value))}
+                      min={0}
+                      className="pr-12"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">万円</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    現金30% / 投資70% で自動配分されます（後から変更可）
+                  </p>
+                </div>
+                <div className="rounded-md bg-muted/50 p-3 text-sm space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">現金</span>
+                    <span>{Math.round(formData.totalAssets * 0.3).toLocaleString()} 万円</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">投資</span>
+                    <span>{Math.round(formData.totalAssets * 0.7).toLocaleString()} 万円</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between pt-2">
+                <Button variant="ghost" onClick={() => setStep(2)}>戻る</Button>
+                <Button
+                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  onClick={handleComplete}
+                >
+                  結果を見る
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

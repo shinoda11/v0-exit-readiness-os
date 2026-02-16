@@ -197,6 +197,16 @@ export default function DashboardPage() {
     }
   };
 
+  const handleWelcomeComplete = (profileData: Partial<typeof profile>) => {
+    updateProfile(profileData);
+    setShowWelcome(false);
+    setShowFirstVisitBanner(false);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('yohack-onboarding-complete', 'complete');
+      localStorage.setItem('yohack-profile-edited', '1');
+    }
+  };
+
   // Handle applying recommended actions
   const handleApplyAction = (updates: Partial<typeof profile>) => {
     updateProfile(updates);
@@ -551,7 +561,7 @@ export default function DashboardPage() {
       {/* Welcome Dialog for first-time visitors */}
       <WelcomeDialog
         open={showWelcome}
-        onStart={dismissWelcome}
+        onComplete={handleWelcomeComplete}
         onSkip={dismissWelcome}
       />
     </div>
