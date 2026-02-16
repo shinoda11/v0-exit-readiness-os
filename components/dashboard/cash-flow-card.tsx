@@ -69,20 +69,23 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
 }
 
 function formatYAxis(value: number): string {
-  if (Math.abs(value) >= 10000) {
-    return `${(value / 10000).toFixed(1)}億`;
+  const abs = Math.abs(value);
+  const sign = value < 0 ? '-' : '';
+  if (abs >= 10000) {
+    const oku = abs / 10000;
+    return `${sign}${oku % 1 === 0 ? oku.toFixed(0) : oku.toFixed(1)}億`;
   }
-  if (Math.abs(value) >= 1000) {
-    return `${(value / 1000).toFixed(0)}千万`;
-  }
-  return `${value}万`;
+  return `${sign}${Math.round(abs).toLocaleString()}万`;
 }
 
 function formatValue(value: number): string {
-  if (Math.abs(value) >= 10000) {
-    return `${(value / 10000).toFixed(2)}億円`;
+  const abs = Math.abs(value);
+  const sign = value < 0 ? '-' : '';
+  if (abs >= 10000) {
+    const oku = abs / 10000;
+    return `${sign}${oku % 1 === 0 ? oku.toFixed(0) : oku.toFixed(1)}億円`;
   }
-  return `${value.toLocaleString()}万円`;
+  return `${sign}${Math.round(abs).toLocaleString()}万円`;
 }
 
 interface RetirementChartPoint {
@@ -155,6 +158,18 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
       }
     }
   }
+
+  // Cap mini chart Y axis to p75 max * 1.2
+  const miniP75Max = retirementChartData.length > 0
+    ? Math.max(...retirementChartData.map(d => d.p25base + d.p25p75band))
+    : 0;
+  const miniYMax = Math.ceil((miniP75Max * 1.2) / 1000) * 1000;
+  const miniMinValue = retirementChartData.length > 0
+    ? Math.min(...retirementChartData.map(d => d.median))
+    : 0;
+  const miniYMin = miniMinValue < 0
+    ? Math.floor(miniMinValue / 1000) * 1000 - 500
+    : Math.max(-500, Math.floor(miniMinValue / 500) * 500);
 
   const annualWithdrawal = Math.abs(cashFlow.netCashFlow);
   const withdrawalWithPension = cashFlow.pension > 0
@@ -323,6 +338,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
                       axisLine={false}
                       tick={{ fontSize: 10 }}
                       tickFormatter={formatYAxis}
+                      domain={[miniYMin, miniYMax]}
                       width={50}
                     />
                     <Tooltip

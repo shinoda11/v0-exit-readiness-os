@@ -34,28 +34,29 @@ interface ChartDataPoint {
   lower: number;
   p25: number;
   p75: number;
-  // Stacked band data
-  p10base: number;
-  p10p90band: number;
+  // Stacked band data for p25-p75
   p25base: number;
   p25p75band: number;
 }
 
 function formatYAxis(value: number): string {
-  if (Math.abs(value) >= 10000) {
-    return `${(value / 10000).toFixed(1)}億`;
+  const abs = Math.abs(value);
+  const sign = value < 0 ? '-' : '';
+  if (abs >= 10000) {
+    const oku = abs / 10000;
+    return `${sign}${oku % 1 === 0 ? oku.toFixed(0) : oku.toFixed(1)}億`;
   }
-  if (Math.abs(value) >= 1000) {
-    return `${(value / 1000).toFixed(0)}千万`;
-  }
-  return `${value}万`;
+  return `${sign}${Math.round(abs).toLocaleString()}万`;
 }
 
 function formatValue(value: number): string {
-  if (Math.abs(value) >= 10000) {
-    return `${(value / 10000).toFixed(2)}億円`;
+  const abs = Math.abs(value);
+  const sign = value < 0 ? '-' : '';
+  if (abs >= 10000) {
+    const oku = abs / 10000;
+    return `${sign}${oku % 1 === 0 ? oku.toFixed(0) : oku.toFixed(1)}億円`;
   }
-  return `${value.toLocaleString()}万円`;
+  return `${sign}${Math.round(abs).toLocaleString()}万円`;
 }
 
 function CustomTooltip({
@@ -175,9 +176,7 @@ export function AssetProjectionChart({
       lower: p10,
       p25,
       p75,
-      // Stacked band data for Recharts
-      p10base: p10,
-      p10p90band: Math.max(0, p90 - p10),
+      // Stacked band data for p25-p75
       p25base: p25,
       p25p75band: Math.max(0, p75 - p25),
     };
@@ -186,20 +185,14 @@ export function AssetProjectionChart({
   // Find key metrics
   const retirementData = chartData.find(d => d.age === targetRetireAge);
   const finalData = chartData[chartData.length - 1];
-  const zeroLineData = chartData.find(d => d.lower <= 0);
-  
-  // Calculate Y axis domain based on visibility
-  const relevantValues = showOptimistic
-    ? chartData.flatMap((d) => [d.upper, d.lower, d.median, d.p25, d.p75])
-    : chartData.flatMap((d) => [d.lower, d.median, d.p25, d.p75]);
-  
-  const minValue = Math.min(...relevantValues);
-  const maxValue = Math.max(...relevantValues);
-  
-  // Add padding and ensure 0 is visible if close
-  const range = maxValue - minValue;
-  const yMin = minValue < 0 ? Math.floor(minValue / 1000) * 1000 - 500 : Math.max(-1000, Math.floor(minValue / 1000) * 1000 - range * 0.1);
-  const yMax = Math.ceil(maxValue / 1000) * 1000 + range * 0.1;
+
+  // Cap Y axis to p75 max * 1.2 so median detail is readable
+  const p75Max = Math.max(...chartData.map(d => d.p75));
+  const yMaxCap = Math.ceil((p75Max * 1.2) / 1000) * 1000;
+
+  const minValue = Math.min(...chartData.map(d => d.lower));
+  const yMin = minValue < 0 ? Math.floor(minValue / 1000) * 1000 - 500 : Math.max(-500, Math.floor(minValue / 500) * 500);
+  const yMax = yMaxCap;
 
   return (
     <SectionCard
@@ -242,14 +235,6 @@ export function AssetProjectionChart({
                 <stop offset="5%" stopColor="#374151" stopOpacity={0.4} />
                 <stop offset="95%" stopColor="#374151" stopOpacity={0.05} />
               </linearGradient>
-              <linearGradient id="colorPessimistic" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6b7280" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#6b7280" stopOpacity={0.05} />
-              </linearGradient>
-              <linearGradient id="colorOptimistic" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#9ca3af" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#9ca3af" stopOpacity={0.05} />
-              </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis
@@ -269,23 +254,7 @@ export function AssetProjectionChart({
             />
             <Tooltip content={<CustomTooltip showOptimistic={showOptimistic} />} />
             
-            {/* p10-p90 band (outer, lighter) */}
-            <Area
-              type="monotone"
-              dataKey="p10base"
-              stackId="bandOuter"
-              stroke="none"
-              fill="transparent"
-            />
-            <Area
-              type="monotone"
-              dataKey="p10p90band"
-              stackId="bandOuter"
-              stroke="none"
-              fill="rgba(200,184,154,0.08)"
-            />
-
-            {/* p25-p75 band (inner, darker) */}
+            {/* p25-p75 band */}
             <Area
               type="monotone"
               dataKey="p25base"
