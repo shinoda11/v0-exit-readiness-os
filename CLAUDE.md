@@ -21,7 +21,7 @@ YOHACK — 人生の余白（お金・時間・体力）で人生の選択を比
 - Zustand 5（状態管理）、Recharts（グラフ）
 - shadcn/ui + Tailwind CSS 4（UI）
 - Vercel（デプロイ、GitHub main ブランチ連携）
-- テスト: vitest（`lib/__tests__/` に4ファイル）
+- テスト: vitest 120本（`lib/__tests__/` に4ファイル）
 - **未導入**: Supabase（認証）、Stripe（決済）、SendGrid（メール）→ すべて Phase 2
 
 ## 現在のルート構成
