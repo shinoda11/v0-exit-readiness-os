@@ -100,8 +100,8 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
   return (
     <SectionCard
       icon={<GitCompare className="h-5 w-5" />}
-      title="シナリオ比較"
-      description="保存して比較（最大3つ）"
+      title="世界線比較"
+      description="異なる条件を並べて比較する"
     >
       <div className="space-y-4">
         {/* Save new scenario */}

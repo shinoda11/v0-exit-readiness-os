@@ -5,7 +5,8 @@ import { useProfileStore } from '@/lib/store';
 import { useMainSimulation } from '@/hooks/useSimulation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, X } from 'lucide-react';
+import { RotateCcw, X, Save, Check } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 // Dashboard input cards
 import { BasicInfoCard } from '@/components/dashboard/basic-info-card';
@@ -55,6 +56,12 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('summary');
   const [showWelcome, setShowWelcome] = useState(false);
   const [showFirstVisitBanner, setShowFirstVisitBanner] = useState(false);
+
+  // Summary tab save scenario state
+  const [savingFromSummary, setSavingFromSummary] = useState(false);
+  const [summaryScenarioName, setSummaryScenarioName] = useState('');
+  const [savedFromSummary, setSavedFromSummary] = useState(false);
+  const { saveScenario } = useProfileStore();
 
   // Check for first-time visit
   useEffect(() => {
@@ -372,11 +379,64 @@ export default function DashboardPage() {
   <TabsList className="grid w-full grid-cols-3">
   <TabsTrigger value="summary" className="text-xs sm:text-sm">サマリー</TabsTrigger>
   <TabsTrigger value="simulator" className="text-xs sm:text-sm">確率分布</TabsTrigger>
-  <TabsTrigger value="scenarios" className="text-xs sm:text-sm">シナリオ</TabsTrigger>
+  <TabsTrigger value="scenarios" className="text-xs sm:text-sm">世界線</TabsTrigger>
   </TabsList>
 
                 {/* Summary Tab */}
                 <TabsContent value="summary" className="mt-6 space-y-6">
+                  {/* Save scenario button */}
+                  <div className="flex items-center justify-end gap-2">
+                    {savedFromSummary ? (
+                      <>
+                        <span className="text-sm text-muted-foreground">保存しました</span>
+                        <Button size="sm" variant="link" onClick={() => setActiveTab('scenarios')}>
+                          世界線比較へ →
+                        </Button>
+                      </>
+                    ) : savingFromSummary ? (
+                      <>
+                        <Input
+                          placeholder="シナリオ名"
+                          value={summaryScenarioName}
+                          onChange={(e) => setSummaryScenarioName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && summaryScenarioName.trim()) {
+                              saveScenario(summaryScenarioName.trim());
+                              setSummaryScenarioName('');
+                              setSavingFromSummary(false);
+                              setSavedFromSummary(true);
+                              setTimeout(() => setSavedFromSummary(false), 3000);
+                            }
+                          }}
+                          className="h-8 text-sm max-w-[200px]"
+                          autoFocus
+                        />
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          disabled={!summaryScenarioName.trim()}
+                          onClick={() => {
+                            saveScenario(summaryScenarioName.trim());
+                            setSummaryScenarioName('');
+                            setSavingFromSummary(false);
+                            setSavedFromSummary(true);
+                            setTimeout(() => setSavedFromSummary(false), 3000);
+                          }}
+                        >
+                          <Check className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => { setSavingFromSummary(false); setSummaryScenarioName(''); }}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </>
+                    ) : (
+                      <Button size="sm" variant="outline" className="text-xs bg-transparent" onClick={() => setSavingFromSummary(true)}>
+                        <Save className="h-3 w-3 mr-1" />
+                        この結果を保存
+                      </Button>
+                    )}
+                  </div>
+
                   {/* Top row: Score and metrics */}
                   <div className="grid gap-6 lg:grid-cols-2">
                     <ExitReadinessCard

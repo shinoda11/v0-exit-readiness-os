@@ -1,16 +1,7 @@
-'use client';
-
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
 import { Sidebar } from '@/components/layout/sidebar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TimelineContent } from '@/components/plan/timeline-content';
-import { RSUContent } from '@/components/plan/rsu-content';
 
-function PlanPageContent() {
-  const searchParams = useSearchParams();
-  const defaultTab = searchParams.get('tab') === 'rsu' ? 'rsu' : 'timeline';
-
+export default function PlanPage() {
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
@@ -24,31 +15,9 @@ function PlanPageContent() {
             </p>
           </div>
 
-          {/* Tabs */}
-          <Tabs defaultValue={defaultTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 max-w-md">
-              <TabsTrigger value="timeline">ライフイベント</TabsTrigger>
-              <TabsTrigger value="rsu">RSU・株式報酬</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="timeline">
-              <TimelineContent />
-            </TabsContent>
-
-            <TabsContent value="rsu">
-              <RSUContent />
-            </TabsContent>
-          </Tabs>
+          <TimelineContent />
         </div>
       </main>
     </div>
-  );
-}
-
-export default function PlanPage() {
-  return (
-    <Suspense>
-      <PlanPageContent />
-    </Suspense>
   );
 }
