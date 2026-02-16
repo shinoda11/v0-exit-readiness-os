@@ -45,18 +45,47 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
 
   const content = (
     <div className="space-y-6">
-      {/* Expected return */}
-      <div>
-        <SliderInput
-          label={<TermTooltip term="期待リターン" description={glossary['期待リターン']} />}
-          description="名目"
-          value={profile.expectedReturn}
-          onChange={(value) => onUpdate({ expectedReturn: value })}
-          min={0}
-          max={15}
-          step={0.5}
-          unit="%"
-        />
+      {/* Expected return presets */}
+      <div className="space-y-3">
+        <div className="text-sm font-medium">
+          <TermTooltip term="期待リターン" description={glossary['期待リターン']} />
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {([
+            { value: 3, label: '保守的', desc: '債券中心・低リスク運用' },
+            { value: 5, label: '標準', desc: 'インデックス投資の長期平均' },
+            { value: 7, label: '積極的', desc: '株式中心・高リスク運用' },
+          ] as const).map((preset) => {
+            const isActive = profile.expectedReturn === preset.value;
+            return (
+              <button
+                key={preset.value}
+                type="button"
+                onClick={() => onUpdate({ expectedReturn: preset.value })}
+                className={`rounded-lg border p-2.5 text-center transition-colors ${
+                  isActive
+                    ? 'border-foreground bg-foreground/5 ring-1 ring-foreground/20'
+                    : 'border-border hover:border-foreground/30 hover:bg-muted/50'
+                }`}
+              >
+                <div className={`text-sm font-semibold ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  {preset.label}
+                </div>
+                <div className={`text-lg font-bold ${isActive ? 'text-foreground' : ''}`}>
+                  {preset.value}%
+                </div>
+                <div className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                  {preset.desc}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+        {profile.expectedReturn !== 3 && profile.expectedReturn !== 5 && profile.expectedReturn !== 7 && (
+          <div className="text-xs text-muted-foreground">
+            カスタム値: {profile.expectedReturn}%（詳細設定で変更可）
+          </div>
+        )}
         <FieldError message={getFieldError?.('expectedReturn')} />
       </div>
 
@@ -97,6 +126,20 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
 
       {showAdvanced && (
         <div className="space-y-6 pl-3 border-l-2 border-muted">
+          {/* Expected return fine-tune slider */}
+          <div>
+            <SliderInput
+              label="期待リターン（カスタム）"
+              description="名目"
+              value={profile.expectedReturn}
+              onChange={(value) => onUpdate({ expectedReturn: value })}
+              min={0}
+              max={15}
+              step={0.5}
+              unit="%"
+            />
+          </div>
+
           {/* Inflation rate */}
           <div>
             <SliderInput
@@ -181,10 +224,12 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
   );
 
   if (open !== undefined && onOpenChange) {
+    const presetLabel = profile.expectedReturn === 3 ? '保守的' : profile.expectedReturn === 5 ? '標準' : profile.expectedReturn === 7 ? '積極的' : '';
     const summary = (
       <>
         {'リターン'}
         <span className="font-medium text-foreground">{profile.expectedReturn}%</span>
+        {presetLabel && <span className="text-muted-foreground">({presetLabel})</span>}
         {' / 税率'}
         <span className="font-medium text-foreground">{displayRate.toFixed(1)}%</span>
       </>
