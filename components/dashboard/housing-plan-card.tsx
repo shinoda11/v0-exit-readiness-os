@@ -488,7 +488,10 @@ export function HousingPlanCard({ profile }: HousingPlanCardProps) {
         </div>
 
         {/* 結論テキスト */}
-        <p className="text-sm font-medium text-center">{conclusionText}</p>
+        <p className={cn(
+          "text-sm font-medium text-center",
+          bestPlanId === 'rent' ? 'text-[#4A7C59]' : 'text-[#4A6FA5]'
+        )}>{conclusionText}</p>
 
         {/* 比較テーブル */}
         <div className="rounded-lg border overflow-hidden">
@@ -508,7 +511,10 @@ export function HousingPlanCard({ profile }: HousingPlanCardProps) {
               {summaries.map(s => (
                 <TableRow
                   key={s.id}
-                  className={cn(s.id === bestPlanId && 'bg-[#C8B89A]/10')}
+                  className={cn(
+                    s.id === bestPlanId && bestPlanId === 'rent' && 'bg-[#4A7C59]/10',
+                    s.id === bestPlanId && bestPlanId !== 'rent' && 'bg-[#4A6FA5]/10',
+                  )}
                 >
                   <TableCell className="font-medium">{s.name}</TableCell>
                   <TableCell className="text-right tabular-nums">

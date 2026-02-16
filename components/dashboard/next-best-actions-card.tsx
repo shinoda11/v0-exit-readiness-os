@@ -263,12 +263,13 @@ export function NextBestActionsCard({
           const isCalculating = calculatingActions.has(action.id);
           const isApplied = appliedActions.has(action.id);
 
+          const isFirst = potentialActions.indexOf(action) === 0;
           return (
             <div
               key={action.id}
               className={cn(
                 'rounded-lg border-l-4 p-4 transition-all',
-                priorityColors[action.priority]
+                isFirst ? 'border-l-[#C8B89A] bg-gray-50/50 dark:bg-gray-900/20' : priorityColors[action.priority]
               )}
             >
               <div className="flex flex-col gap-3">

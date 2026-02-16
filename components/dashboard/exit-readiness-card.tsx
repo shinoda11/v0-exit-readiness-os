@@ -91,12 +91,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
           const circumference = 2 * Math.PI * radius;
           const progress = Math.min(Math.max(score.overall, 0), 100);
           const offset = circumference - (progress / 100) * circumference;
-          const strokeColor = {
-            GREEN: '#C8B89A',
-            YELLOW: '#5A5550',
-            ORANGE: '#5A5550',
-            RED: '#DC2626',
-          }[score.level];
+          const strokeColor = score.overall >= 80 ? '#4A7C59' : score.overall >= 50 ? '#C8B89A' : '#CC3333';
 
           return (
             <div className="relative">
@@ -133,10 +128,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
                   dominantBaseline="central"
                   className={cn(
                     "text-5xl font-bold tabular-nums",
-                    score.level === 'GREEN' && "fill-[#8A7A62] dark:fill-[#C8B89A]",
-                    score.level === 'YELLOW' && "fill-[#5A5550] dark:fill-[#DDD0B8]",
-                    score.level === 'ORANGE' && "fill-[#5A5550] dark:fill-[#DDD0B8]",
-                    score.level === 'RED' && "fill-red-600 dark:fill-red-400",
+                    score.overall >= 80 && "fill-[#4A7C59] dark:fill-[#6BA368]",
+                    score.overall >= 50 && score.overall < 80 && "fill-[#8A7A62] dark:fill-[#C8B89A]",
+                    score.overall < 50 && "fill-[#CC3333] dark:fill-[#E05555]",
                   )}
                   fontSize="48"
                   fontWeight="bold"
@@ -157,10 +151,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
               <div
                 className={cn(
                   "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold border",
-                  score.level === 'GREEN' && "bg-[#C8B89A] text-[#1A1916] border-[#C8B89A]",
-                  score.level === 'YELLOW' && "bg-[#5A5550] text-white border-[#5A5550]",
-                  score.level === 'ORANGE' && "bg-[#5A5550] text-white border-[#5A5550]",
-                  score.level === 'RED' && "bg-red-600 text-white border-red-600",
+                  score.overall >= 80 && "bg-[#4A7C59] text-white border-[#4A7C59]",
+                  score.overall >= 50 && score.overall < 80 && "bg-[#C8B89A] text-[#1A1916] border-[#C8B89A]",
+                  score.overall < 50 && "bg-[#CC3333] text-white border-[#CC3333]",
                 )}
               >
                 {levelText[score.level]}
@@ -172,10 +165,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
         {/* Level description */}
         <p className={cn(
           "mt-6 text-sm font-medium",
-          score.level === 'GREEN' && "text-[#8A7A62] dark:text-[#C8B89A]",
-          score.level === 'YELLOW' && "text-[#5A5550] dark:text-[#DDD0B8]",
-          score.level === 'ORANGE' && "text-[#5A5550] dark:text-[#DDD0B8]",
-          score.level === 'RED' && "text-red-600 dark:text-red-400",
+          score.overall >= 80 && "text-[#4A7C59] dark:text-[#6BA368]",
+          score.overall >= 50 && score.overall < 80 && "text-[#8A7A62] dark:text-[#C8B89A]",
+          score.overall < 50 && "text-[#CC3333] dark:text-[#E05555]",
         )}>
           {score.level === 'GREEN' && '目標達成の可能性が非常に高いです'}
           {score.level === 'YELLOW' && '目標達成の見込みは良好です'}

@@ -87,11 +87,10 @@ export function V2ResultSection(props: V2ResultSectionProps) {
                       cy="64"
                       r="56"
                       fill="none"
-                      stroke="currentColor"
+                      stroke={(simResult?.score.overall ?? 0) >= 80 ? '#4A7C59' : (simResult?.score.overall ?? 0) >= 50 ? '#C8B89A' : '#CC3333'}
                       strokeWidth="8"
                       strokeLinecap="round"
                       strokeDasharray={`${(simResult?.score.overall ?? 0) * 3.52} 352`}
-                      className={readiness.textColor}
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -352,7 +351,12 @@ export function V2ResultSection(props: V2ResultSectionProps) {
                 <div className="flex items-center justify-between mb-2">
                   <Badge
                     variant="outline"
-                    className="border-gray-400 text-gray-700"
+                    className={cn(
+                      insight.category === 'strength' && 'bg-[#E8F5E8] text-[#4A7C59] border-[#4A7C59]/30',
+                      insight.category === 'weakness' && 'bg-[#FDE8E8] text-[#CC3333] border-[#CC3333]/30',
+                      insight.category === 'opportunity' && 'bg-[#E8EFF5] text-[#4A6FA5] border-[#4A6FA5]/30',
+                      insight.category === 'threat' && 'border-gray-400 text-gray-700',
+                    )}
                   >
                     {insight.category === 'strength' && '強み'}
                     {insight.category === 'weakness' && '弱み'}
