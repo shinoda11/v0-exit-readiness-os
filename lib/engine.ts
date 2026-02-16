@@ -592,8 +592,8 @@ export function createDefaultProfile(): Profile {
     mode: 'solo',
     
     grossIncome: 1200,
-    rsuAnnual: 200,
-    sideIncomeNet: 50,
+    rsuAnnual: 0,
+    sideIncomeNet: 0,
     partnerGrossIncome: 0,
     partnerRsuAnnual: 0,
     

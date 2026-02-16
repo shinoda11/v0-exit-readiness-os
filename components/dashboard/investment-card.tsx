@@ -60,43 +60,6 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
         <FieldError message={getFieldError?.('expectedReturn')} />
       </div>
 
-      {/* Inflation rate */}
-      <div>
-        <SliderInput
-          label={<TermTooltip term="インフレ率" description={glossary['インフレ率']} />}
-          value={profile.inflationRate}
-          onChange={(value) => onUpdate({ inflationRate: value })}
-          min={0}
-          max={5}
-          step={0.1}
-          unit="%"
-        />
-        <FieldError message={getFieldError?.('inflationRate')} />
-      </div>
-
-      {/* Real return display */}
-      <div className="rounded-lg bg-muted/50 p-3">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">実質リターン</span>
-          <span className="font-semibold">{realReturn.toFixed(1)}%</span>
-        </div>
-      </div>
-
-      {/* Volatility */}
-      <div>
-        <SliderInput
-          label={<TermTooltip term="ボラティリティ" description={glossary['ボラティリティ']} />}
-          description="標準偏差"
-          value={Math.round(profile.volatility * 100)}
-          onChange={(value) => onUpdate({ volatility: value / 100 })}
-          min={5}
-          max={30}
-          step={1}
-          unit="%"
-        />
-        <FieldError message={getFieldError?.('volatility')} />
-      </div>
-
       {/* Estimated effective tax rate (read-only) */}
       <div className="rounded-lg bg-muted/50 p-3 space-y-1">
         <div className="flex items-center justify-between text-sm">
@@ -129,11 +92,48 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
         className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
       >
         <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
-        高度な設定
+        詳細設定
       </button>
 
       {showAdvanced && (
-        <div className="space-y-4 pl-3 border-l-2 border-muted">
+        <div className="space-y-6 pl-3 border-l-2 border-muted">
+          {/* Inflation rate */}
+          <div>
+            <SliderInput
+              label={<TermTooltip term="インフレ率" description={glossary['インフレ率']} />}
+              value={profile.inflationRate}
+              onChange={(value) => onUpdate({ inflationRate: value })}
+              min={0}
+              max={5}
+              step={0.1}
+              unit="%"
+            />
+            <FieldError message={getFieldError?.('inflationRate')} />
+          </div>
+
+          {/* Real return display */}
+          <div className="rounded-lg bg-muted/50 p-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">実質リターン</span>
+              <span className="font-semibold">{realReturn.toFixed(1)}%</span>
+            </div>
+          </div>
+
+          {/* Volatility */}
+          <div>
+            <SliderInput
+              label={<TermTooltip term="ボラティリティ" description={glossary['ボラティリティ']} />}
+              description="標準偏差"
+              value={Math.round(profile.volatility * 100)}
+              onChange={(value) => onUpdate({ volatility: value / 100 })}
+              min={5}
+              max={30}
+              step={1}
+              unit="%"
+            />
+            <FieldError message={getFieldError?.('volatility')} />
+          </div>
+
           {/* Auto tax toggle */}
           <label className="flex items-center gap-2 text-sm cursor-pointer">
             <input
@@ -160,23 +160,23 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
               <FieldError message={getFieldError?.('effectiveTaxRate')} />
             </div>
           )}
+
+          {/* Retirement spending multiplier */}
+          <div>
+            <SliderInput
+              label={<TermTooltip term="退職後支出倍率" description={glossary['退職後支出倍率']} />}
+              description="現役時比"
+              value={Math.round(profile.retireSpendingMultiplier * 100)}
+              onChange={(value) => onUpdate({ retireSpendingMultiplier: value / 100 })}
+              min={50}
+              max={120}
+              step={5}
+              unit="%"
+            />
+            <FieldError message={getFieldError?.('retireSpendingMultiplier')} />
+          </div>
         </div>
       )}
-
-      {/* Retirement spending multiplier */}
-      <div>
-        <SliderInput
-          label={<TermTooltip term="退職後支出倍率" description={glossary['退職後支出倍率']} />}
-          description="現役時比"
-          value={Math.round(profile.retireSpendingMultiplier * 100)}
-          onChange={(value) => onUpdate({ retireSpendingMultiplier: value / 100 })}
-          min={50}
-          max={120}
-          step={5}
-          unit="%"
-        />
-        <FieldError message={getFieldError?.('retireSpendingMultiplier')} />
-      </div>
     </div>
   );
 
@@ -185,8 +185,6 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
       <>
         {'リターン'}
         <span className="font-medium text-foreground">{profile.expectedReturn}%</span>
-        {' / インフレ'}
-        <span className="font-medium text-foreground">{profile.inflationRate}%</span>
         {' / 税率'}
         <span className="font-medium text-foreground">{displayRate.toFixed(1)}%</span>
       </>

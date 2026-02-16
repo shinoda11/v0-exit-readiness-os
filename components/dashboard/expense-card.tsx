@@ -23,32 +23,32 @@ export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChan
 
   const content = (
     <div className="space-y-6">
-      {/* Living cost */}
+      {/* Living cost (monthly input, stored as annual) */}
       <div>
         <SliderInput
-          label="基本生活費"
+          label="基本生活費（住居費除く・月額）"
           description="食費、光熱費、通信費など"
-          value={profile.livingCostAnnual}
-          onChange={(value) => onUpdate({ livingCostAnnual: value })}
-          min={100}
-          max={1200}
-          step={10}
-          unit="万円"
+          value={Math.round(profile.livingCostAnnual / 12)}
+          onChange={(value) => onUpdate({ livingCostAnnual: Math.round(value * 12) })}
+          min={8}
+          max={100}
+          step={1}
+          unit="万円/月"
         />
         <FieldError message={getFieldError?.('livingCostAnnual')} />
       </div>
 
-      {/* Housing cost */}
+      {/* Housing cost (monthly input, stored as annual) */}
       <div>
         <SliderInput
-          label="住居費"
+          label="住居費（家賃/ローン・月額）"
           description="家賃またはローン返済"
-          value={profile.housingCostAnnual}
-          onChange={(value) => onUpdate({ housingCostAnnual: value })}
+          value={Math.round(profile.housingCostAnnual / 12)}
+          onChange={(value) => onUpdate({ housingCostAnnual: Math.round(value * 12) })}
           min={0}
-          max={600}
-          step={10}
-          unit="万円"
+          max={50}
+          step={1}
+          unit="万円/月"
         />
         <FieldError message={getFieldError?.('housingCostAnnual')} />
       </div>
