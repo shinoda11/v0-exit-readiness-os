@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { useCallback } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,6 +33,18 @@ export function SliderInput({
   className,
   disabled = false,
 }: SliderInputProps) {
+  // Local string state for the text input to allow intermediate values during typing
+  const [localValue, setLocalValue] = useState(String(value));
+  const [isFocused, setIsFocused] = useState(false);
+  const focusRef = useRef(false);
+
+  // Sync local value from prop when not focused (e.g. slider changes, external updates)
+  useEffect(() => {
+    if (!focusRef.current) {
+      setLocalValue(String(value));
+    }
+  }, [value]);
+
   const handleSliderChange = useCallback(
     (values: number[]) => {
       onChange(values[0]);
@@ -40,16 +52,47 @@ export function SliderInput({
     [onChange]
   );
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = Number.parseFloat(e.target.value);
-      if (!Number.isNaN(newValue)) {
-        // Clamp value to min/max
-        const clampedValue = Math.min(max, Math.max(min, newValue));
-        onChange(clampedValue);
+  const commitValue = useCallback(
+    (raw: string) => {
+      const parsed = Number.parseFloat(raw);
+      if (!Number.isNaN(parsed)) {
+        const clamped = Math.min(max, Math.max(min, parsed));
+        onChange(clamped);
+        setLocalValue(String(clamped));
+      } else {
+        // Reset to current prop value if invalid
+        setLocalValue(String(value));
       }
     },
-    [onChange, min, max]
+    [onChange, min, max, value]
+  );
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setLocalValue(e.target.value);
+    },
+    []
+  );
+
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+    focusRef.current = true;
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+    focusRef.current = false;
+    commitValue(localValue);
+  }, [commitValue, localValue]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        commitValue(localValue);
+        (e.target as HTMLInputElement).blur();
+      }
+    },
+    [commitValue, localValue]
   );
 
   return (
@@ -66,8 +109,11 @@ export function SliderInput({
         <div className="flex shrink-0 items-center gap-1.5">
           <Input
             type="number"
-            value={value}
+            value={isFocused ? localValue : value}
             onChange={handleInputChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
             min={min}
             max={max}
             step={step}
