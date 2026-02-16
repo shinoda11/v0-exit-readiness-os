@@ -121,7 +121,8 @@ export function HousingPlanCard({ profile }: HousingPlanCardProps) {
   // --- 決定論的資産予測 ---
   const projectionData = useMemo(() => {
     const maxAge = 100;
-    const realReturn = (profile.expectedReturn - profile.inflationRate) / 100;
+    const nominalReturn = profile.expectedReturn / 100;
+    const inflationRate = profile.inflationRate / 100;
     const initialAssets =
       profile.assetCash + profile.assetInvest + profile.assetDefinedContributionJP;
 
@@ -145,14 +146,14 @@ export function HousingPlanCard({ profile }: HousingPlanCardProps) {
       return net;
     }
 
-    function baseExpenses(age: number): number {
-      let expenses = profile.livingCostAnnual;
+    function baseExpenses(age: number, inflationFactor: number): number {
+      let expenses = profile.livingCostAnnual * inflationFactor;
       for (const event of profile.lifeEvents) {
         if (age >= event.age) {
           const endAge = event.duration ? event.age + event.duration : maxAge + 1;
           if (age < endAge) {
-            if (event.type === 'expense_increase') expenses += event.amount;
-            else if (event.type === 'expense_decrease') expenses -= event.amount;
+            if (event.type === 'expense_increase') expenses += event.amount * inflationFactor;
+            else if (event.type === 'expense_decrease') expenses -= event.amount * inflationFactor;
           }
         }
       }
@@ -183,22 +184,25 @@ export function HousingPlanCard({ profile }: HousingPlanCardProps) {
       });
       data.push(point);
 
+      const yearsElapsed = age - profile.currentAge;
+      const inflationFactor = Math.pow(1 + inflationRate, yearsElapsed);
+
       const income = netIncome(age);
-      const expenses = baseExpenses(age);
+      const expenses = baseExpenses(age, inflationFactor);
 
-      // 賃貸シナリオ
-      const rentNet = income - expenses - rentAnnual;
-      rentAssets = rentAssets + rentNet + rentAssets * realReturn;
+      // 賃貸シナリオ (rent inflates)
+      const inflatedRent = rentAnnual * inflationFactor;
+      const rentNet = income - expenses - inflatedRent;
+      rentAssets = rentAssets + rentNet + rentAssets * nominalReturn;
 
-      // 各購入プラン
+      // 各購入プラン (mortgage is nominal fixed, maintenance inflates)
       plans.forEach((plan, i) => {
         const yearsSincePurchase = age - profile.currentAge;
-        const housingCost =
-          yearsSincePurchase < plan.years
-            ? planPayments[i] * 12 + plan.maintenanceCost
-            : plan.maintenanceCost;
+        const mortgagePayment = yearsSincePurchase < plan.years ? planPayments[i] * 12 : 0;
+        const maintenance = plan.maintenanceCost * inflationFactor;
+        const housingCost = mortgagePayment + maintenance;
         const planNet = income - expenses - housingCost;
-        planAssets[i] = planAssets[i] + planNet + planAssets[i] * realReturn;
+        planAssets[i] = planAssets[i] + planNet + planAssets[i] * nominalReturn;
       });
     }
 

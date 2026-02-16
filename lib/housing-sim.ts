@@ -120,58 +120,67 @@ function calculateNetIncome(profile: Profile, age: number): number {
   return netIncome;
 }
 
-// Calculate annual expenses
-function calculateExpenses(profile: Profile, age: number): number {
+// Calculate annual expenses with inflation
+function calculateExpenses(profile: Profile, age: number, inflationFactor: number = 1): number {
   const isRetired = age >= profile.targetRetireAge;
-  
-  let baseExpenses = profile.livingCostAnnual + profile.housingCostAnnual;
-  
+
+  const isOwner = profile.homeStatus === 'owner' || profile.homeStatus === 'relocating';
+  const housingCost = isOwner
+    ? profile.housingCostAnnual
+    : profile.housingCostAnnual * inflationFactor;
+
+  let baseExpenses = profile.livingCostAnnual * inflationFactor + housingCost;
+
   for (const event of profile.lifeEvents) {
     if (age >= event.age) {
       const endAge = event.duration ? event.age + event.duration : MAX_AGE;
       if (age < endAge) {
         if (event.type === 'expense_increase') {
-          baseExpenses += event.amount;
+          baseExpenses += event.amount * inflationFactor;
         } else if (event.type === 'expense_decrease') {
-          baseExpenses -= event.amount;
+          baseExpenses -= event.amount * inflationFactor;
         }
       }
     }
   }
-  
+
   if (isRetired) {
     baseExpenses *= profile.retireSpendingMultiplier;
   }
-  
+
   return Math.max(0, baseExpenses);
 }
 
 // Run single simulation with seeded random
 function runSingleSimulationSeeded(profile: Profile, rng: SeededRandom): AssetPoint[] {
   const path: AssetPoint[] = [];
-  
+
   let totalAssets = profile.assetCash + profile.assetInvest + profile.assetDefinedContributionJP;
-  const realReturn = (profile.expectedReturn - profile.inflationRate) / 100;
-  
+  const nominalReturn = profile.expectedReturn / 100;
+  const inflationRate = profile.inflationRate / 100;
+
   for (let age = profile.currentAge; age <= MAX_AGE; age++) {
     path.push({ age, assets: Math.round(totalAssets) });
-    
+
+    const yearsElapsed = age - profile.currentAge;
+    const inflationFactor = Math.pow(1 + inflationRate, yearsElapsed);
+
     const income = calculateNetIncome(profile, age);
-    const expenses = calculateExpenses(profile, age);
+    const expenses = calculateExpenses(profile, age, inflationFactor);
     const netCashFlow = income - expenses;
-    
+
     const dcContrib = age < profile.targetRetireAge ? profile.dcContributionAnnual : 0;
-    
-    const yearReturn = realReturn + rng.nextGaussian() * profile.volatility;
+
+    const yearReturn = nominalReturn + rng.nextGaussian() * profile.volatility;
     const investmentGain = totalAssets * yearReturn;
-    
+
     totalAssets = totalAssets + netCashFlow + dcContrib + investmentGain;
-    
+
     if (totalAssets < -10000) {
       totalAssets = -10000;
     }
   }
-  
+
   return path;
 }
 

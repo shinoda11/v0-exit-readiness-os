@@ -243,69 +243,83 @@ function calculateNetIncome(profile: Profile, age: number): number {
   return netIncome;
 }
 
-// Calculate annual expenses
-function calculateExpenses(profile: Profile, age: number): number {
+// Calculate annual expenses with inflation
+// inflationFactor: (1 + rate)^yearsElapsed — applied to living costs & rent, not mortgage
+function calculateExpenses(profile: Profile, age: number, inflationFactor: number = 1): number {
   const isRetired = age >= profile.targetRetireAge;
-  
-  let baseExpenses = profile.livingCostAnnual + profile.housingCostAnnual;
-  
-  // Apply life events
+
+  // Housing cost: rent inflates, mortgage stays nominal
+  const isOwner = profile.homeStatus === 'owner' || profile.homeStatus === 'relocating';
+  const housingCost = isOwner
+    ? profile.housingCostAnnual                     // Mortgage: nominal fixed
+    : profile.housingCostAnnual * inflationFactor;  // Rent: inflates
+
+  // Living costs inflate
+  let baseExpenses = profile.livingCostAnnual * inflationFactor + housingCost;
+
+  // Life event amounts also inflate (they're defined in today's 万円)
   for (const event of profile.lifeEvents) {
     if (age >= event.age) {
       const endAge = event.duration ? event.age + event.duration : MAX_AGE;
       if (age < endAge) {
         if (event.type === 'expense_increase') {
-          baseExpenses += event.amount;
+          baseExpenses += event.amount * inflationFactor;
         } else if (event.type === 'expense_decrease') {
-          baseExpenses -= event.amount;
+          baseExpenses -= event.amount * inflationFactor;
         }
       }
     }
   }
-  
-  // Retired lifestyle adjustment
+
+  // Retired lifestyle adjustment (applied after inflation)
   if (isRetired) {
     baseExpenses *= profile.retireSpendingMultiplier;
   }
-  
+
   return Math.max(0, baseExpenses);
 }
 
 // Run a single simulation path
 function runSingleSimulation(profile: Profile): AssetPoint[] {
   const path: AssetPoint[] = [];
-  
+
   // Initial assets
   let totalAssets = profile.assetCash + profile.assetInvest + profile.assetDefinedContributionJP;
-  
-  const realReturn = (profile.expectedReturn - profile.inflationRate) / 100;
-  
+
+  // Nominal return (inflation is now reflected in expenses, not subtracted from returns)
+  const nominalReturn = profile.expectedReturn / 100;
+  const inflationRate = profile.inflationRate / 100;
+
   for (let age = profile.currentAge; age <= MAX_AGE; age++) {
     // Record current state
     path.push({ age, assets: Math.round(totalAssets) });
-    
+
+    // Inflation factor: compound from start year
+    const yearsElapsed = age - profile.currentAge;
+    const inflationFactor = Math.pow(1 + inflationRate, yearsElapsed);
+
     // Calculate cash flow for this year
     const income = calculateNetIncome(profile, age);
-    const expenses = calculateExpenses(profile, age);
+    const expenses = calculateExpenses(profile, age, inflationFactor);
     const netCashFlow = income - expenses;
-    
+
     // Add DC contribution if working
     const dcContrib = age < profile.targetRetireAge ? profile.dcContributionAnnual : 0;
-    
-    // Apply investment return with volatility
-    const yearReturn = randomNormal(realReturn, profile.volatility);
+
+    // Apply investment return with volatility (nominal)
+    const yearReturn = randomNormal(nominalReturn, profile.volatility);
     const investmentGain = totalAssets * yearReturn;
-    
+
     // Update total assets
     totalAssets = totalAssets + netCashFlow + dcContrib + investmentGain;
-    
+
     // Assets can go negative (debt), but we track it
     if (totalAssets < -10000) {
       // Cap negative at -1億 for practical purposes
       totalAssets = -10000;
     }
   }
-  
+
   return path;
 }
 
@@ -338,13 +352,16 @@ function calculateMetrics(allPaths: AssetPoint[][], profile: Profile): KeyMetric
   const medianPath = getPercentilePath(allPaths, 50);
   const assetAt100 = medianPath[medianPath.length - 1]?.assets ?? 0;
   
-  // FIRE age calculation (when passive income can cover expenses)
+  // FIRE age calculation (when 4% SWR covers inflated expenses at that age)
   let fireAge: number | null = null;
-  const targetExpenses = calculateExpenses(profile, profile.targetRetireAge);
+  const inflationRate = profile.inflationRate / 100;
   const safeWithdrawalRate = 0.04; // 4% rule
-  
+
   for (const point of medianPath) {
-    if (point.assets * safeWithdrawalRate >= targetExpenses) {
+    const yearsElapsed = point.age - profile.currentAge;
+    const inflationFactor = Math.pow(1 + inflationRate, yearsElapsed);
+    const expensesAtAge = calculateExpenses(profile, point.age, inflationFactor);
+    if (point.assets * safeWithdrawalRate >= expensesAtAge) {
       fireAge = point.age;
       break;
     }
@@ -358,16 +375,20 @@ function calculateMetrics(allPaths: AssetPoint[][], profile: Profile): KeyMetric
   };
 }
 
-// Calculate post-retirement cash flow breakdown
+// Calculate post-retirement cash flow breakdown (at retirement age, with inflation)
 function calculateCashFlow(profile: Profile): CashFlowBreakdown {
   const retireAge = profile.targetRetireAge;
   const pensionAge = 65;
-  
+
+  // Inflation factor at retirement
+  const yearsToRetire = retireAge - profile.currentAge;
+  const inflationFactor = Math.pow(1 + profile.inflationRate / 100, yearsToRetire);
+
   // Simplified cash flow at retirement
   const income = profile.retirePassiveIncome;
   const pension = retireAge >= pensionAge ? 200 : 0;
   const dividends = (profile.assetInvest * 0.03); // Assume 3% dividend yield
-  const expenses = calculateExpenses(profile, retireAge);
+  const expenses = calculateExpenses(profile, retireAge, inflationFactor);
   
   return {
     income,
@@ -401,8 +422,10 @@ export function computeExitScore(metrics: KeyMetrics, profile: Profile, paths: S
   // Survival score (0-100)
   const survival = Math.min(100, safeNum(metrics.survivalRate));
 
-  // Lifestyle score: based on asset cushion
-  const targetExpenses = calculateExpenses(profile, profile.targetRetireAge);
+  // Lifestyle score: based on asset cushion (with inflation at retirement)
+  const yearsToRetire = profile.targetRetireAge - profile.currentAge;
+  const retireInflation = Math.pow(1 + profile.inflationRate / 100, yearsToRetire);
+  const targetExpenses = calculateExpenses(profile, profile.targetRetireAge, retireInflation);
   const yearsOfExpenses = paths.yearlyData[0]?.assets
     ? safeNum(paths.yearlyData[0].assets / targetExpenses)
     : 0;
