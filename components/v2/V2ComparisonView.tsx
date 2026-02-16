@@ -14,6 +14,7 @@ import {
   CalendarDays,
   Save,
   Columns,
+  Info,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -337,6 +338,104 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
             </tbody>
           </table>
         </div>
+
+        {/* 全指標同一ガイド */}
+        {(() => {
+          // 各シナリオの4指標が「現在」と全て同一かチェック
+          const currentFireAge = simResult?.metrics.fireAge ?? null;
+          const currentAssets60 = (() => {
+            if (!simResult?.paths.yearlyData || profile.currentAge > 60) return null;
+            const idx = Math.min(60 - profile.currentAge, simResult.paths.yearlyData.length - 1);
+            return simResult.paths.yearlyData[idx]?.assets ?? null;
+          })();
+          const currentMonthlyCF = (() => {
+            const netCF = simResult?.cashFlow?.netCashFlow;
+            if (netCF == null || Number.isNaN(netCF)) return null;
+            return Math.round(netCF / 12);
+          })();
+          const currentDrawdownAge = (() => {
+            if (!simResult?.paths.yearlyData) return null;
+            const ddIdx = simResult.paths.yearlyData.findIndex((y, i) =>
+              i > 0 && y.assets < simResult.paths.yearlyData[i - 1].assets
+            );
+            return ddIdx > 0 ? profile.currentAge + ddIdx : null;
+          })();
+
+          const allSame = scenarios.slice(0, 2).every((scenario) => {
+            const sFireAge = scenario.result?.metrics.fireAge ?? null;
+            const sAssets60 = (() => {
+              const data = scenario.result?.paths.yearlyData;
+              if (!data || scenario.profile.currentAge > 60) return null;
+              const idx = Math.min(60 - scenario.profile.currentAge, data.length - 1);
+              return data[idx]?.assets ?? null;
+            })();
+            const sMonthlyCF = (() => {
+              const netCF = scenario.result?.cashFlow?.netCashFlow;
+              if (netCF == null || Number.isNaN(netCF)) return null;
+              return Math.round(netCF / 12);
+            })();
+            const sDrawdownAge = (() => {
+              const data = scenario.result?.paths.yearlyData;
+              if (!data) return null;
+              const ddIdx = data.findIndex((y, i) => i > 0 && y.assets < data[i - 1].assets);
+              return ddIdx > 0 ? scenario.profile.currentAge + ddIdx : null;
+            })();
+
+            return sFireAge === currentFireAge
+              && sAssets60 === currentAssets60
+              && sMonthlyCF === currentMonthlyCF
+              && sDrawdownAge === currentDrawdownAge;
+          });
+
+          if (!allSame) return null;
+
+          return (
+            <div className="mt-4 flex gap-3 rounded-lg border-l-4 border-l-[#C8B89A] bg-[#C8B89A]/10 p-4 dark:bg-[#C8B89A]/5">
+              <div className="flex-shrink-0 mt-0.5">
+                <Info className="h-5 w-5 text-[#C8B89A]" />
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-medium text-sm">現在の条件とシナリオが同じ状態です</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    シナリオを保存した直後は、現在の条件と同じため差が表示されません。<br />
+                    比較するには、以下のどちらかを試してください：
+                  </p>
+                </div>
+                <div className="space-y-2 text-xs text-muted-foreground">
+                  <div className="flex gap-2">
+                    <span className="flex-shrink-0 font-medium text-foreground">①</span>
+                    <div>
+                      <span className="font-medium text-foreground">現在の条件を変更する</span>
+                      <p className="mt-0.5">シミュレーション画面で収入や支出を変えるか、ライフプランでイベントを追加・削除すると、ここに差分が表示されます。</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="flex-shrink-0 font-medium text-foreground">②</span>
+                    <div>
+                      <span className="font-medium text-foreground">別パターンのシナリオを追加する</span>
+                      <p className="mt-0.5">異なるイベントを組んで2つ目のシナリオを保存すると、シナリオ同士を並べて比較できます。</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <Link href="/">
+                    <Button variant="outline" size="sm" className="gap-1.5 bg-transparent text-xs">
+                      シミュレーションへ
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </Link>
+                  <Link href="/plan">
+                    <Button variant="outline" size="sm" className="gap-1.5 bg-transparent text-xs">
+                      ライフプランへ
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* アクション行 */}
         <div className="mt-4 pt-4 border-t flex items-center justify-between">
