@@ -161,7 +161,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
         <div className="flex flex-col items-center py-8">
           <Skeleton className="h-32 w-32 rounded-full" />
           <Skeleton className="mt-4 h-4 w-24" />
-          <div className="mt-6 grid w-full grid-cols-4 gap-3">
+          <div className="mt-6 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
               <Skeleton key={i} className="h-20" />
             ))}
@@ -279,7 +279,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
         </p>
 
         {/* Sub-scores grid */}
-        <div className="mt-6 grid w-full grid-cols-4 gap-3">
+        <div className="mt-6 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
           <SubScore
             label="サバイバル"
             value={score.survival}
