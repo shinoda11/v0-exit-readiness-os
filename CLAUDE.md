@@ -12,7 +12,7 @@ YOHACK — 人生の余白（お金・時間・体力）で人生の選択を比
 - ペルソナA（2,000〜3,000万・合理的最適化カップル）が最優先ターゲット
 
 ## 収益モデル
-- Pass: ¥29,800 / 90日（メイン収益。未実装、Stripe連携は Phase 2）
+- Pass: ¥29,800 / 90日（メイン収益。Stripe連携は Phase 3）
 - 1on1: ¥50,000 / 回（裏メニュー。LP・Instagramでは一切言及しない）
 - 運営者 = 開発者 = 1人（サラリーマン兼業）。週25分の稼働で回る設計が必須
 
@@ -21,67 +21,107 @@ YOHACK — 人生の余白（お金・時間・体力）で人生の選択を比
 - Zustand 5（状態管理）、Recharts（グラフ）
 - shadcn/ui + Tailwind CSS 4（UI）
 - Vercel（デプロイ、GitHub main ブランチ連携）
-- テスト: vitest 120本（`lib/__tests__/` に4ファイル）
-- **未導入**: Supabase（認証）、Stripe（決済）、SendGrid（メール）→ すべて Phase 2
+- テスト: vitest 169本（`lib/__tests__/` に5ファイル）
+- **未導入**: Supabase（認証）、Stripe（決済）、SendGrid（メール）→ すべて Phase 2-3
 
 ## 現在のルート構成
-| パス | 用途 | 備考 |
+
+### 公開ページ（認証なし）
+| パス | 用途 | 行数 |
 |------|------|------|
-| `/` | LP（7セクション） | 認証なし。Instagram → LP → FitGate の入口 |
-| `/fit` | FitGate（12問 + 自由記述） | 認証なし |
-| `/fit/result` | FitGate 判定結果 | 認証なし |
-| `/fit/prep` | Prep向けレター登録 | 認証なし |
-| `/app` | メインダッシュボード（入力 + シミュレーション結果） | Basic認証。オンボーディングウィザード付き |
-| `/app/v2` | 世界線比較 | Basic認証 |
-| `/app/plan` | ライフプラン（ライフイベント + RSU タブ切替） | Basic認証 |
-| `/app/settings` | 設定（データ管理・バージョン情報） | Basic認証 |
-| `/pricing` | 料金ページ | 認証なし |
-| `/legal/*` | 利用規約・プライバシー・特商法 | 認証なし |
+| `/` | LP（7セクション。Instagram → LP → FitGate の入口） | 359 |
+| `/fit` | FitGate（12問フォーム） | 285 |
+| `/fit/result` | FitGate 判定結果 | 222 |
+| `/fit/prep` | Prep向けレター登録 | 59 |
+| `/pricing` | 料金ページ | 160 |
+| `/legal/terms` | 利用規約 | 151 |
+| `/legal/privacy` | プライバシーポリシー | 146 |
+| `/legal/commercial` | 特商法 | 105 |
+
+### プロダクト（Basic認証 `/app/*`）
+| パス | 用途 | 行数 |
+|------|------|------|
+| `/app` | メインダッシュボード（入力カード + 結果タブ） | 576 |
+| `/app/branch` | 分岐ビルダー（ツリー + カテゴリ選択 + 世界線プレビュー） | 235 |
+| `/app/profile` | プロファイル入力（単カラム） | 283 |
+| `/app/worldline` | 世界線比較（旧 /v2） | 185 |
+| `/app/settings` | 設定（データ管理・バージョン情報） | 279 |
+
+### リダイレクト（スタブ）
+| パス | リダイレクト先 |
+|------|---------------|
+| `/app/v2` | → `/app/worldline` |
+| `/app/plan` | → `/app/branch` |
+| `/rsu` | → `/app/profile` |
+| `/timeline` | → `/app/branch` |
 
 ## ディレクトリ構造
 ```
 app/
   page.tsx              ← LP（7セクション）
   fit/                  ← FitGate（12問フォーム + 判定結果 + Prep）
+    page.tsx, result/page.tsx, prep/page.tsx
   app/
     page.tsx            ← メインダッシュボード
-    v2/page.tsx         ← 世界線比較
-    plan/page.tsx       ← ライフプラン
+    branch/page.tsx     ← 分岐ビルダー
+    profile/page.tsx    ← プロファイル入力
+    worldline/page.tsx  ← 世界線比較
     settings/page.tsx   ← 設定
+    v2/page.tsx         ← リダイレクトスタブ
+    plan/page.tsx       ← リダイレクトスタブ
+    layout.tsx          ← プロダクト共通レイアウト（Sidebar wrapper）
   pricing/page.tsx      ← 料金
   legal/                ← 利用規約・プライバシー・特商法
 
 components/
   dashboard/            ← 19ファイル（入力カード・結果カード・オンボーディング）
   v2/                   ← 10ファイル（世界線比較コンポーネント）
-  plan/                 ← 2ファイル（timeline-content, rsu-content）
-  layout/               ← sidebar, brand-story-dialog
-  ui/                   ← 27ファイル（shadcn/ui）
+  branch/               ← 4ファイル（branch-tree-viz, branch-category, branch-node, worldline-preview）
+  layout/               ← 3ファイル（sidebar, bottom-nav, brand-story-dialog）
+  plan/                 ← 1ファイル（rsu-content）
+  ui/                   ← 24ファイル（shadcn/ui）
   slider-input.tsx      ← 共通スライダー入力
   section-card.tsx      ← 共通セクションカード
+  theme-provider.tsx    ← テーマプロバイダー
 
 lib/
-  store.ts              ← Zustand SoT（Single Source of Truth）
-  engine.ts             ← モンテカルロシミュレーション
-  housing-sim.ts        ← 住宅シミュレーション
-  types.ts              ← 型定義
-  worldline-templates.ts← 世界線テンプレート
-  glossary.ts           ← 用語集
-  plan.ts               ← ライフプラン計算
-  utils.ts
-  v2/                   ← 7ファイル（世界線比較ロジック）
-  __tests__/            ← 4テストファイル
+  store.ts              ← Zustand SoT（415行）
+  engine.ts             ← モンテカルロシミュレーション（819行）
+  housing-sim.ts        ← 住宅シミュレーション（779行）
+  branch.ts             ← 分岐ビルダーロジック（369行）
+  types.ts              ← 型定義（217行）
+  fitgate.ts            ← FitGate判定 + Profile変換（120行）
+  worldline-templates.ts← 世界線テンプレート5種（119行）
+  plan.ts               ← ライフプラン計算（16行）
+  glossary.ts           ← 用語集（14行）
+  utils.ts              ← ユーティリティ（6行）
+  v2/                   ← 7ファイル（世界線比較ロジック: adapter, events, margin, strategy, store, worldline, readinessConfig）
+  __tests__/            ← 5テストファイル（169テスト）
+    engine.test.ts, adapter.test.ts, housing-sim.test.ts, e2e-personas.test.ts, e02-regression.test.ts
 
 hooks/                  ← 8ファイル
 scripts/                ← ケース台帳シミュレーション・感度分析・SoTチェック
+
 docs/
   lp-design.md             ← LP設計書 v1.0
   migration-from-lp.md     ← 旧LPリポからの移植ガイド
-  fitgate-reference/       ← 旧リポから抽出した移植対象コード（実装時の参照用）
+  fitgate-reference/       ← 旧リポから抽出した移植対象コード（8ファイル、実装時の参照用）
   case-catalog-results.md  ← 18ケースの賃貸vs購入比較結果
   sensitivity-analysis.md  ← 感度分析結果
   product-backlog.md       ← プロダクトバックログ
 ```
+
+## ナビゲーション
+
+### サイドバー（デスクトップ md+）
+ファイル: `components/layout/sidebar.tsx`（169行）
+- ロゴ: YohackSymbol（Y字分岐SVG）+ "YOHACK" + "人生に、余白を。"
+- メニュー: ダッシュボード `/app` | プロファイル `/app/profile` | 分岐ビルダー `/app/branch` | 世界線比較 `/app/worldline`
+- フッター: 設定 `/app/settings`
+
+### ボトムナビ（モバイル md未満）
+ファイル: `components/layout/bottom-nav.tsx`（47行）
+- タブ: ホーム `/app` | 分岐 `/app/branch` | 比較 `/app/worldline` | 設定 `/app/settings`
 
 ## アーキテクチャ原則
 
@@ -90,10 +130,12 @@ docs/
   - `profile`: ユーザー入力データ
   - `simResult`: シミュレーション計算結果
   - `scenarios`: 保存されたシナリオ
+  - `selectedBranchIds`: 分岐ビルダーの選択状態
+  - `customBranches`: ユーザー追加の分岐
 - `lib/v2/store.ts` は世界線比較の UI 状態専用（計算結果は持たない）。唯一の許可された例外
 - 第三のストアを絶対に作らない
 - 各ページ/コンポーネントは `useProfileStore()` から参照のみ。独自に `runSimulation` を呼び出さない
-- 違反チェック: `npm run check:store`（禁止パスのストアファイル検出 + `create()` の不正使用検出）
+- 違反チェック: `npm run check:store`
 
 ### localStorage 永続化
 - プロファイルとシナリオは localStorage に保存（Phase 2 で Supabase DB に移行予定）
@@ -130,6 +172,26 @@ docs/
 ### デフォルトプロファイル
 35歳 / solo / 年収1,200万 / 資産2,500万（現金500+投資2,000+DC300）/ 家賃月15万 / 期待リターン5% / インフレ2%
 
+## 分岐ビルダー (`lib/branch.ts` + `/app/branch`)
+
+### 概要
+ライフイベントを「確定・計画・不確定」の3カテゴリで整理し、不確定イベントの組み合わせから世界線候補を自動生成する。
+
+### UI構成（2ステップ）
+1. **select**: SVGタイムラインビジュアル + 3カテゴリの分岐チェックリスト + 「世界線を生成する」ボタン
+2. **preview**: 世界線候補リスト（スコア + 差分バッジ）+ 発見カード + 「比較する」ボタン → `/app/worldline` に遷移
+
+### 設計判断（確定済み）
+- 世界線候補: 最大5本。ベースライン（確定+計画のみ）は必ず含む
+- エンジン接続: 分岐 → `lib/v2/events.ts` のイベント変換 → `engine.ts` でモンテカルロ実行 → スコア算出
+- カスタムイベント追加: ボタンのみ配置（Phase C で実装予定）
+
+### SVGタイムライン
+- viewBox="0 0 400 240"、水平線（今→65→100歳）
+- 計画ブランチ: 上方向に実線（緑 #4A7C59）
+- 不確定ブランチ: 下方向に破線（茶 #8A7A62）
+- 分岐点ノード: Gold #C8B89A + pulse アニメーション
+
 ## ビジネス判断基準（市場調査 2026-02 結論）
 
 機能追加・UI変更・メッセージング変更の判断時に参照すること。
@@ -160,30 +222,22 @@ docs/
 - **高収入特化の精度**: 累進課税・収入連動年金・インフレ調整
 - **セルフサービス**: 自分で数字を動かす。「答えを出してもらう」導線は作らない
 
-## LP統合計画
+## フェーズ計画
 
-### 現状
-- LP は別リポジトリ（`yohack-lp.vercel.app`）にデプロイ済み
-- プロダクトは `yohack.jp` にデプロイ済み
-- 両者は未接続
+### 完了
+- **Phase A**: モバイル基盤修正（overflow-x-hidden、ボトムナビ導入）
+- **Phase B**: ページ再構成（/branch, /worldline, /profile 新設 + エンジン接続）
+- **Phase B-fix**: ダッシュボード復元（入力カード + 結果タブの3カラム構成を維持）
+- **LP・FitGate統合**: / → LP、/app/* → プロダクト、FitGate 12問 + 判定ロジック
 
-### 最終形のルート構成（Phase 3）
-```
-/              ← LP（S1〜S7）
-/fit           ← FitGate（12問 + 自由記述）
-/fit/result    ← 判定結果（Ready → Stripe Checkout）
-/app           ← ダッシュボード ※ 現在の / を移動
-/app/v2        ← 世界線比較
-/app/plan      ← ライフプラン
-/app/settings  ← 設定
-```
+### 次にやること
+- **UX/UI改善**: ダッシュボードのモバイルレイアウト改善（結果が入力カード群の下に埋もれる問題）、世界線比較の5タブ小画面対応、モバイルでのブランド浸透（Y-branch）
 
-### フェーズ
-- **Phase 1（完了）**: プロダクト品質向上。LP・FitGate 実装済み。`/` → LP、`/app/*` → プロダクト
+### 将来
 - **Phase 2**: Supabase導入（認証 + DB）。localStorage → DB移行
-- **Phase 3**: Stripe連携（Pass 課金）。アクセス制御（Pass未購入者はプロダクトにアクセスできない）
+- **Phase 3**: Stripe連携（Pass課金）。アクセス制御（Pass未購入者はプロダクトにアクセスできない）
 
-### FitGate → プロファイル自動プリセット（Phase 2-3）
+## FitGate → プロファイル自動プリセット
 | FitGate質問 | → YOHACKフィールド |
 |------------|-------------------|
 | 個人年収レンジ | `grossIncome` |
@@ -194,19 +248,16 @@ docs/
 | 検討物件価格帯 | 住宅プラン初期値 |
 | 貯蓄＋投資 | `assetCash + assetInvest` |
 
-### 移植の詳細手順
-`docs/migration-from-lp.md` を参照。旧リポから移植対象コードを `docs/fitgate-reference/` に抽出済み。LP のセクション構成は `docs/lp-design.md` に準拠。
-
 ## コマンド
 | コマンド | 用途 |
 |---------|------|
 | `pnpm dev` | 開発サーバー |
 | `pnpm build` | ビルド |
 | `pnpm lint` | ESLint |
-| `pnpm test` | vitest 実行 |
-| `pnpm test:watch` | vitest ウォッチ |
+| `pnpm test` | vitest実行（169本） |
+| `pnpm test:watch` | vitestウォッチ |
 | `pnpm run case-sim` | ケース台帳シミュレーション（C01-C18） |
-| `npm run check:store` | SoT ガードレールチェック |
+| `npm run check:store` | SoTガードレールチェック |
 
 ## コーディング規約
 - UIコンポーネントは shadcn/ui を使用
@@ -216,6 +267,8 @@ docs/
 - カラーパレット: Night #1A1916 / Linen #F0ECE4 / Gold #C8B89A / テキスト #5A5550 / 背景 #FAF9F7
 - コンポーネントファイルは `'use client'` ディレクティブ必須
 - 金融アドバイスではない旨の免責を、計算結果を表示するすべての画面に記載
+- モバイルファーストのレスポンシブデザイン（max-w-2xl mx-auto が基本パターン）
+- タッチターゲット 44px 以上
 
 ## やらないことリスト
 - 物件紹介・保険紹介・投資商品紹介の機能
@@ -230,3 +283,4 @@ docs/
 - DecisionHost の新しい世界線作成（`components/v2/DecisionHost.tsx` L58）
 - `middleware.ts` → `proxy` 規約への移行（Next.js 16 非推奨警告）
 - TypeScript 5.0.2 → 5.1.0+ へのアップグレード
+- metadataBase 未設定（OGP用）
