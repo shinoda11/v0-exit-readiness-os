@@ -113,15 +113,24 @@ docs/
 
 ## ナビゲーション
 
+### モバイルヘッダー（md未満）
+ファイル: `components/layout/mobile-header.tsx`
+- Y-branchシンボル（20px）+ "YOHACK" ワードマーク（Gold）
+- スクロールで流れる（sticky ではない）
+- 共通レイアウト `app/app/layout.tsx` から全プロダクトページに適用
+
 ### サイドバー（デスクトップ md+）
-ファイル: `components/layout/sidebar.tsx`（169行）
+ファイル: `components/layout/sidebar.tsx`
 - ロゴ: YohackSymbol（Y字分岐SVG）+ "YOHACK" + "人生に、余白を。"
 - メニュー: ダッシュボード `/app` | プロファイル `/app/profile` | 分岐ビルダー `/app/branch` | 世界線比較 `/app/worldline`
 - フッター: 設定 `/app/settings`
 
 ### ボトムナビ（モバイル md未満）
-ファイル: `components/layout/bottom-nav.tsx`（47行）
-- タブ: ホーム `/app` | 分岐 `/app/branch` | 比較 `/app/worldline` | 設定 `/app/settings`
+ファイル: `components/layout/bottom-nav.tsx`
+- タブ: ホーム(Y-branch) `/app` | 分岐 `/app/branch` | 比較 `/app/worldline` | 設定 `/app/settings`
+
+### 共通コンポーネント
+- `components/layout/yohack-symbol.tsx`: Y-branchシンボルSVG（sidebar, mobile-header, bottom-nav で共有）
 
 ## アーキテクチャ原則
 

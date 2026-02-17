@@ -352,7 +352,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Mobile: 入力/結果 Tab Bar */}
-          <div className="md:hidden sticky top-16 z-20 -mx-4 bg-[#FAF9F7] border-b border-border">
+          <div className="md:hidden sticky top-16 z-20 -mx-4 bg-[#FAF9F7] border-b border-[#F0ECE4]">
             <div className="flex">
               <button
                 onClick={() => setMobileTab('input')}

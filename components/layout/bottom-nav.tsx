@@ -2,17 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, GitBranch, Scale, Settings } from 'lucide-react';
+import { GitBranch, Scale, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { YohackSymbol } from '@/components/layout/yohack-symbol';
 
 const tabs = [
-  { href: '/app', label: 'ホーム', icon: Home },
+  { href: '/app', label: 'ホーム', icon: null },
   { href: '/app/branch', label: '分岐', icon: GitBranch },
   { href: '/app/worldline', label: '比較', icon: Scale },
   { href: '/app/settings', label: '設定', icon: Settings },
 ] as const;
-
-// Note: /app/profile is not in the bottom nav; it's accessed from the sidebar on desktop
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -22,6 +21,7 @@ export function BottomNav() {
       <div className="flex h-16 items-stretch" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {tabs.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
+          const isHome = href === '/app';
           return (
             <Link
               key={href}
@@ -33,7 +33,7 @@ export function BottomNav() {
                   : 'text-[#B5AFA6]'
               )}
             >
-              <Icon className="h-5 w-5" />
+              {isHome ? <YohackSymbol size={20} /> : Icon && <Icon className="h-5 w-5" />}
               <span>{label}</span>
             </Link>
           );
