@@ -436,7 +436,7 @@ export function RSUContent() {
                       </TableCell>
                       <TableCell
                         className={`text-right font-medium ${
-                          gain >= 0 ? 'text-gray-700' : 'text-gray-600'
+                          gain >= 0 ? 'text-[#5A5550]' : 'text-[#8A7A62]'
                         }`}
                       >
                         {gain >= 0 ? '+' : ''}

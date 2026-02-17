@@ -91,7 +91,7 @@ export function V2InputSection(props: V2InputSectionProps) {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-gray-600" />
+              <Sparkles className="h-5 w-5 text-[#8A7A62]" />
               余白の使い道
             </CardTitle>
             <CardDescription className="space-y-1">
@@ -161,8 +161,8 @@ export function V2InputSection(props: V2InputSectionProps) {
                             "rounded-xl border-2 p-6 text-center",
                             cfResult.type === 'surplus' && "border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950/30",
                             cfResult.type === 'cost' && "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30",
-                            cfResult.type === 'neutral' && "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/30",
-                            cfResult.type === 'unknown' && "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/30"
+                            cfResult.type === 'neutral' && "border-[#F0ECE4] bg-[#FAF9F7] dark:border-[#8A7A62] dark:bg-[#1A1916]/30",
+                            cfResult.type === 'unknown' && "border-[#F0ECE4] bg-[#FAF9F7] dark:border-[#8A7A62] dark:bg-[#1A1916]/30"
                           )}>
                             {cfResult.type === 'unknown' ? (
                               <div className="text-muted-foreground">—</div>
@@ -584,7 +584,7 @@ function AllocationSliders({
             max="100"
             value={allocation.travel}
             onChange={(e) => setAllocation('travel', Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+            className="w-full h-2 bg-[#F0ECE4] rounded-lg appearance-none cursor-pointer accent-emerald-600"
           />
         </div>
 
@@ -600,7 +600,7 @@ function AllocationSliders({
             max="100"
             value={allocation.invest}
             onChange={(e) => setAllocation('invest', Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            className="w-full h-2 bg-[#F0ECE4] rounded-lg appearance-none cursor-pointer accent-blue-600"
           />
         </div>
 
@@ -616,7 +616,7 @@ function AllocationSliders({
             max="100"
             value={allocation.freeTime}
             onChange={(e) => setAllocation('freeTime', Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600"
+            className="w-full h-2 bg-[#F0ECE4] rounded-lg appearance-none cursor-pointer accent-amber-600"
           />
         </div>
       </div>

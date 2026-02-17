@@ -42,7 +42,7 @@ export function ConclusionCard({ kpis, goalLens = 'balance', isLoading }: Conclu
 
   return (
     <div
-      className="relative overflow-hidden rounded-xl p-6 transition-all bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800"
+      className="relative overflow-hidden rounded-xl p-6 transition-all bg-[#FAF9F7] dark:bg-[#1A1916]/50 border border-[#F0ECE4] dark:border-[#5A5550]"
     >
       {/* 背景装飾 */}
       <div className="absolute right-0 top-0 -mr-8 -mt-8 h-32 w-32 rounded-full bg-white/20 blur-2xl" />
@@ -50,12 +50,12 @@ export function ConclusionCard({ kpis, goalLens = 'balance', isLoading }: Conclu
       {/* アイコン */}
       <div className="mb-4 flex items-center gap-3">
         {isGoodResult ? (
-          <div className="rounded-full bg-gray-100 p-2 dark:bg-gray-800">
-            <CheckCircle2 className="h-6 w-6 text-gray-500 dark:text-gray-400" />
+          <div className="rounded-full bg-[#FAF9F7] p-2 dark:bg-[#1A1916]">
+            <CheckCircle2 className="h-6 w-6 text-[#8A7A62] dark:text-[#8A7A62]/60" />
           </div>
         ) : (
-          <div className="rounded-full bg-gray-100 p-2 dark:bg-gray-800">
-            <AlertTriangle className="h-6 w-6 text-gray-500 dark:text-gray-400" />
+          <div className="rounded-full bg-[#FAF9F7] p-2 dark:bg-[#1A1916]">
+            <AlertTriangle className="h-6 w-6 text-[#8A7A62] dark:text-[#8A7A62]/60" />
           </div>
         )}
         <span className="text-sm font-medium text-muted-foreground">
@@ -64,7 +64,7 @@ export function ConclusionCard({ kpis, goalLens = 'balance', isLoading }: Conclu
       </div>
       
       {/* 結論テキスト */}
-      <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-800 dark:text-gray-200">
+      <h2 className="text-2xl font-bold leading-tight tracking-tight text-[#5A5550] dark:text-[#C8B89A]/40">
         {conclusionText}
       </h2>
       
@@ -76,16 +76,16 @@ export function ConclusionCard({ kpis, goalLens = 'balance', isLoading }: Conclu
       
       {/* 追加情報 */}
       {hasGoal && (
-        <div className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+        <div className="mt-4 grid grid-cols-2 gap-4 border-t border-[#F0ECE4] pt-4 dark:border-[#8A7A62]">
           <div>
             <p className="text-xs text-muted-foreground">100歳まで資産が持つ確率</p>
-            <p className="text-lg font-bold text-gray-800 dark:text-gray-200 tabular-nums">
+            <p className="text-lg font-bold text-[#5A5550] dark:text-[#C8B89A]/40 tabular-nums">
               {kpis.survivalRate.toFixed(0)}%
             </p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">60歳時点の資産</p>
-            <p className="text-lg font-bold text-gray-800 dark:text-gray-200 tabular-nums">
+            <p className="text-lg font-bold text-[#5A5550] dark:text-[#C8B89A]/40 tabular-nums">
               {(kpis.assetsAt60 / 10000).toFixed(1)}億円
             </p>
           </div>

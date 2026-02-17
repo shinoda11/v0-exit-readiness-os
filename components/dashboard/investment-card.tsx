@@ -50,7 +50,7 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
         <div className="text-sm font-medium">
           <TermTooltip term="期待リターン" description={glossary['期待リターン']} />
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
           {([
             { value: 3, label: '保守的', desc: '債券中心・低リスク運用' },
             { value: 5, label: '標準', desc: 'インデックス投資の長期平均' },
@@ -62,7 +62,7 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
                 key={preset.value}
                 type="button"
                 onClick={() => onUpdate({ expectedReturn: preset.value })}
-                className={`rounded-lg border p-2.5 text-center transition-colors ${
+                className={`rounded-lg border p-2 sm:p-2.5 text-center transition-colors ${
                   isActive
                     ? 'border-foreground bg-foreground/5 ring-1 ring-foreground/20'
                     : 'border-border hover:border-foreground/30 hover:bg-muted/50'
@@ -74,7 +74,7 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
                 <div className={`text-lg font-bold ${isActive ? 'text-foreground' : ''}`}>
                   {preset.value}%
                 </div>
-                <div className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                <div className="text-[10px] text-muted-foreground leading-tight mt-0.5 hidden sm:block">
                   {preset.desc}
                 </div>
               </button>

@@ -34,7 +34,7 @@ export function CollapsibleCard({
   className,
 }: CollapsibleCardProps) {
   return (
-    <Card className={cn('overflow-hidden border-gray-200 dark:border-gray-800', className)}>
+    <Card className={cn('overflow-hidden border-[#F0ECE4] dark:border-[#5A5550]', className)}>
       <Collapsible open={open} onOpenChange={onOpenChange}>
         <CollapsibleTrigger asChild>
           <button
@@ -42,7 +42,7 @@ export function CollapsibleCard({
             className="flex w-full items-center justify-between px-6 py-4 text-left transition-colors hover:bg-muted/50"
           >
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center text-gray-400 dark:text-gray-500">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center text-[#8A7A62]/60 dark:text-[#8A7A62]">
                 {icon}
               </div>
               <div className="min-w-0">

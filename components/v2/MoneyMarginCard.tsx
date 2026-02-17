@@ -83,13 +83,13 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
 
   return (
     <Card className="overflow-hidden">
-      <CardHeader className={`pb-2 ${hasValidData ? getHealthBgColor(health) : 'bg-gray-50'}`}>
+      <CardHeader className={`pb-2 ${hasValidData ? getHealthBgColor(health) : 'bg-[#FAF9F7]'}`}>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
             <Wallet className="h-5 w-5" />
             お金の余白
           </CardTitle>
-          <span className={`text-sm font-medium ${hasValidData ? getHealthColor(health) : 'text-gray-500'}`}>
+          <span className={`text-sm font-medium ${hasValidData ? getHealthColor(health) : 'text-[#8A7A62]'}`}>
             {hasValidData ? getHealthLabel(health) : '未計算'}
           </span>
         </div>
@@ -100,7 +100,7 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
       <CardContent className="pt-4">
         {/* Missing data hint */}
         {missingReason && (
-          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-2 text-xs text-gray-600">
+          <div className="mb-4 rounded-lg border border-[#F0ECE4] bg-[#FAF9F7] p-2 text-xs text-[#8A7A62]">
             {missingReason}
           </div>
         )}
@@ -136,8 +136,8 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
         </div>
         
         {/* サマリーメッセージ */}
-        <div className={`mt-4 rounded-lg p-3 ${hasValidData ? getHealthBgColor(health) : 'bg-gray-50'}`}>
-          <p className={`text-sm ${hasValidData ? getHealthColor(health) : 'text-gray-500'}`}>
+        <div className={`mt-4 rounded-lg p-3 ${hasValidData ? getHealthBgColor(health) : 'bg-[#FAF9F7]'}`}>
+          <p className={`text-sm ${hasValidData ? getHealthColor(health) : 'text-[#8A7A62]'}`}>
             {!hasValidData && 'ダッシュボードでシミュレーションを実行すると、お金の余白が計算されます。'}
             {hasValidData && health === 'excellent' && '素晴らしい状態です。このペースで資産形成を続けましょう。'}
             {hasValidData && health === 'good' && '良好な状態です。さらなる改善の余地があります。'}

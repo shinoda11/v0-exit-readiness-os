@@ -43,7 +43,7 @@ function getHighlightStyles(highlight?: 'success' | 'warning' | 'danger' | 'neut
       };
     case 'danger':
       return {
-        icon: 'text-red-600 dark:text-red-400',
+        icon: 'text-red-700 dark:text-red-400',
         value: 'text-red-700 dark:text-red-300',
         bg: 'bg-red-50 dark:bg-red-950/20',
       };
@@ -71,12 +71,12 @@ function MetricItem({
         {icon}
       </div>
       <div className="flex-1">
-        <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="text-xs text-[#8A7A62] dark:text-[#8A7A62]/60">{label}</p>
         <p className={cn("text-lg font-semibold tabular-nums", styles.value)}>
           {value}
         </p>
         {subValue && (
-          <p className="text-xs text-gray-400 dark:text-gray-500">{subValue}</p>
+          <p className="text-xs text-[#8A7A62]/60 dark:text-[#8A7A62]">{subValue}</p>
         )}
       </div>
     </div>
@@ -149,7 +149,7 @@ export function KeyMetricsCard({
       icon={<Gauge className="h-5 w-5" />}
       title="主要指標"
       description="シミュレーション結果のサマリー"
-      action={isLoading && <span className="text-xs text-gray-400">更新中...</span>}
+      action={isLoading && <span className="text-xs text-[#8A7A62]/60">更新中...</span>}
     >
       <div className={cn("grid gap-2 sm:grid-cols-2", isLoading && "opacity-60")}>
         <MetricItem

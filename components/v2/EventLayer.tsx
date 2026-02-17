@@ -93,20 +93,20 @@ const eventTypeIcons: Record<EventType, typeof Baby> = {
 
 // 統一カラーパレット - グレー系でニュートラルに
 const eventTypeColors: Record<EventType, string> = {
-  CHILDCARE: 'bg-gray-100 text-gray-700 border-gray-200',
-  ELDERCARE: 'bg-gray-100 text-gray-700 border-gray-200',
-  RELOCATION: 'bg-gray-100 text-gray-700 border-gray-200',
-  JOB_CHANGE: 'bg-gray-100 text-gray-700 border-gray-200',
-  SABBATICAL: 'bg-gray-100 text-gray-700 border-gray-200',
-  EDUCATION: 'bg-gray-100 text-gray-700 border-gray-200',
-  MARRIAGE: 'bg-gray-100 text-gray-700 border-gray-200',
-  DIVORCE: 'bg-gray-100 text-gray-700 border-gray-200',
-  INHERITANCE: 'bg-gray-100 text-gray-700 border-gray-200',
-  SIDE_BUSINESS: 'bg-gray-100 text-gray-700 border-gray-200',
-  HEALTH_ISSUE: 'bg-gray-100 text-gray-700 border-gray-200',
-  HOUSING_PURCHASE: 'bg-gray-100 text-gray-700 border-gray-200',
-  HOUSING_RENT: 'bg-gray-100 text-gray-700 border-gray-200',
-  CUSTOM: 'bg-gray-100 text-gray-700 border-gray-200',
+  CHILDCARE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  ELDERCARE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  RELOCATION: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  JOB_CHANGE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  SABBATICAL: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  EDUCATION: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  MARRIAGE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  DIVORCE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  INHERITANCE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  SIDE_BUSINESS: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  HEALTH_ISSUE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  HOUSING_PURCHASE: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  HOUSING_RENT: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
+  CUSTOM: 'bg-[#FAF9F7] text-[#5A5550] border-[#F0ECE4]',
 };
 
 export function EventLayer({ events, onAddEvent, onRemoveEvent, currentAge, needsSync, onSync }: EventLayerProps) {
@@ -144,14 +144,14 @@ export function EventLayer({ events, onAddEvent, onRemoveEvent, currentAge, need
           <div className="flex items-center gap-2">
             {needsSync && onSync && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-600 font-medium animate-pulse">
+                <span className="text-xs text-[#8A7A62] font-medium animate-pulse">
                   反映が必要
                 </span>
                 <Button 
                   variant="default" 
                   size="sm"
                   onClick={onSync}
-                  className="bg-gray-800 hover:bg-gray-900 text-white"
+                  className="bg-[#1A1916] hover:bg-[#1A1916]/90 text-white"
                 >
                   <RefreshCw className="mr-1 h-3 w-3" />
                   反映する

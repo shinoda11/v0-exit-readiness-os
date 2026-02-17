@@ -134,8 +134,8 @@ export default function SettingsPage() {
       <div className="container mx-auto max-w-3xl px-4 py-4 md:p-6 space-y-6 overflow-x-hidden">
           {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">設定</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-xl font-bold tracking-tight text-foreground">設定</h1>
+            <p className="text-sm text-[#8A7A62] mt-1">
               データ管理とアプリケーション情報
             </p>
           </div>

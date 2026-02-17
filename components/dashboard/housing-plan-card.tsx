@@ -387,7 +387,7 @@ export function HousingPlanCard({ profile, open, onOpenChange }: HousingPlanCard
                 step={100}
                 unit="万円"
               />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <SliderInput
                   label="金利"
                   value={plan.rate}
@@ -531,8 +531,8 @@ export function HousingPlanCard({ profile, open, onOpenChange }: HousingPlanCard
         )}>{conclusionText}</p>
 
         {/* 比較テーブル */}
-        <div className="rounded-lg border overflow-hidden">
-          <Table>
+        <div className="rounded-lg border overflow-x-auto">
+          <Table className="text-xs sm:text-sm">
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="w-[28%]">プラン</TableHead>

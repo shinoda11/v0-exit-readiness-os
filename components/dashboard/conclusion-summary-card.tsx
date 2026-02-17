@@ -56,7 +56,7 @@ function getStatusConfig(status: Status) {
       return {
         bgColor: 'bg-red-50/80 dark:bg-red-950/20',
         borderColor: 'border-red-300/60 dark:border-red-800/40',
-        iconColor: 'text-red-500 dark:text-red-400',
+        iconColor: 'text-red-700 dark:text-red-400',
         textColor: 'text-red-700 dark:text-red-300',
         icon: XCircle,
       };
@@ -243,7 +243,7 @@ function ChangeBadge({ value, unit, invertColor = false }: {
         'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-medium transition-opacity duration-500',
         isImprovement
           ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
-          : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+          : 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300',
         fadingOut && 'opacity-0'
       )}
     >
@@ -319,14 +319,14 @@ export function ConclusionSummaryCard({
       )}
       {/* 計算中インジケータ（再計算時） */}
       {isLoading && score && (
-        <div className="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-gray-400">
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-[#8A7A62]/60">
           <Loader2 className="h-3 w-3 animate-spin" />
           <span>更新中</span>
         </div>
       )}
       <CardContent className="p-5">
         {/* Goal Lens前提（1行） */}
-        <p className="text-xs text-gray-400 mb-3">
+        <p className="text-xs text-[#8A7A62]/60 mb-3">
           前提: {workStyle} / {legacyGoal} / {targetRetireAge}歳目標
         </p>
 
@@ -351,7 +351,7 @@ export function ConclusionSummaryCard({
                 "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0 self-start sm:self-auto",
                 score.overall >= 70 ? "bg-[#C8B89A]/20 text-[#8A7A62] dark:bg-[#C8B89A]/10 dark:text-[#C8B89A]" :
                 score.overall >= 40 ? "bg-[#5A5550]/15 text-[#5A5550] dark:bg-[#5A5550]/15 dark:text-[#DDD0B8]" :
-                "bg-red-100/80 text-red-700 dark:bg-red-900/20 dark:text-red-300",
+                "bg-red-50/80 text-red-700 dark:bg-red-900/20 dark:text-red-300",
                 isLoading && "opacity-50"
               )}>
                 {score.overall.toFixed(0)}

@@ -42,7 +42,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
         <div
           className={cn(
             'flex h-6 w-6 items-center justify-center rounded-full',
-            'bg-gray-100 text-gray-500'
+            'bg-[#FAF9F7] text-[#8A7A62]'
           )}
         >
           {isIncome ? (
@@ -59,7 +59,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
             {formatPercent(percentage)}
           </span>
         )}
-        <span className="font-semibold tabular-nums text-gray-700">
+        <span className="font-semibold tabular-nums text-[#5A5550]">
           {isIncome ? '+' : '-'}
           {formatCurrency(Math.abs(amount))}
         </span>
@@ -182,7 +182,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
       icon={<ArrowDownUp className="h-5 w-5" />}
       title="退職後キャッシュフロー"
       description="Exit後の年間収支内訳"
-      action={isLoading && <span className="text-xs text-gray-400">更新中...</span>}
+      action={isLoading && <span className="text-xs text-[#8A7A62]/60">更新中...</span>}
     >
       <div className={cn("space-y-4", isLoading && "opacity-60")}>
         {/* Income section */}
@@ -216,7 +216,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
           </div>
           <div className="mt-2 flex items-center justify-between border-t pt-2">
             <span className="text-sm font-medium">収入合計</span>
-            <span className="font-bold text-gray-800 tabular-nums">
+            <span className="font-bold text-[#5A5550] tabular-nums">
               +{formatCurrency(totalIncome)}
             </span>
           </div>
@@ -236,25 +236,25 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
         <div
           className={cn(
             'rounded-lg p-4 border',
-            'bg-gray-50 border-gray-200'
+            'bg-[#FAF9F7] border-[#F0ECE4]'
           )}
         >
           <div className="flex items-center justify-between">
             <span className="font-medium">年間収支</span>
             <div className="flex items-center gap-2">
               {netCashFlowPositive ? (
-                <ArrowUp className="h-4 w-4 text-gray-500" />
+                <ArrowUp className="h-4 w-4 text-[#8A7A62]" />
               ) : (
-                <ArrowDown className="h-4 w-4 text-gray-500" />
+                <ArrowDown className="h-4 w-4 text-[#8A7A62]" />
               )}
-              <span className="text-xl font-bold text-gray-800 tabular-nums">
+              <span className="text-xl font-bold text-[#5A5550] tabular-nums">
                 {cashFlow.netCashFlow >= 0 ? '+' : ''}
                 {formatCurrency(cashFlow.netCashFlow)}
               </span>
             </div>
           </div>
           {!netCashFlowPositive && (
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-[#8A7A62]">
               年間{formatCurrency(Math.abs(cashFlow.netCashFlow))}の
               余白を使う必要があります
             </p>
@@ -310,7 +310,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
                 <p className="text-xs text-muted-foreground">枯渇確率（100歳まで）</p>
                 <p className={cn(
                   "text-base font-bold tabular-nums",
-                  depletionProb !== null && depletionProb > 20 && "text-red-600"
+                  depletionProb !== null && depletionProb > 20 && "text-red-700"
                 )}>
                   {depletionProb !== null ? `${depletionProb}%` : '—'}
                 </p>

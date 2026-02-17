@@ -83,24 +83,24 @@ function CustomTooltip({ active, payload, label }: any) {
   };
 
   return (
-    <div className="rounded border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-      <p className="text-xs font-medium text-gray-900 dark:text-gray-100">{label}歳</p>
+    <div className="rounded border border-[#F0ECE4] bg-white px-3 py-2 shadow-sm dark:border-[#8A7A62] dark:bg-[#1A1916]">
+      <p className="text-xs font-medium text-[#1A1916] dark:text-[#F0ECE4]">{label}歳</p>
       <div className="mt-1 space-y-0.5 text-xs">
         <div className="flex justify-between gap-4">
-          <span className="text-gray-500">楽観</span>
-          <span className="tabular-nums text-gray-700 dark:text-gray-300">
+          <span className="text-[#8A7A62]">楽観</span>
+          <span className="tabular-nums text-[#5A5550] dark:text-[#C8B89A]/40">
             {formatValue(optimisticEntry?.value)}
           </span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-gray-500">中央</span>
-          <span className="tabular-nums font-medium text-gray-900 dark:text-gray-100">
+          <span className="text-[#8A7A62]">中央</span>
+          <span className="tabular-nums font-medium text-[#1A1916] dark:text-[#F0ECE4]">
             {formatValue(medianEntry?.value)}
           </span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-gray-500">悲観</span>
-          <span className="tabular-nums text-gray-700 dark:text-gray-300">
+          <span className="text-[#8A7A62]">悲観</span>
+          <span className="tabular-nums text-[#5A5550] dark:text-[#C8B89A]/40">
             {formatValue(pessimisticEntry?.value)}
           </span>
         </div>
@@ -330,7 +330,7 @@ export function MonteCarloSimulatorTab({
           </CardDescription>
         </CardHeader>
         {/* Graph interpretation guide - テキストのみ、背景なし */}
-        <p className="mx-6 mb-4 text-xs text-gray-400">
+        <p className="mx-6 mb-4 text-xs text-[#8A7A62]/60">
           実線が最もありそうな推移。帯が広いほど不確実性が高い。下限が0を下回らなければ資産枯渇リスクは低い。
         </p>
         <CardContent>
@@ -437,7 +437,7 @@ export function MonteCarloSimulatorTab({
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（楽観）</p>
-                <p className="mt-1 text-2xl font-bold text-gray-700 sm:text-3xl">
+                <p className="mt-1 text-2xl font-bold text-[#5A5550] sm:text-3xl">
                   {spreadAtRetirement.optimistic.toFixed(2)}億円
                 </p>
                 <Badge variant="secondary" className="mt-2">
@@ -447,14 +447,14 @@ export function MonteCarloSimulatorTab({
             </CardContent>
           </Card>
 
-          <Card className="border-gray-300">
+          <Card className="border-[#F0ECE4]">
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（中央値）</p>
-                <p className="mt-1 text-2xl font-bold text-gray-800 sm:text-3xl">
+                <p className="mt-1 text-2xl font-bold text-[#5A5550] sm:text-3xl">
                   {spreadAtRetirement.median.toFixed(2)}億円
                 </p>
-                <Badge className="mt-2 bg-gray-700">
+                <Badge className="mt-2 bg-[#5A5550]">
                   最も可能性の高い結果
                 </Badge>
               </div>
@@ -465,7 +465,7 @@ export function MonteCarloSimulatorTab({
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（悲観）</p>
-                <p className="mt-1 text-2xl font-bold text-gray-600 sm:text-3xl">
+                <p className="mt-1 text-2xl font-bold text-[#8A7A62] sm:text-3xl">
                   {spreadAtRetirement.pessimistic.toFixed(2)}億円
                 </p>
                 <Badge variant="secondary" className="mt-2">
@@ -479,14 +479,14 @@ export function MonteCarloSimulatorTab({
 
       {/* Risk Warning */}
       {spreadAtRetirement && spreadAtRetirement.spread > 1 && (
-        <Card className="border-gray-300 bg-gray-50/50 dark:border-gray-700 dark:bg-gray-900/20">
+        <Card className="border-[#F0ECE4] bg-[#FAF9F7]/50 dark:border-[#8A7A62] dark:bg-[#1A1916]/20">
           <CardContent className="flex items-start gap-3 pt-6">
-            <AlertTriangle className="h-5 w-5 shrink-0 text-gray-500" />
+            <AlertTriangle className="h-5 w-5 shrink-0 text-[#8A7A62]" />
             <div>
-              <p className="font-medium text-gray-700 dark:text-gray-200">
+              <p className="font-medium text-[#5A5550] dark:text-[#C8B89A]/40">
                 シナリオ間の差が大きい
               </p>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              <p className="mt-1 text-sm text-[#8A7A62] dark:text-[#8A7A62]/60">
                 楽観と悲観の差が{spreadAtRetirement.spread.toFixed(2)}億円あります。
                 ボラティリティを下げるか、より保守的な資産配分を検討することで
                 将来の不確実性を減らせる可能性があります。

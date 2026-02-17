@@ -34,6 +34,7 @@ interface V2ResultSectionProps {
   overallAssessment: OverallAssessment;
   scenarios: SavedScenario[];
   selectedComparisonIds: string[];
+  onViewStrategy?: () => void;
   // margins
   moneyMargin: MoneyMargin | null;
   moneyHealth: 'excellent' | 'good' | 'fair' | 'poor' | null;
@@ -54,6 +55,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
     overallAssessment,
     scenarios,
     selectedComparisonIds,
+    onViewStrategy,
     moneyMargin,
     moneyHealth,
     timeMargin,
@@ -135,7 +137,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
 
               {/* Quick Actions */}
               <div className="flex-shrink-0">
-                <Button className="gap-2">
+                <Button className="gap-2" onClick={onViewStrategy}>
                   戦略を見る
                   <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -177,7 +179,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
-              <Clock className="h-5 w-5 text-gray-500" />
+              <Clock className="h-5 w-5 text-[#8A7A62]" />
               時間の余白
             </CardTitle>
             <p className="text-xs text-muted-foreground mt-1">
@@ -186,7 +188,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="text-center">
-              <div className="text-4xl font-bold text-gray-800">
+              <div className="text-4xl font-bold text-[#5A5550]">
                 {timeMargin?.yearsToTarget ?? '—'}
               </div>
               <div className="text-sm text-muted-foreground">
@@ -217,7 +219,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-base">
-              <Shield className="h-5 w-5 text-gray-500" />
+              <Shield className="h-5 w-5 text-[#8A7A62]" />
               リスク耐性
             </CardTitle>
             <p className="text-xs text-muted-foreground mt-1">
@@ -227,7 +229,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
           <CardContent className="space-y-4">
             {/* Drawdown capacity */}
             <div className="rounded-lg bg-muted/50 p-4 text-center">
-              <div className="text-4xl font-bold text-gray-800">
+              <div className="text-4xl font-bold text-[#5A5550]">
                 {riskMargin ? `${riskMargin.drawdownCapacity.toFixed(0)}%` : '—'}
               </div>
               <p className="text-sm text-muted-foreground mt-1">
@@ -241,7 +243,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
             {(() => {
               const months = riskMargin?.emergencyFundCoverage ?? 0;
               const hasData = riskMargin !== null;
-              let colorClass = 'bg-gray-50 text-gray-600';
+              let colorClass = 'bg-[#FAF9F7] text-[#8A7A62]';
               if (hasData) {
                 if (months >= 12) colorClass = 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400';
                 else if (months >= 6) colorClass = 'bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400';
@@ -294,7 +296,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-gray-600" />
+                <Sparkles className="h-5 w-5 text-[#8A7A62]" />
                 推奨戦略: {primaryStrategy.name}
               </CardTitle>
               <CardDescription className="mt-1">
@@ -310,19 +312,19 @@ export function V2ResultSection(props: V2ResultSectionProps) {
           {/* Expected Outcomes */}
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-lg border p-4 text-center">
-              <div className="text-2xl font-bold text-gray-800">
+              <div className="text-2xl font-bold text-[#5A5550]">
                 +{primaryStrategy.expectedOutcome.scoreImprovement}
               </div>
               <div className="text-sm text-muted-foreground">スコア改善予測</div>
             </div>
             <div className="rounded-lg border p-4 text-center">
-              <div className="text-2xl font-bold text-gray-800">
+              <div className="text-2xl font-bold text-[#5A5550]">
                 {primaryStrategy.expectedOutcome.timeToFire ?? '--'}年
               </div>
               <div className="text-sm text-muted-foreground">安心ラインまで</div>
             </div>
             <div className="rounded-lg border p-4 text-center">
-              <div className="text-2xl font-bold text-gray-800">
+              <div className="text-2xl font-bold text-[#5A5550]">
                 {primaryStrategy.expectedOutcome.riskReduction > 0 ? '-' : '+'}
                 {Math.abs(primaryStrategy.expectedOutcome.riskReduction)}%
               </div>
@@ -370,7 +372,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
             {strategicInsights.map((insight) => (
               <div
                 key={insight.id}
-                className="rounded-lg border border-gray-200 bg-gray-50/50 p-4"
+                className="rounded-lg border border-[#F0ECE4] bg-[#FAF9F7]/50 p-4"
               >
                 <div className="flex items-center justify-between mb-2">
                   <Badge
@@ -379,7 +381,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
                       insight.category === 'strength' && 'bg-[#E8F5E8] text-[#4A7C59] border-[#4A7C59]/30',
                       insight.category === 'weakness' && 'bg-[#FDE8E8] text-[#CC3333] border-[#CC3333]/30',
                       insight.category === 'opportunity' && 'bg-[#E8EFF5] text-[#4A6FA5] border-[#4A6FA5]/30',
-                      insight.category === 'threat' && 'border-gray-400 text-gray-700',
+                      insight.category === 'threat' && 'border-[#8A7A62]/60 text-[#5A5550]',
                     )}
                   >
                     {insight.category === 'strength' && '強み'}

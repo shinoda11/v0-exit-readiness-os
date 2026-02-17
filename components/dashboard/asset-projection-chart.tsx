@@ -81,41 +81,41 @@ function CustomTooltip({
   const p25 = payload.find((p) => p.dataKey === 'p25')?.value ?? 0;
 
   return (
-    <div className="rounded-lg border bg-background p-3 shadow-lg min-w-[200px]">
+    <div className="rounded-lg border bg-background p-3 shadow-sm min-w-0 w-[200px] max-w-[90vw]">
       <p className="mb-2 font-semibold text-base">{label}歳</p>
       <div className="space-y-2 text-sm">
         {showOptimistic && (
           <div className="flex items-center justify-between gap-4">
-            <span className="text-gray-500 flex items-center gap-1">
-              <div className="h-2 w-2 rounded-full bg-gray-400" />
+            <span className="text-[#8A7A62] flex items-center gap-1">
+              <div className="h-2 w-2 rounded-full bg-[#8A7A62]/60" />
               楽観 (90%)
             </span>
             <span className="font-medium">{formatValue(upper)}</span>
           </div>
         )}
         <div className="flex items-center justify-between gap-4 text-xs">
-          <span className="text-gray-500">75%</span>
+          <span className="text-[#8A7A62]">75%</span>
           <span className="font-medium">{formatValue(p75)}</span>
         </div>
         <div className="flex items-center justify-between gap-4 py-1 border-y">
-          <span className="text-gray-700 flex items-center gap-1 font-medium">
-            <div className="h-2 w-2 rounded-full bg-gray-700" />
+          <span className="text-[#5A5550] flex items-center gap-1 font-medium">
+            <div className="h-2 w-2 rounded-full bg-[#5A5550]" />
             中央値
           </span>
           <span className="font-bold text-base">{formatValue(median)}</span>
         </div>
         <div className="flex items-center justify-between gap-4 text-xs">
-          <span className="text-gray-500">25%</span>
+          <span className="text-[#8A7A62]">25%</span>
           <span className="font-medium">{formatValue(p25)}</span>
         </div>
         <div className="flex items-center justify-between gap-4">
-          <span className="text-gray-600 flex items-center gap-1">
-            <div className="h-2 w-2 rounded-full bg-gray-500" />
+          <span className="text-[#8A7A62] flex items-center gap-1">
+            <div className="h-2 w-2 rounded-full bg-[#8A7A62]" />
             悲観 (10%)
           </span>
           <span className={cn(
             "font-medium",
-            lower < 0 && "text-gray-800"
+            lower < 0 && "text-[#5A5550]"
           )}>{formatValue(lower)}</span>
         </div>
         {lower < 0 && (
@@ -372,7 +372,7 @@ export function AssetProjectionChart({
           <p className="text-xs text-muted-foreground mb-1">
             {targetRetireAge}歳時点（中央値）
           </p>
-          <p className="text-lg font-bold text-gray-800">
+          <p className="text-lg font-bold text-[#5A5550]">
             {retirementData ? formatValue(retirementData.median) : '-'}
           </p>
         </div>
@@ -382,7 +382,7 @@ export function AssetProjectionChart({
           </p>
           <p className={cn(
             "text-lg font-bold",
-            finalData && finalData.median > 0 ? "text-gray-800" : "text-gray-600"
+            finalData && finalData.median > 0 ? "text-[#5A5550]" : "text-[#8A7A62]"
           )}>
             {finalData ? formatValue(finalData.median) : '-'}
           </p>
@@ -393,12 +393,12 @@ export function AssetProjectionChart({
           </p>
           <p className={cn(
             "text-lg font-bold",
-            finalData && finalData.lower > 0 ? "text-gray-700" : "text-gray-600"
+            finalData && finalData.lower > 0 ? "text-[#5A5550]" : "text-[#8A7A62]"
           )}>
             {finalData ? formatValue(finalData.lower) : '-'}
           </p>
           {finalData && finalData.lower < 0 && (
-            <p className="text-xs text-gray-600 flex items-center justify-center gap-1 mt-1">
+            <p className="text-xs text-[#8A7A62] flex items-center justify-center gap-1 mt-1">
               <AlertTriangle className="h-3 w-3" />
               枯渇リスクあり
             </p>
@@ -409,7 +409,7 @@ export function AssetProjectionChart({
       {/* Legend */}
       <div className="mt-4 flex flex-wrap justify-center gap-4 text-sm">
         <div className="flex items-center gap-2">
-          <div className="h-1 w-5 rounded bg-gray-700" />
+          <div className="h-1 w-5 rounded bg-[#5A5550]" />
           <span className="text-muted-foreground">中央値</span>
         </div>
         <div className="flex items-center gap-2">
@@ -417,12 +417,12 @@ export function AssetProjectionChart({
           <span className="text-muted-foreground">25-75%</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-0.5 w-5 border-t-2 border-dashed border-gray-500" />
+          <div className="h-0.5 w-5 border-t-2 border-dashed border-[#8A7A62]" />
           <span className="text-muted-foreground">悲観 (10%)</span>
         </div>
         {showOptimistic && (
           <div className="flex items-center gap-2">
-            <div className="h-0.5 w-5 border-t-2 border-dashed border-gray-400" />
+            <div className="h-0.5 w-5 border-t-2 border-dashed border-[#8A7A62]/60" />
             <span className="text-muted-foreground">楽観 (90%)</span>
           </div>
         )}

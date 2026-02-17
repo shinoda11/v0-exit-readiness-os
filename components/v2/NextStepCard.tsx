@@ -36,27 +36,27 @@ const leverTypeConfig: Record<StrategyLeverType, {
   income: {
     icon: TrendingUp,
     label: '収入',
-    color: 'text-gray-700',
-    bgColor: 'bg-gray-100 dark:bg-gray-800',
+    color: 'text-[#5A5550]',
+    bgColor: 'bg-[#FAF9F7] dark:bg-[#1A1916]',
   },
   cost: {
     icon: TrendingDown,
     label: '支出',
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100 dark:bg-gray-800',
+    color: 'text-[#8A7A62]',
+    bgColor: 'bg-[#FAF9F7] dark:bg-[#1A1916]',
   },
   timing: {
     icon: Clock,
     label: 'タイミング',
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100 dark:bg-gray-800',
+    color: 'text-[#8A7A62]',
+    bgColor: 'bg-[#FAF9F7] dark:bg-[#1A1916]',
   },
 };
 
 const difficultyConfig: Record<string, { label: string; color: string }> = {
-  easy: { label: '簡単', color: 'bg-gray-100 text-gray-600' },
-  medium: { label: '普通', color: 'bg-gray-200 text-gray-700' },
-  hard: { label: '難しい', color: 'bg-gray-300 text-gray-800' },
+  easy: { label: '簡単', color: 'bg-[#FAF9F7] text-[#8A7A62]' },
+  medium: { label: '普通', color: 'bg-[#F0ECE4] text-[#5A5550]' },
+  hard: { label: '難しい', color: 'bg-[#C8B89A]/40 text-[#5A5550]' },
 };
 
 export function NextStepCard({ levers, isLoading, onApplyStrategy }: NextStepCardProps) {
@@ -121,10 +121,10 @@ export function NextStepCard({ levers, isLoading, onApplyStrategy }: NextStepCar
                       {topLevers[0].description}
                     </p>
                     <div className="mt-2 flex items-center gap-4 text-sm">
-                      <span className="font-semibold text-gray-800">
+                      <span className="font-semibold text-[#5A5550]">
                         安心ライン {topLevers[0].impact.fireAgeChange > 0 ? '+' : ''}{topLevers[0].impact.fireAgeChange}年
                       </span>
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-[#5A5550]">
                         生存率 +{topLevers[0].impact.survivalRateChange.toFixed(0)}%
                       </span>
                     </div>

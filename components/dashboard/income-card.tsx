@@ -67,6 +67,7 @@ export function IncomeCard({ profile, onUpdate, getFieldError, open, onOpenChang
       <button
         type="button"
         onClick={() => setShowExtra(!showExtra)}
+        aria-label={showExtra ? 'RSU・副業収入を閉じる' : 'RSU・副業収入を展開'}
         className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
       >
         <ChevronDown className={`h-3 w-3 transition-transform ${showExtra ? 'rotate-180' : ''}`} />

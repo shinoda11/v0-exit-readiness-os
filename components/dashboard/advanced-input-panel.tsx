@@ -169,7 +169,7 @@ export function AdvancedInputPanel({
                     onValueChange={(value) => 
                       onAdvancedUpdate({ workStyleGoal: value as WorkStyleGoal })
                     }
-                    className="grid grid-cols-3 gap-2"
+                    className="grid grid-cols-3 gap-1.5 sm:gap-2"
                   >
                     {workStyleOptions.map((option) => (
                       <div key={option.value}>
@@ -180,10 +180,10 @@ export function AdvancedInputPanel({
                         />
                         <Label
                           htmlFor={`work-${option.value}`}
-                          className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 border-muted p-3 text-center hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5"
+                          className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 border-muted p-2 sm:p-3 text-center hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5"
                         >
-                          <span className="text-sm font-medium">{option.label}</span>
-                          <span className="text-[10px] text-muted-foreground">{option.description}</span>
+                          <span className="text-xs sm:text-sm font-medium">{option.label}</span>
+                          <span className="text-[10px] text-muted-foreground hidden sm:inline">{option.description}</span>
                         </Label>
                       </div>
                     ))}
@@ -198,7 +198,7 @@ export function AdvancedInputPanel({
                     onValueChange={(value) => 
                       onAdvancedUpdate({ legacyStance: value as LegacyStance })
                     }
-                    className="grid grid-cols-3 gap-2"
+                    className="grid grid-cols-3 gap-1.5 sm:gap-2"
                   >
                     {legacyOptions.map((option) => (
                       <div key={option.value}>
@@ -209,10 +209,10 @@ export function AdvancedInputPanel({
                         />
                         <Label
                           htmlFor={`legacy-${option.value}`}
-                          className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 border-muted p-3 text-center hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5"
+                          className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border-2 border-muted p-2 sm:p-3 text-center hover:bg-muted/50 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5"
                         >
-                          <span className="text-sm font-medium">{option.label}</span>
-                          <span className="text-[10px] text-muted-foreground">{option.description}</span>
+                          <span className="text-xs sm:text-sm font-medium">{option.label}</span>
+                          <span className="text-[10px] text-muted-foreground hidden sm:inline">{option.description}</span>
                         </Label>
                       </div>
                     ))}
@@ -229,6 +229,7 @@ export function AdvancedInputPanel({
         <CardContent className="pt-0">
           <button
             onClick={() => setIsExpanded(true)}
+            aria-label="詳細設定を展開"
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed py-2 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
           >
             <ChevronDown className="h-4 w-4" />

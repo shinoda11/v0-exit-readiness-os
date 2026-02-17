@@ -153,9 +153,9 @@ function generatePotentialActions(
 
 // 統一カラーパレット - グレー系で落ち着いたトーン
 const priorityColors = {
-  high: 'border-l-gray-600 bg-gray-50/50 dark:bg-gray-900/20',
-  medium: 'border-l-gray-400 bg-gray-50/30 dark:bg-gray-900/10',
-  low: 'border-l-gray-300 bg-gray-50/20 dark:bg-gray-900/5',
+  high: 'border-l-[#8A7A62] bg-[#FAF9F7]/50 dark:bg-[#1A1916]/20',
+  medium: 'border-l-[#8A7A62]/60 bg-[#FAF9F7]/30 dark:bg-[#1A1916]/10',
+  low: 'border-l-[#F0ECE4] bg-[#FAF9F7]/20 dark:bg-[#1A1916]/5',
 };
 
 function ImpactBadge({ value, label, unit, isPositive }: { 
@@ -170,9 +170,9 @@ function ImpactBadge({ value, label, unit, isPositive }: {
   return (
     <div className={cn(
       'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium',
-      isGood 
-        ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' 
-        : 'bg-gray-50 text-gray-500 dark:bg-gray-900 dark:text-gray-500'
+      isGood
+        ? 'bg-[#FAF9F7] text-[#5A5550] dark:bg-[#1A1916] dark:text-[#F0ECE4]'
+        : 'bg-[#FAF9F7] text-[#8A7A62] dark:bg-[#1A1916] dark:text-[#8A7A62]'
     )}>
       <span>{label}:</span>
       <span className={isGood ? 'font-semibold' : ''}>{formatted}{unit}</span>
@@ -269,7 +269,7 @@ export function NextBestActionsCard({
               key={action.id}
               className={cn(
                 'rounded-lg border-l-4 p-4 transition-all',
-                isFirst ? 'border-l-[#C8B89A] bg-gray-50/50 dark:bg-gray-900/20' : priorityColors[action.priority]
+                isFirst ? 'border-l-[#C8B89A] bg-[#FAF9F7]/50 dark:bg-[#1A1916]/20' : priorityColors[action.priority]
               )}
             >
               <div className="flex flex-col gap-3">

@@ -71,7 +71,7 @@ export function WorldlinePreview({
                         'text-xs font-medium px-1.5 py-0.5 rounded',
                         diff! >= 0
                           ? 'bg-[#4A7C59]/10 text-[#4A7C59]'
-                          : 'bg-red-100 text-red-700'
+                          : 'bg-red-50 text-red-700'
                       )}
                     >
                       {diffLabel}

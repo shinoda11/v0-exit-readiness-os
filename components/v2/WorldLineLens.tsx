@@ -108,7 +108,7 @@ export function WorldLineLens({
     const isPositive = isInverted ? value < 0 : value > 0;
     const Icon = isPositive ? TrendingUp : TrendingDown;
     // 落ち着いたグレー系で統一し、アイコンで方向性を示す
-    const colorClass = isPositive ? 'text-gray-700 font-medium' : 'text-gray-600';
+    const colorClass = isPositive ? 'text-[#5A5550] font-medium' : 'text-[#8A7A62]';
     
     return (
       <span className={cn('flex items-center gap-1', colorClass)}>
@@ -180,14 +180,14 @@ export function WorldLineLens({
           <>
             {/* Missing data hints */}
             {(activeMissing || comparisonMissing) && (
-              <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm dark:border-gray-700 dark:bg-gray-900">
+              <div className="mb-4 rounded-lg border border-[#F0ECE4] bg-[#FAF9F7] p-3 text-sm dark:border-[#8A7A62] dark:bg-[#1A1916]">
                 {activeMissing && (
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-[#8A7A62] dark:text-[#8A7A62]/60">
                     比較元: {activeMissing}
                   </p>
                 )}
                 {comparisonMissing && (
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-[#8A7A62] dark:text-[#8A7A62]/60">
                     比較先: {comparisonMissing}
                   </p>
                 )}
@@ -196,7 +196,7 @@ export function WorldLineLens({
             
             {/* Recommendation banner - only show when comparison is available */}
             {comparison && comparison.recommendation !== 'neutral' && (
-              <div className="mb-4 flex items-center gap-2 rounded-lg bg-gray-50 p-3 text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+              <div className="mb-4 flex items-center gap-2 rounded-lg bg-[#FAF9F7] p-3 text-[#5A5550] dark:bg-[#1A1916] dark:text-[#F0ECE4]">
                 <CheckCircle2 className="h-5 w-5" />
                 <p className="text-sm font-medium">{comparison.recommendationReason}</p>
               </div>

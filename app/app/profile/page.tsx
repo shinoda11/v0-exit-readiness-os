@@ -167,7 +167,8 @@ export default function ProfilePage() {
               <ArrowLeft className="h-3 w-3" />
               ダッシュボードに戻る
             </Link>
-            <h1 className="text-xl font-semibold text-foreground">プロファイル</h1>
+            <h1 className="text-xl font-bold tracking-tight text-foreground">プロファイル</h1>
+            <p className="text-sm text-[#8A7A62]">基本情報を入力します</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-sm">

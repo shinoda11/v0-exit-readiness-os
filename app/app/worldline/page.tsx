@@ -54,7 +54,7 @@ export default function WorldlinePage() {
         <div className="container mx-auto max-w-7xl px-4 py-4 md:p-6 space-y-6">
           <div>
             <h1 className="text-xl font-bold tracking-tight text-foreground">世界線比較</h1>
-            <p className="text-muted-foreground mt-1">余白で比較し、次の一手を決める</p>
+            <p className="text-sm text-[#8A7A62] mt-1">余白で比較し、次の一手を決める</p>
           </div>
           <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-card p-12 text-center space-y-4">
             <div className="rounded-full bg-muted p-4">
@@ -95,6 +95,7 @@ export default function WorldlinePage() {
     riskMargin: margins.risk,
     primaryStrategy: strategy.primaryStrategy,
     strategicInsights: strategy.strategicInsights,
+    onViewStrategy: () => setActiveTab('strategy'),
   };
 
   const inputProps = {
@@ -134,7 +135,7 @@ export default function WorldlinePage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-foreground">世界線比較</h1>
-              <p className="text-muted-foreground mt-1">
+              <p className="text-sm text-[#8A7A62] mt-1">
                 余白で比較し、次の一手を決める
               </p>
             </div>

@@ -66,6 +66,7 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
       <button
         type="button"
         onClick={() => setShowBreakdown(!showBreakdown)}
+        aria-label={showBreakdown ? '内訳を閉じる' : '内訳を展開'}
         className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
       >
         <ChevronDown className={`h-3 w-3 transition-transform ${showBreakdown ? 'rotate-180' : ''}`} />

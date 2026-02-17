@@ -266,7 +266,7 @@ export default function DashboardPage() {
       <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur-sm">
           <div className="flex h-16 items-center justify-between px-4 sm:px-6">
             <div>
-              <h1 className="text-xl font-semibold text-foreground">
+              <h1 className="text-xl font-bold tracking-tight text-foreground">
                 シミュレーション
               </h1>
               <p className="text-sm text-muted-foreground">
@@ -381,7 +381,7 @@ export default function DashboardPage() {
 
           <div className="mt-4 md:mt-0 grid gap-6 lg:grid-cols-3">
             {/* Left column: Input cards — hidden on mobile when result tab active */}
-            <div className={cn("space-y-4 lg:col-span-1", mobileTab === 'result' && 'hidden md:block')}>
+            <div className={cn("space-y-4 lg:col-span-1 min-w-0 overflow-x-hidden", mobileTab === 'result' && 'hidden md:block')}>
               {/* Basic Inputs - Collapsible */}
               <div ref={cardRefs.basicInfo}>
                 <BasicInfoCard
@@ -457,7 +457,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Right column: Result cards */}
-            <div className={cn("lg:col-span-2", mobileTab === 'input' && 'hidden md:block')}>
+            <div className={cn("lg:col-span-2 min-w-0 overflow-x-hidden", mobileTab === 'input' && 'hidden md:block')}>
               {/* Mobile: flat result list (no sub-tabs) */}
               <div className="md:hidden space-y-6">
                 <div className="grid gap-4">

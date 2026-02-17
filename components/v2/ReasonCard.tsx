@@ -74,19 +74,19 @@ export function ReasonCard({ kpis, isLoading }: ReasonCardProps) {
   // 統一カラーパレット - グレー系で落ち着いたトーン
   const colorClasses = {
     primary: {
-      bg: 'bg-gray-100 dark:bg-gray-800',
-      text: 'text-gray-700 dark:text-gray-300',
-      progress: 'bg-gray-600',
+      bg: 'bg-[#FAF9F7] dark:bg-[#1A1916]',
+      text: 'text-[#5A5550] dark:text-[#F0ECE4]',
+      progress: 'bg-[#8A7A62]',
     },
     secondary: {
-      bg: 'bg-gray-100 dark:bg-gray-800',
-      text: 'text-gray-600 dark:text-gray-400',
-      progress: 'bg-gray-500',
+      bg: 'bg-[#FAF9F7] dark:bg-[#1A1916]',
+      text: 'text-[#8A7A62] dark:text-[#8A7A62]/60',
+      progress: 'bg-[#8A7A62]',
     },
     tertiary: {
-      bg: 'bg-gray-100 dark:bg-gray-800',
-      text: 'text-gray-600 dark:text-gray-400',
-      progress: 'bg-gray-500',
+      bg: 'bg-[#FAF9F7] dark:bg-[#1A1916]',
+      text: 'text-[#8A7A62] dark:text-[#8A7A62]/60',
+      progress: 'bg-[#8A7A62]',
     },
   };
 
