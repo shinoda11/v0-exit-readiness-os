@@ -9,210 +9,383 @@ interface BranchTreeVizProps {
   showScores?: boolean;
 }
 
-const CERTAINTY_COLORS: Record<string, string> = {
-  confirmed: '#1A1916',
-  planned: '#4A7C59',
-  uncertain: '#8A7A62',
-};
+// ---------------------------------------------------------------------------
+// Decision Tree data structures
+// ---------------------------------------------------------------------------
+
+interface TreeNode {
+  x: number;
+  y: number;
+  label?: string;
+  children?: [TreeNode, TreeNode]; // [without event, with event]
+  isLeaf?: boolean;
+  worldlineIndex?: number;
+  eventSummary?: string;
+  clipped?: number; // number of clipped worldlines below this node
+}
+
+interface Edge {
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+  isUncertain: boolean;
+  labelText: string;
+  labelAbove: boolean; // true = upper branch (without), false = lower branch (with)
+}
+
+const MAX_WORLDLINES = 5;
+
+// ---------------------------------------------------------------------------
+// Build & layout the binary decision tree
+// ---------------------------------------------------------------------------
+
+function buildTree(
+  events: Branch[],
+  depth: number,
+  activeEvents: string[],
+  leafCounter: { value: number },
+): TreeNode {
+  // If no more events or we've hit the worldline cap
+  if (depth >= events.length || leafCounter.value >= MAX_WORLDLINES) {
+    const remaining = Math.pow(2, events.length - depth);
+    if (leafCounter.value >= MAX_WORLDLINES && depth < events.length) {
+      return { x: 0, y: 0, isLeaf: true, worldlineIndex: -1, clipped: remaining };
+    }
+    leafCounter.value++;
+    return {
+      x: 0,
+      y: 0,
+      isLeaf: true,
+      worldlineIndex: leafCounter.value,
+      eventSummary: activeEvents.length > 0 ? activeEvents.join(' / ') : 'ベースライン',
+    };
+  }
+
+  const event = events[depth];
+  const withoutChild = buildTree(events, depth + 1, activeEvents, leafCounter);
+  const withChild = buildTree(events, depth + 1, [...activeEvents, event.label], leafCounter);
+
+  return {
+    x: 0,
+    y: 0,
+    label: event.label,
+    children: [withoutChild, withChild],
+  };
+}
+
+function countLeaves(node: TreeNode): number {
+  if (node.isLeaf) return 1;
+  if (!node.children) return 1;
+  return countLeaves(node.children[0]) + countLeaves(node.children[1]);
+}
+
+function layoutTree(
+  node: TreeNode,
+  depth: number,
+  maxDepth: number,
+  yStart: number,
+  yEnd: number,
+  padX: number,
+  padRight: number,
+  svgWidth: number,
+): void {
+  const xStep = maxDepth > 0 ? (svgWidth - padX - padRight) / maxDepth : 0;
+  node.x = padX + depth * xStep;
+  node.y = (yStart + yEnd) / 2;
+
+  if (!node.children) return;
+
+  const totalLeaves = countLeaves(node);
+  const topLeaves = countLeaves(node.children[0]);
+  const splitRatio = topLeaves / totalLeaves;
+  const midY = yStart + (yEnd - yStart) * splitRatio;
+
+  layoutTree(node.children[0], depth + 1, maxDepth, yStart, midY, padX, padRight, svgWidth);
+  layoutTree(node.children[1], depth + 1, maxDepth, midY, yEnd, padX, padRight, svgWidth);
+}
+
+function collectEdges(node: TreeNode, event: Branch | undefined, edges: Edge[]): void {
+  if (!node.children) return;
+
+  // Short labels for edge annotations
+  const shortWithout = event ? '維持' : '維持';
+  const shortWith = event?.label ?? '';
+
+  // Upper branch = without event
+  edges.push({
+    from: { x: node.x, y: node.y },
+    to: { x: node.children[0].x, y: node.children[0].y },
+    isUncertain: false,
+    labelText: shortWithout,
+    labelAbove: true,
+  });
+
+  // Lower branch = with event
+  edges.push({
+    from: { x: node.x, y: node.y },
+    to: { x: node.children[1].x, y: node.children[1].y },
+    isUncertain: true,
+    labelText: shortWith,
+    labelAbove: false,
+  });
+
+  // Recurse — we don't know which event corresponds to children,
+  // but it's the next depth's event. We handle this via the events array externally.
+}
+
+function collectAllEdges(node: TreeNode, events: Branch[], depth: number, edges: Edge[]): void {
+  if (!node.children) return;
+
+  const event = events[depth];
+  const shortWithout = '維持';
+  const shortWith = event?.label ?? '';
+
+  edges.push({
+    from: { x: node.x, y: node.y },
+    to: { x: node.children[0].x, y: node.children[0].y },
+    isUncertain: false,
+    labelText: shortWithout,
+    labelAbove: true,
+  });
+
+  edges.push({
+    from: { x: node.x, y: node.y },
+    to: { x: node.children[1].x, y: node.children[1].y },
+    isUncertain: true,
+    labelText: shortWith,
+    labelAbove: false,
+  });
+
+  collectAllEdges(node.children[0], events, depth + 1, edges);
+  collectAllEdges(node.children[1], events, depth + 1, edges);
+}
+
+interface JunctionNode {
+  x: number;
+  y: number;
+  label: string;
+}
+
+function collectJunctions(node: TreeNode, junctions: JunctionNode[]): void {
+  if (node.isLeaf || !node.children) return;
+  junctions.push({ x: node.x, y: node.y, label: node.label ?? '' });
+  collectJunctions(node.children[0], junctions);
+  collectJunctions(node.children[1], junctions);
+}
+
+interface LeafNode {
+  x: number;
+  y: number;
+  worldlineIndex: number;
+  eventSummary: string;
+  clipped?: number;
+}
+
+function collectLeaves(node: TreeNode, leaves: LeafNode[]): void {
+  if (node.isLeaf) {
+    leaves.push({
+      x: node.x,
+      y: node.y,
+      worldlineIndex: node.worldlineIndex ?? 0,
+      eventSummary: node.eventSummary ?? '',
+      clipped: node.clipped,
+    });
+    return;
+  }
+  if (node.children) {
+    collectLeaves(node.children[0], leaves);
+    collectLeaves(node.children[1], leaves);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export function BranchTreeViz({
-  currentAge,
   selectedBranches,
   candidates,
   showScores,
 }: BranchTreeVizProps) {
-  const ageRange = 100 - currentAge;
-  const LEFT = 30;
-  const RIGHT = 380;
-  const MID_Y = 100;
-  const WIDTH = RIGHT - LEFT;
+  const uncertain = selectedBranches.filter(
+    (b) => !b.auto && b.certainty === 'uncertain' && b.age !== undefined
+  );
 
-  function ageToX(age: number): number {
-    return LEFT + ((age - currentAge) / ageRange) * WIDTH;
+  const SVG_W = 480;
+  const SVG_H = 280;
+  const PAD_X = 30;
+  const PAD_RIGHT = 110;
+  const PAD_Y = 30;
+
+  // ── 0 uncertain events: simple baseline ──
+  if (uncertain.length === 0) {
+    return (
+      <div className="rounded-lg border border-border bg-card p-3">
+        <p className="text-xs font-medium text-muted-foreground mb-2">デシジョンツリー</p>
+        <svg viewBox={`0 0 ${SVG_W} 100`} className="w-full h-auto" role="img" aria-label="デシジョンツリー">
+          <circle cx={PAD_X} cy={50} r={5} fill="#1A1916" />
+          <line x1={PAD_X} y1={50} x2={SVG_W - PAD_RIGHT} y2={50} stroke="#4A7C59" strokeWidth={2} strokeLinecap="round" />
+          <circle cx={SVG_W - PAD_RIGHT} cy={50} r={4} fill="#4A7C59" />
+          <text x={PAD_X} y={72} fontSize={9} fill="#5A5550" textAnchor="middle">現在</text>
+          <text x={SVG_W - PAD_RIGHT + 8} y={53} fontSize={9} fill="#5A5550">ベースライン</text>
+          <text x={SVG_W / 2} y={92} fontSize={9} fill="#8A7A62" textAnchor="middle">
+            不確定イベントを選択すると分岐が表示されます
+          </text>
+        </svg>
+      </div>
+    );
   }
 
-  // Filter branches with ages (non-auto, have age)
-  const branchesWithAge = selectedBranches.filter(
-    (b) => !b.auto && b.age !== undefined
-  );
-  const planned = branchesWithAge.filter((b) => b.certainty === 'planned');
-  const uncertain = branchesWithAge.filter((b) => b.certainty === 'uncertain');
+  // ── Build decision tree ──
+  const leafCounter = { value: 0 };
+  const root = buildTree(uncertain, 0, [], leafCounter);
 
-  // Find earliest branch age for the junction point
-  const allAges = branchesWithAge.map((b) => b.age!);
-  const junctionAge = allAges.length > 0 ? Math.min(...allAges) : currentAge + 5;
-  const junctionX = ageToX(junctionAge);
+  const maxDepth = uncertain.length;
+  layoutTree(root, 0, maxDepth, PAD_Y, SVG_H - PAD_Y, PAD_X, PAD_RIGHT, SVG_W);
 
-  // Distribute branches vertically — planned upward, uncertain downward
-  const BRANCH_SPACING = 35;
-  const plannedPositions = planned.map((_, i) => MID_Y - BRANCH_SPACING * (i + 1));
-  const uncertainPositions = uncertain.map((_, i) => MID_Y + BRANCH_SPACING * (i + 1));
+  // Collect rendering data
+  const edges: Edge[] = [];
+  collectAllEdges(root, uncertain, 0, edges);
+
+  const junctions: JunctionNode[] = [];
+  collectJunctions(root, junctions);
+
+  const leaves: LeafNode[] = [];
+  collectLeaves(root, leaves);
+
+  // Score lookup for candidates
+  const scoreMap = new Map<number, { score: number; color: string }>();
+  if (showScores && candidates) {
+    const validLeaves = leaves.filter((l) => !l.clipped);
+    candidates.forEach((c, i) => {
+      if (c.score && i < validLeaves.length) {
+        scoreMap.set(i, { score: c.score, color: c.color });
+      }
+    });
+  }
+
+  // Total clipped count
+  const totalClipped = leaves
+    .filter((l) => l.clipped)
+    .reduce((sum, l) => sum + (l.clipped ?? 0), 0);
+  // Remove clipped placeholder leaves for rendering
+  const realLeaves = leaves.filter((l) => !l.clipped);
 
   return (
     <div className="rounded-lg border border-border bg-card p-3">
-      <p className="text-xs font-medium text-muted-foreground mb-2">タイムライン</p>
+      <p className="text-xs font-medium text-muted-foreground mb-2">デシジョンツリー</p>
       <svg
-        viewBox="0 0 400 200"
+        viewBox={`0 0 ${SVG_W} ${SVG_H}`}
         className="w-full h-auto"
         role="img"
-        aria-label="人生のタイムライン"
+        aria-label="デシジョンツリー"
       >
-        {/* Age markers */}
-        <text x={LEFT} y={15} fontSize={10} fill="#8A7A62" textAnchor="start">
+        {/* Edges: Cubic Bezier curves */}
+        {edges.map((edge, i) => {
+          const dx = (edge.to.x - edge.from.x) * 0.4;
+          return (
+            <path
+              key={`e-${i}`}
+              d={`M ${edge.from.x} ${edge.from.y} C ${edge.from.x + dx} ${edge.from.y}, ${edge.to.x - dx} ${edge.to.y}, ${edge.to.x} ${edge.to.y}`}
+              stroke={edge.isUncertain ? '#C8B89A' : '#4A7C59'}
+              strokeWidth={edge.isUncertain ? 1.5 : 2}
+              strokeDasharray={edge.isUncertain ? '6 4' : 'none'}
+              fill="none"
+              strokeLinecap="round"
+            />
+          );
+        })}
+
+        {/* Edge labels */}
+        {edges.map((edge, i) => {
+          const t = 0.3;
+          const lx = edge.from.x + (edge.to.x - edge.from.x) * t;
+          const ly = edge.from.y + (edge.to.y - edge.from.y) * t;
+          const offsetY = edge.labelAbove ? -6 : 12;
+          return (
+            <text
+              key={`el-${i}`}
+              x={lx}
+              y={ly + offsetY}
+              fontSize={7}
+              fill={edge.isUncertain ? '#8A7A62' : '#4A7C59'}
+            >
+              {edge.labelText}
+            </text>
+          );
+        })}
+
+        {/* Junction nodes: Gold + pulse */}
+        {junctions.map((node, i) => (
+          <g key={`j-${i}`}>
+            <circle cx={node.x} cy={node.y} r={5} fill="#C8B89A">
+              <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        ))}
+
+        {/* Root node */}
+        <circle cx={root.x} cy={root.y} r={5} fill="#1A1916" />
+        <text x={root.x} y={root.y + 16} fontSize={9} fill="#5A5550" textAnchor="middle">
           現在
         </text>
-        <text x={ageToX(65)} y={15} fontSize={10} fill="#8A7A62" textAnchor="middle">
-          65歳
-        </text>
-        <text x={RIGHT} y={15} fontSize={10} fill="#8A7A62" textAnchor="end">
-          100歳
-        </text>
 
-        {/* 65 marker tick */}
-        <line
-          x1={ageToX(65)}
-          y1={MID_Y - 4}
-          x2={ageToX(65)}
-          y2={MID_Y + 4}
-          stroke="#D4CFC7"
-          strokeWidth={1}
-        />
+        {/* Leaf nodes (worldlines) */}
+        {realLeaves.map((leaf, i) => (
+          <g key={`l-${i}`}>
+            <circle cx={leaf.x} cy={leaf.y} r={4} fill="#4A7C59" />
+            <text x={leaf.x + 8} y={leaf.y + 3} fontSize={9} fill="#5A5550">
+              世界線{leaf.worldlineIndex}
+            </text>
+            <text x={leaf.x + 8} y={leaf.y + 14} fontSize={7} fill="#8A7A62">
+              {leaf.eventSummary}
+            </text>
 
-        {/* Main trunk: current age → junction point */}
-        <line
-          x1={LEFT}
-          y1={MID_Y}
-          x2={junctionX}
-          y2={MID_Y}
-          stroke="#1A1916"
-          strokeWidth={3}
-          strokeLinecap="round"
-        />
+            {/* Score badge */}
+            {showScores && scoreMap.has(i) && (() => {
+              const s = scoreMap.get(i)!;
+              return (
+                <>
+                  <rect
+                    x={leaf.x - 30}
+                    y={leaf.y - 8}
+                    width={28}
+                    height={16}
+                    rx={4}
+                    fill={s.color}
+                    opacity={0.9}
+                  />
+                  <text
+                    x={leaf.x - 16}
+                    y={leaf.y + 4}
+                    fontSize={10}
+                    fill="white"
+                    textAnchor="middle"
+                    fontWeight="bold"
+                  >
+                    {s.score}
+                  </text>
+                </>
+              );
+            })()}
+          </g>
+        ))}
 
-        {/* Baseline continuation: junction → 100歳 (thin) */}
-        <line
-          x1={junctionX}
-          y1={MID_Y}
-          x2={RIGHT}
-          y2={MID_Y}
-          stroke="#D4CFC7"
-          strokeWidth={1.5}
-          strokeDasharray="4 3"
-        />
-
-        {/* Planned branches: Cubic Bezier curving upward-forward */}
-        {planned.map((b, i) => {
-          const endY = plannedPositions[i];
-          const endX = RIGHT;
-          // Bezier control points: start horizontal, curve to endpoint
-          const cp1x = junctionX + (endX - junctionX) * 0.3;
-          const cp1y = MID_Y;
-          const cp2x = junctionX + (endX - junctionX) * 0.5;
-          const cp2y = endY;
+        {/* Clipped indicator */}
+        {totalClipped > 0 && (() => {
+          const lastLeaf = realLeaves[realLeaves.length - 1];
+          if (!lastLeaf) return null;
           return (
-            <g key={b.id} className="transition-opacity duration-300">
-              <path
-                d={`M ${junctionX} ${MID_Y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`}
-                stroke={CERTAINTY_COLORS.planned}
-                strokeWidth={2}
-                fill="none"
-                strokeLinecap="round"
-              />
-              {/* Endpoint dot */}
-              <circle cx={endX} cy={endY} r={3} fill={CERTAINTY_COLORS.planned} />
-              {/* Label */}
-              <text
-                x={junctionX + (endX - junctionX) * 0.55}
-                y={endY - 6}
-                fontSize={9}
-                fill={CERTAINTY_COLORS.planned}
-              >
-                {b.label}
-              </text>
-            </g>
+            <text
+              x={lastLeaf.x + 8}
+              y={lastLeaf.y + 32}
+              fontSize={8}
+              fill="#8A7A62"
+            >
+              ...他 {totalClipped} 本
+            </text>
           );
-        })}
-
-        {/* Uncertain branches: Cubic Bezier curving downward-forward, dashed */}
-        {uncertain.map((b, i) => {
-          const endY = uncertainPositions[i];
-          const endX = RIGHT;
-          const cp1x = junctionX + (endX - junctionX) * 0.3;
-          const cp1y = MID_Y;
-          const cp2x = junctionX + (endX - junctionX) * 0.5;
-          const cp2y = endY;
-          return (
-            <g key={b.id} className="transition-opacity duration-300">
-              <path
-                d={`M ${junctionX} ${MID_Y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY}`}
-                stroke={CERTAINTY_COLORS.uncertain}
-                strokeWidth={2}
-                fill="none"
-                strokeDasharray="6 4"
-                strokeLinecap="round"
-                opacity={i === 0 ? 1 : 0.6}
-              />
-              {/* Endpoint dot */}
-              <circle cx={endX} cy={endY} r={3} fill={CERTAINTY_COLORS.uncertain} opacity={i === 0 ? 1 : 0.6} />
-              {/* Label */}
-              <text
-                x={junctionX + (endX - junctionX) * 0.55}
-                y={endY + 14}
-                fontSize={9}
-                fill={CERTAINTY_COLORS.uncertain}
-                opacity={i === 0 ? 1 : 0.6}
-              >
-                {b.label}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Score badges on branches (preview mode) */}
-        {showScores &&
-          candidates?.map((c, ci) => {
-            if (!c.score || c.id === 'baseline') return null;
-            const uniqueBranch = c.branches.find(
-              (b) => !b.auto && b.certainty === 'uncertain' && b.age
-            );
-            if (!uniqueBranch) return null;
-            const idx = uncertain.findIndex((u) => u.id === uniqueBranch.id);
-            if (idx < 0) return null;
-            const badgeY = uncertainPositions[idx];
-            const badgeX = RIGHT - 40;
-            return (
-              <g key={c.id}>
-                <rect
-                  x={badgeX - 14}
-                  y={badgeY - 8}
-                  width={28}
-                  height={16}
-                  rx={4}
-                  fill={c.color}
-                  opacity={0.9}
-                />
-                <text
-                  x={badgeX}
-                  y={badgeY + 4}
-                  fontSize={10}
-                  fill="white"
-                  textAnchor="middle"
-                  fontWeight="bold"
-                >
-                  {c.score}
-                </text>
-              </g>
-            );
-          })}
-
-        {/* Junction node — Gold, pulse animation */}
-        <circle cx={junctionX} cy={MID_Y} r={6} fill="#C8B89A">
-          <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" />
-        </circle>
-
-        {/* Start dot */}
-        <circle cx={LEFT} cy={MID_Y} r={4} fill="#1A1916" />
+        })()}
       </svg>
     </div>
   );

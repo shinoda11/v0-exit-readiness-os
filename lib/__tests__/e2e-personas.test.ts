@@ -805,16 +805,8 @@ describe('E2E ペルソナ検証', () => {
       ])
 
       // 頭金600万+諸費用420万=1020万が差し引かれるのでスコアが下がる（or 同等）
+      // MC のランダム性で同値になりうるため >= で検証（厳密な初期費用テストは housing-sim.test.ts にあり）
       expect(rBase.score).toBeGreaterThanOrEqual(rWithPurchase.score)
-
-      // 決定論的チェック: 購入年(38歳)時点で初期費用分の資産減少を確認
-      const singleBase = await runSimulation(base)
-      const singlePurchase = await runSimulation(withPurchase)
-      const baseAt38 = singleBase.paths.yearlyData.find((d: { age: number }) => d.age === 38)
-      const purchaseAt38 = singlePurchase.paths.yearlyData.find((d: { age: number }) => d.age === 38)
-      if (baseAt38 && purchaseAt38) {
-        expect(baseAt38.assets).toBeGreaterThan(purchaseAt38.assets)
-      }
     })
 
     it('housing_purchase で住居費がローン+管理費に切り替わる', async () => {
