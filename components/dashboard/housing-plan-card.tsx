@@ -437,7 +437,7 @@ export function HousingPlanCard({ profile, open, onOpenChange }: HousingPlanCard
         </div>
 
         {/* グラフ */}
-        <div className="h-[250px] sm:h-[300px] w-full">
+        <div className="h-[250px] sm:h-[300px] w-full overflow-x-hidden">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={projectionData}

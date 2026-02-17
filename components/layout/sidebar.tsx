@@ -6,14 +6,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
-  CalendarDays,
+  GitBranch,
   Settings,
-  Sparkles,
-  Menu,
-  X,
+  Scale,
+  UserPen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { BrandStoryDialog } from '@/components/layout/brand-story-dialog';
 
 /** Y-branch symbol SVG — shared between mobile header and desktop sidebar */
@@ -62,25 +60,29 @@ interface NavItemWithBadge extends NavItem {
 
 const navItems: NavItemWithBadge[] = [
   {
-    href: '/app/plan',
-    label: 'ライフプラン',
-    icon: <CalendarDays className="h-5 w-5" />,
-  },
-  {
     href: '/app',
-    label: 'シミュレーション',
+    label: 'ホーム',
     icon: <LayoutDashboard className="h-5 w-5" />,
   },
   {
-    href: '/app/v2',
+    href: '/app/profile',
+    label: 'プロファイル',
+    icon: <UserPen className="h-5 w-5" />,
+  },
+  {
+    href: '/app/branch',
+    label: '分岐',
+    icon: <GitBranch className="h-5 w-5" />,
+  },
+  {
+    href: '/app/worldline',
     label: '世界線比較',
-    icon: <Sparkles className="h-5 w-5" />,
+    icon: <Scale className="h-5 w-5" />,
   },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
   const [isBrandDialogOpen, setIsBrandDialogOpen] = useState(false);
 
   // Auto-open brand story on first visit
@@ -98,58 +100,10 @@ export function Sidebar() {
     }
   };
 
-  // Close sidebar when route changes (mobile)
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
-
-  // Close sidebar on escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
-
   return (
     <>
-      {/* Mobile Header Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden">
-        <button
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => setIsBrandDialogOpen(true)}
-          aria-label="ブランドストーリーを表示"
-        >
-          <YohackSymbol size={20} />
-          <YohackWordmark />
-        </button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-sidebar-foreground hover:bg-sidebar-accent"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
-      </div>
-
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside className={cn(
-        "fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform duration-300 ease-in-out",
-        // Mobile: slide in/out
-        isOpen ? "translate-x-0" : "-translate-x-full",
-        // Desktop: always visible
-        "lg:translate-x-0"
-      )}>
+      {/* Sidebar — hidden on mobile, visible on md+ */}
+      <aside className="hidden md:flex fixed left-0 top-0 z-40 h-screen w-64 flex-col bg-sidebar text-sidebar-foreground">
       {/* Logo */}
       <button
         className="flex h-16 w-full items-center gap-3 border-b border-sidebar-border px-6 cursor-pointer hover:bg-sidebar-accent/50 transition-colors"
@@ -166,7 +120,8 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-4">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href
+            || (item.href === '/app' && pathname === '/app/profile');
           return (
             <Link
               key={item.href}

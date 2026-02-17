@@ -205,7 +205,7 @@ export function WorldLineLens({
             {/* Visual Comparison Chart */}
             <div className="mb-6 space-y-2">
               <p className="text-sm font-medium">主要指標の比較</p>
-              <div className="h-64">
+              <div className="h-64 overflow-x-hidden">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={[

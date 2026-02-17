@@ -323,7 +323,7 @@ export function RSUContent() {
         <div className="space-y-6 lg:col-span-2">
           {/* Vesting Chart */}
           <SectionCard title="年間ベスティング予測" icon={<BarChart3 className="h-5 w-5" />}>
-            <div className="h-64">
+            <div className="h-64 overflow-x-hidden">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />

@@ -22,6 +22,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Profile, SimulationResult, Scenario, LifeEvent } from './types';
+import type { Branch } from './branch';
 import { runSimulation, createDefaultProfile } from './engine';
 
 // localStorage keys
@@ -69,6 +70,13 @@ interface ProfileStore {
   activeScenarioId: string | null;
   comparisonIds: string[]; // IDs of scenarios to compare (max 2)
   
+  // Onboarding
+  hasOnboarded: boolean;
+
+  // Branch builder state
+  selectedBranchIds: string[];
+  customBranches: Branch[];
+
   // 内部: debounce管理
   _pendingUpdate: boolean;
   _storageInitialized: boolean;
@@ -79,6 +87,15 @@ interface ProfileStore {
   runSimulationAsync: () => Promise<void>;
   initializeFromStorage: () => void;
   
+  // Onboarding action
+  setHasOnboarded: () => void;
+
+  // Branch builder actions
+  setSelectedBranchIds: (ids: string[]) => void;
+  addCustomBranch: (branch: Branch) => void;
+  removeCustomBranch: (id: string) => void;
+  addScenarioBatch: (scenarios: SavedScenario[]) => void;
+
   // Scenario actions
   saveScenario: (name: string) => { success: boolean; error?: string; scenario?: SavedScenario };
   saveAllocationAsScenario: (
@@ -135,6 +152,9 @@ export const useProfileStore = create<ProfileStore>()(
         scenarios: [],
         activeScenarioId: null,
         comparisonIds: [],
+        hasOnboarded: false,
+        selectedBranchIds: [],
+        customBranches: [],
         _pendingUpdate: false,
         _storageInitialized: false,
         
@@ -187,6 +207,26 @@ export const useProfileStore = create<ProfileStore>()(
           });
         },
         
+        // Onboarding action
+        setHasOnboarded: () => set({ hasOnboarded: true }),
+
+        // Branch builder actions
+        setSelectedBranchIds: (ids) => set({ selectedBranchIds: ids }),
+        addCustomBranch: (branch) =>
+          set((s) => ({ customBranches: [...s.customBranches, branch] })),
+        removeCustomBranch: (id) =>
+          set((s) => ({ customBranches: s.customBranches.filter((b) => b.id !== id) })),
+        addScenarioBatch: (newScenarios) => {
+          const { scenarios } = get();
+          const nonBranch = scenarios.filter((s) => !s.id.startsWith('branch-'));
+          const updated = [...nonBranch, ...newScenarios];
+          set({
+            scenarios: updated,
+            comparisonIds: newScenarios.slice(0, 2).map((s) => s.id),
+          });
+          saveScenariosToStorage(updated);
+        },
+
         // Save current profile as a scenario
         saveScenario: (name) => {
           const { profile, simResult, scenarios, isLoading } = get();
@@ -348,6 +388,9 @@ export const useProfileStore = create<ProfileStore>()(
         scenarios: state.scenarios,
         activeScenarioId: state.activeScenarioId,
         comparisonIds: state.comparisonIds,
+        hasOnboarded: state.hasOnboarded,
+        selectedBranchIds: state.selectedBranchIds,
+        customBranches: state.customBranches,
       }),
       // ストレージから復元後にシミュレーションを再実行
       onRehydrateStorage: () => (state) => {

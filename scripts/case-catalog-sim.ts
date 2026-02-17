@@ -350,7 +350,7 @@ const SCENARIOS: CaseScenario[] = [
   // --- C20: RSU持ち → RSU半減リスク ---
   { caseId: 'C20', scenarioId: 'C20-base', label: 'ベースライン', lifeEvents: [] },
   { caseId: 'C20', scenarioId: 'C20-rsu-halved', label: '36歳でRSU半減+副業停止', lifeEvents: [
-    { type: 'income_decrease', name: 'RSU半減+副業停止', age: 36, amount: 250, isRecurring: false, target: 'self' }
+    { type: 'income_decrease', name: 'RSU半減+副業停止', age: 36, amount: 250, isRecurring: true, target: 'self' }
   ]},
 
   // --- C21 vs C22: 投資リターン差の検証 ---

@@ -44,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${dmSans.variable} ${notoSansJP.variable} ${notoSerifJP.variable} font-sans antialiased`}>
+      <body className={`${dmSans.variable} ${notoSansJP.variable} ${notoSerifJP.variable} font-sans antialiased overflow-x-hidden max-w-screen`}>
         {children}
         <Toaster />
         <Analytics />

@@ -334,7 +334,7 @@ export function MonteCarloSimulatorTab({
           実線が最もありそうな推移。帯が広いほど不確実性が高い。下限が0を下回らなければ資産枯渇リスクは低い。
         </p>
         <CardContent>
-          <div className="relative h-[300px] w-full sm:h-[400px]">
+          <div className="relative h-[300px] w-full sm:h-[400px] overflow-x-hidden">
             {isLoading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/40">
                 <span className="text-xs text-muted-foreground">計算中...</span>

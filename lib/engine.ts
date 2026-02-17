@@ -463,6 +463,17 @@ function runSingleSimulation(profile: Profile): AssetPoint[] {
   let mortgageEndAge = 0;
   let ownerAnnualCost = 0;
 
+  // Initial owner: set up mortgage payoff so L509-512 logic fires at completion
+  if (purchaseOccurred && profile.mortgageYearsRemaining > 0) {
+    mortgageEndAge = profile.currentAge + profile.mortgageYearsRemaining;
+    const mortgageAnnual = profile.mortgageMonthlyPayment * 12;
+    ownerAnnualCost = Math.max(0, profile.housingCostAnnual - mortgageAnnual);
+    housingOverrides = {
+      homeStatus: profile.homeStatus as HomeStatus,
+      housingCostAnnual: profile.housingCostAnnual,
+    };
+  }
+
   for (let age = profile.currentAge; age <= MAX_AGE; age++) {
     // Record current state
     path.push({ age, assets: Math.round(totalAssets) });

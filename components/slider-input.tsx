@@ -130,7 +130,7 @@ export function SliderInput({
         max={max}
         step={step}
         disabled={disabled}
-        className="cursor-pointer"
+        className="cursor-pointer min-h-[44px]"
       />
     </div>
   );

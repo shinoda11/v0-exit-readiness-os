@@ -319,7 +319,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
 
             {/* Retirement mini chart */}
             {retirementChartData.length > 0 && (
-              <div className="h-[200px] w-full">
+              <div className="h-[200px] w-full overflow-x-hidden">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
                     data={retirementChartData}

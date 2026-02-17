@@ -219,7 +219,7 @@ export function AssetProjectionChart({
       </div>
 
       {/* Chart */}
-      <div className="relative h-64 sm:h-80">
+      <div className="relative h-64 sm:h-80 w-full overflow-x-hidden">
         {isLoading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/40">
             <span className="text-xs text-muted-foreground">計算中...</span>

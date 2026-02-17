@@ -131,7 +131,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <div className="container mx-auto max-w-3xl p-4 sm:p-6 space-y-6">
+      <div className="container mx-auto max-w-3xl px-4 py-4 md:p-6 space-y-6 overflow-x-hidden">
           {/* Header */}
           <div>
             <h1 className="text-3xl font-bold tracking-tight">設定</h1>
