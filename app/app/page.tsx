@@ -7,7 +7,7 @@ import { useMainSimulation } from '@/hooks/useSimulation';
 import { worldlineTemplates } from '@/lib/worldline-templates';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, X, Save, Check } from 'lucide-react';
+import { X, Save, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
@@ -52,7 +52,6 @@ export default function DashboardPage() {
     simResult,
     isLoading,
     updateProfile,
-    resetProfile,
     runSimulationAsync,
   } = useProfileStore();
 
@@ -264,41 +263,10 @@ export default function DashboardPage() {
     <>
       {/* Header */}
       <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur-sm">
-          <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+          <div className="flex h-14 items-center px-4 sm:px-6">
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground">
-                シミュレーション
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                現在の条件でのシミュレーション結果
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              {/* Status indicator */}
-              <div className="flex items-center gap-2 text-sm">
-                {isLoading ? (
-                  <span className="flex items-center gap-2 text-muted-foreground">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-[#5A5550]" />
-                    計算中...
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2 text-muted-foreground">
-                    <span className="h-2 w-2 rounded-full bg-[#C8B89A]" />
-                    最新
-                  </span>
-                )}
-              </div>
-
-              {/* Action buttons */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={resetProfile}
-                className="gap-2 bg-transparent"
-              >
-                <RotateCcw className="h-4 w-4" />
-                リセット
-              </Button>
+              <h1 className="text-xl font-bold tracking-tight text-[#1A1916]">ダッシュボード</h1>
+              <p className="text-sm text-[#8A7A62]">プロファイルとシミュレーション結果</p>
             </div>
           </div>
         </header>

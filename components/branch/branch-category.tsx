@@ -62,7 +62,7 @@ export function BranchCategory({
             selected={branch.auto || selectedIds.has(branch.id)}
             onToggle={() => onToggle(branch.id)}
             disabled={branch.auto}
-            onEdit={branch.presetId ? () => onEditBranch?.(branch) : undefined}
+            onEdit={!branch.auto && onEditBranch ? () => onEditBranch(branch) : undefined}
           />
         ))}
       </div>

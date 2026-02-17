@@ -11,6 +11,7 @@ import {
   buildProfileForCandidate,
   presetToBranch,
   bundleToBranches,
+  branchToVirtualPreset,
   type Branch,
   type WorldlineCandidate,
 } from '@/lib/branch';
@@ -33,6 +34,8 @@ export default function BranchPage() {
     addCustomBranch,
     removeCustomBranch,
     updateCustomBranch,
+    hiddenDefaultBranchIds,
+    hideDefaultBranch,
     addScenarioBatch,
   } = useProfileStore();
 
@@ -50,10 +53,26 @@ export default function BranchPage() {
   // Generate default branches from profile
   const defaultBranches = useMemo(() => createDefaultBranches(profile), [profile]);
 
-  // All branches = default + custom
+  // IDs of defaults overridden by custom branches
+  const overriddenDefaultIds = useMemo(
+    () => new Set(customBranches.map((b) => b.overridesDefaultId).filter((id): id is string => !!id)),
+    [customBranches]
+  );
+
+  // Default branch IDs (for detecting edits on defaults)
+  const defaultBranchIds = useMemo(
+    () => new Set(defaultBranches.map((b) => b.id)),
+    [defaultBranches]
+  );
+
+  // All branches = filtered defaults + custom
+  const hiddenIds = useMemo(() => new Set(hiddenDefaultBranchIds), [hiddenDefaultBranchIds]);
   const allBranches = useMemo(
-    () => [...defaultBranches, ...customBranches],
-    [defaultBranches, customBranches]
+    () => [
+      ...defaultBranches.filter((d) => !hiddenIds.has(d.id) && !overriddenDefaultIds.has(d.id)),
+      ...customBranches,
+    ],
+    [defaultBranches, customBranches, hiddenIds, overriddenDefaultIds]
   );
 
   // Available branch IDs for filtering stale selections
@@ -197,8 +216,61 @@ export default function BranchPage() {
   const handleCustomizeSave = useCallback(
     (branch: Branch) => {
       if (editingBranch) {
-        // Editing existing
-        updateCustomBranch(editingBranch.id, branch);
+        const isDefault = defaultBranchIds.has(editingBranch.id);
+        if (isDefault) {
+          // Editing a default branch → create custom override
+          let savedBranch: Branch;
+
+          if (editingBranch.eventType === 'child') {
+            // Child branches need two events (childcare + education)
+            const childNum = (editingBranch.eventParams.childNumber as number) ?? 1;
+            const newAge = branch.age ?? editingBranch.age ?? profile.currentAge + 2;
+            const ts = Date.now();
+            savedBranch = {
+              id: `edited-${editingBranch.id}-${ts}`,
+              label: editingBranch.label,
+              detail: `${newAge}歳`,
+              certainty: branch.certainty,
+              age: newAge,
+              eventType: '_direct',
+              eventParams: {},
+              directEvents: [
+                {
+                  id: `edited-${editingBranch.id}-childcare-${ts}`,
+                  type: 'expense_increase',
+                  name: `第${childNum}子 育児費`,
+                  age: newAge,
+                  amount: 100,
+                  duration: 6,
+                  isRecurring: true,
+                },
+                {
+                  id: `edited-${editingBranch.id}-edu-${ts}`,
+                  type: 'expense_increase',
+                  name: `第${childNum}子 教育費`,
+                  age: newAge + 6,
+                  amount: 150,
+                  duration: 16,
+                  isRecurring: true,
+                },
+              ],
+              overridesDefaultId: editingBranch.id,
+            };
+          } else {
+            // Other defaults: use the dialog-generated branch
+            savedBranch = { ...branch, overridesDefaultId: editingBranch.id };
+          }
+
+          addCustomBranch(savedBranch);
+          // Replace in selectedBranchIds
+          setSelectedBranchIds([
+            ...selectedBranchIds.filter((id) => id !== editingBranch.id),
+            savedBranch.id,
+          ]);
+        } else {
+          // Editing an existing custom branch
+          updateCustomBranch(editingBranch.id, branch);
+        }
       } else {
         // Adding new
         addCustomBranch(branch);
@@ -208,27 +280,45 @@ export default function BranchPage() {
       setCustomizePreset(null);
       setEditingBranch(null);
     },
-    [editingBranch, updateCustomBranch, addCustomBranch, selectedBranchIds, setSelectedBranchIds]
+    [editingBranch, defaultBranchIds, profile, updateCustomBranch, addCustomBranch, selectedBranchIds, setSelectedBranchIds]
   );
 
   const handleCustomizeDelete = useCallback(() => {
     if (editingBranch) {
-      removeCustomBranch(editingBranch.id);
-      // Remove from selectedBranchIds
-      setSelectedBranchIds(selectedBranchIds.filter((id) => id !== editingBranch.id));
+      const isDefault = defaultBranchIds.has(editingBranch.id);
+      if (isDefault) {
+        // Deleting a default branch → hide it
+        hideDefaultBranch(editingBranch.id);
+        setSelectedBranchIds(selectedBranchIds.filter((id) => id !== editingBranch.id));
+      } else {
+        // Deleting a custom branch
+        removeCustomBranch(editingBranch.id);
+        // If it overrides a default, also hide the default
+        if (editingBranch.overridesDefaultId) {
+          hideDefaultBranch(editingBranch.overridesDefaultId);
+        }
+        setSelectedBranchIds(selectedBranchIds.filter((id) => id !== editingBranch.id));
+      }
     }
     setEditingBranch(null);
     setCustomizePreset(null);
-  }, [editingBranch, removeCustomBranch, selectedBranchIds, setSelectedBranchIds]);
+  }, [editingBranch, defaultBranchIds, removeCustomBranch, hideDefaultBranch, selectedBranchIds, setSelectedBranchIds]);
 
   const handleEditBranch = useCallback((branch: Branch) => {
-    // Find the preset for this branch
+    // Try real preset first (for custom branches from event catalog)
     const preset = PRESET_EVENTS.find((p) => p.id === branch.presetId);
     if (preset) {
       setEditingBranch(branch);
       setCustomizePreset(preset);
+      return;
     }
-  }, []);
+    // Fall back to virtual preset for default branches
+    const virtualPreset = branchToVirtualPreset(branch, profile);
+    if (virtualPreset) {
+      setEditingBranch(branch);
+      setCustomizePreset(virtualPreset);
+    }
+  }, [profile]);
 
   // Message for zero uncertain branches selected
   const hasUncertain = selectedBranches.some((b) => b.certainty === 'uncertain');
@@ -248,8 +338,8 @@ export default function BranchPage() {
 
       {/* Main layout */}
       <div className="flex flex-col md:flex-row md:gap-8">
-        {/* Left: Tree (sticky on desktop) */}
-        <div className="md:w-80 md:sticky md:top-20 md:self-start shrink-0 mb-6 md:mb-0">
+        {/* Left: Tree (sticky on desktop, flexible width) */}
+        <div className="md:flex-1 md:sticky md:top-20 md:self-start mb-6 md:mb-0">
           <BranchTreeViz
             currentAge={profile.currentAge}
             selectedBranches={selectedBranches}

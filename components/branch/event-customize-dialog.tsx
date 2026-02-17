@@ -60,6 +60,10 @@ export function EventCustomizeDialog({
       if (ev) {
         setAmount(ev.type === 'housing_purchase' ? (ev.purchaseDetails?.propertyPrice ?? 8000) : ev.amount);
         setDuration(ev.duration ?? 1);
+      } else if (preset) {
+        // Default branch without directEvents — use virtual preset defaults
+        setAmount(getDefaultAmount(preset, profile));
+        setDuration(preset.defaultDuration || 1);
       }
     } else if (preset) {
       // New preset

@@ -211,9 +211,10 @@ export function BranchTreeViz({
   );
 
   const SVG_W = 480;
-  const SVG_H = 280;
+  // Dynamic height: taller with more uncertain branches (320–400)
+  const SVG_H = Math.max(320, Math.min(400, 280 + uncertain.length * 40));
   const PAD_X = 30;
-  const PAD_RIGHT = 110;
+  const PAD_RIGHT = 120;
   const PAD_Y = 30;
 
   // ── 0 uncertain events: simple baseline ──
@@ -221,13 +222,13 @@ export function BranchTreeViz({
     return (
       <div className="rounded-lg border border-border bg-card p-3">
         <p className="text-xs font-medium text-muted-foreground mb-2">デシジョンツリー</p>
-        <svg viewBox={`0 0 ${SVG_W} 100`} className="w-full h-auto" role="img" aria-label="デシジョンツリー">
-          <circle cx={PAD_X} cy={50} r={5} fill="#1A1916" />
+        <svg viewBox={`0 0 ${SVG_W} 120`} className="w-full h-auto" role="img" aria-label="デシジョンツリー">
+          <circle cx={PAD_X} cy={50} r={6} fill="#1A1916" />
           <line x1={PAD_X} y1={50} x2={SVG_W - PAD_RIGHT} y2={50} stroke="#4A7C59" strokeWidth={2} strokeLinecap="round" />
-          <circle cx={SVG_W - PAD_RIGHT} cy={50} r={4} fill="#4A7C59" />
-          <text x={PAD_X} y={72} fontSize={9} fill="#5A5550" textAnchor="middle">現在</text>
-          <text x={SVG_W - PAD_RIGHT + 8} y={53} fontSize={9} fill="#5A5550">ベースライン</text>
-          <text x={SVG_W / 2} y={92} fontSize={9} fill="#8A7A62" textAnchor="middle">
+          <circle cx={SVG_W - PAD_RIGHT} cy={50} r={5} fill="#4A7C59" />
+          <text x={PAD_X} y={72} fontSize={10} fill="#5A5550" textAnchor="middle">現在</text>
+          <text x={SVG_W - PAD_RIGHT + 8} y={53} fontSize={10} fill="#5A5550">ベースライン</text>
+          <text x={SVG_W / 2} y={100} fontSize={10} fill="#8A7A62" textAnchor="middle">
             不確定イベントを選択すると分岐が表示されます
           </text>
         </svg>
@@ -300,13 +301,13 @@ export function BranchTreeViz({
           const t = 0.3;
           const lx = edge.from.x + (edge.to.x - edge.from.x) * t;
           const ly = edge.from.y + (edge.to.y - edge.from.y) * t;
-          const offsetY = edge.labelAbove ? -6 : 12;
+          const offsetY = edge.labelAbove ? -7 : 14;
           return (
             <text
               key={`el-${i}`}
               x={lx}
               y={ly + offsetY}
-              fontSize={7}
+              fontSize={8}
               fill={edge.isUncertain ? '#8A7A62' : '#4A7C59'}
             >
               {edge.labelText}
@@ -317,27 +318,27 @@ export function BranchTreeViz({
         {/* Junction nodes: Gold + pulse */}
         {junctions.map((node, i) => (
           <g key={`j-${i}`}>
-            <circle cx={node.x} cy={node.y} r={5} fill="#C8B89A">
-              <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" />
+            <circle cx={node.x} cy={node.y} r={6} fill="#C8B89A">
+              <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" />
             </circle>
           </g>
         ))}
 
         {/* Root node */}
-        <circle cx={root.x} cy={root.y} r={5} fill="#1A1916" />
-        <text x={root.x} y={root.y + 16} fontSize={9} fill="#5A5550" textAnchor="middle">
+        <circle cx={root.x} cy={root.y} r={6} fill="#1A1916" />
+        <text x={root.x} y={root.y + 18} fontSize={10} fill="#5A5550" textAnchor="middle">
           現在
         </text>
 
         {/* Leaf nodes (worldlines) */}
         {realLeaves.map((leaf, i) => (
           <g key={`l-${i}`}>
-            <circle cx={leaf.x} cy={leaf.y} r={4} fill="#4A7C59" />
-            <text x={leaf.x + 8} y={leaf.y + 3} fontSize={9} fill="#5A5550">
+            <circle cx={leaf.x} cy={leaf.y} r={5} fill="#4A7C59" />
+            <text x={leaf.x + 9} y={leaf.y + 4} fontSize={10} fill="#5A5550">
               世界線{leaf.worldlineIndex}
             </text>
-            <text x={leaf.x + 8} y={leaf.y + 14} fontSize={7} fill="#8A7A62">
+            <text x={leaf.x + 9} y={leaf.y + 16} fontSize={8} fill="#8A7A62">
               {leaf.eventSummary}
             </text>
 
@@ -347,18 +348,18 @@ export function BranchTreeViz({
               return (
                 <>
                   <rect
-                    x={leaf.x - 30}
-                    y={leaf.y - 8}
-                    width={28}
-                    height={16}
+                    x={leaf.x - 32}
+                    y={leaf.y - 9}
+                    width={30}
+                    height={18}
                     rx={4}
                     fill={s.color}
                     opacity={0.9}
                   />
                   <text
-                    x={leaf.x - 16}
-                    y={leaf.y + 4}
-                    fontSize={10}
+                    x={leaf.x - 17}
+                    y={leaf.y + 5}
+                    fontSize={11}
                     fill="white"
                     textAnchor="middle"
                     fontWeight="bold"
@@ -379,7 +380,7 @@ export function BranchTreeViz({
             <text
               x={lastLeaf.x + 8}
               y={lastLeaf.y + 32}
-              fontSize={8}
+              fontSize={9}
               fill="#8A7A62"
             >
               ...他 {totalClipped} 本

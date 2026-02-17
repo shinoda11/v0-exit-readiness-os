@@ -28,6 +28,7 @@ export interface Branch {
   eventParams: Record<string, unknown>;
   directEvents?: LifeEvent[];
   presetId?: string;
+  overridesDefaultId?: string;
 }
 
 export interface WorldlineCandidate {
@@ -77,21 +78,29 @@ export function createDefaultBranches(profile: Profile): Branch[] {
     // 計画
     ...(profile.homeStatus === 'renter'
       ? [
-          {
-            id: 'housing_purchase',
-            label: '住宅購入',
-            detail: `${Math.round(totalIncome * 5 / 100) * 100}万円`,
-            certainty: 'planned' as const,
-            age: profile.currentAge + 2,
-            eventType: 'housing_purchase',
-            eventParams: {
-              propertyPrice: Math.min(10000, Math.max(6000, Math.round(totalIncome * 5 / 100) * 100)),
-              downPayment: 1500,
-              loanYears: 35,
-              interestRate: 0.5,
-              ownerAnnualCost: 40,
-            },
-          },
+          (() => {
+            // プロファイルの資産情報から頭金を推定（現金の30%、上限20%の物件価格）
+            const estimatedPrice = Math.min(12000, Math.max(5000, Math.round(totalIncome * 5 / 100) * 100));
+            const estimatedDown = Math.min(
+              Math.max(500, Math.round(profile.assetCash * 0.3 / 100) * 100),
+              Math.round(estimatedPrice * 0.2)
+            );
+            return {
+              id: 'housing_purchase',
+              label: '住宅購入',
+              detail: `${estimatedPrice}万円（頭金${estimatedDown}万円・35年）`,
+              certainty: 'planned' as const,
+              age: profile.currentAge + 2,
+              eventType: 'housing_purchase',
+              eventParams: {
+                propertyPrice: estimatedPrice,
+                downPayment: estimatedDown,
+                loanYears: 35,
+                interestRate: 0.5,
+                ownerAnnualCost: 40,
+              },
+            };
+          })(),
         ]
       : []),
     ...(profile.mode === 'couple'
@@ -474,4 +483,101 @@ export function bundleToBranches(
     directEvents,
     presetId: bundle.id,
   };
+}
+
+// ============================================================
+// Default Branch → Virtual PresetEvent (for editing defaults)
+// ============================================================
+
+export function branchToVirtualPreset(branch: Branch, profile: Profile): PresetEvent | null {
+  switch (branch.eventType) {
+    case '_auto':
+      return null;
+
+    case 'housing_purchase': {
+      const p = branch.eventParams;
+      const price = (p.propertyPrice as number) ?? 8000;
+      return {
+        id: `_default_${branch.id}`,
+        name: branch.label,
+        category: 'housing',
+        description: `${price}万円の住宅購入`,
+        icon: '🏠',
+        ageOffset: (branch.age ?? profile.currentAge + 2) - profile.currentAge,
+        defaultAmount: price,
+        defaultDuration: 1,
+        isRecurring: false,
+        engineType: 'housing_purchase',
+        customizable: { age: true, amount: true, duration: false },
+        amountLabel: '物件価格',
+        purchaseDetails: {
+          propertyPrice: price,
+          downPayment: (p.downPayment as number) ?? 1500,
+          purchaseCostRate: 7,
+          mortgageYears: (p.loanYears as number) ?? 35,
+          interestRate: (p.interestRate as number) ?? 0.5,
+          ownerAnnualCost: (p.ownerAnnualCost as number) ?? 40,
+        },
+      };
+    }
+
+    case 'child': {
+      return {
+        id: `_default_${branch.id}`,
+        name: branch.label,
+        category: 'family',
+        description: '育児費＋教育費（自動計算）',
+        icon: '👶',
+        ageOffset: (branch.age ?? profile.currentAge + 2) - profile.currentAge,
+        defaultAmount: 100,
+        defaultDuration: 6,
+        isRecurring: true,
+        engineType: 'expense_increase',
+        customizable: { age: true, amount: false, duration: false },
+        amountLabel: '年間費用',
+      };
+    }
+
+    case 'income_change': {
+      const pct = (branch.eventParams.changePercent as number) ?? 0;
+      const amount = Math.round(profile.grossIncome * Math.abs(pct) / 100);
+      const dur = branch.eventParams.duration as number | undefined;
+      return {
+        id: `_default_${branch.id}`,
+        name: branch.label,
+        category: 'career',
+        description: branch.detail,
+        icon: pct > 0 ? '📈' : '📉',
+        ageOffset: (branch.age ?? profile.currentAge + 3) - profile.currentAge,
+        defaultAmount: amount,
+        defaultDuration: dur ?? 0,
+        isRecurring: !!dur,
+        engineType: pct > 0 ? 'income_increase' : 'income_decrease',
+        target: 'self',
+        customizable: { age: true, amount: true, duration: !!dur },
+        amountLabel: pct > 0 ? '年間増額' : '年間減額',
+      };
+    }
+
+    case 'partner_income_change': {
+      return {
+        id: `_default_${branch.id}`,
+        name: branch.label,
+        category: 'career',
+        description: branch.detail,
+        icon: '👤',
+        ageOffset: (branch.age ?? profile.currentAge + 2) - profile.currentAge,
+        defaultAmount: profile.partnerGrossIncome,
+        defaultDuration: 0,
+        isRecurring: false,
+        engineType: 'income_decrease',
+        target: 'partner',
+        customizable: { age: true, amount: true, duration: false },
+        amountLabel: '年間減額',
+      };
+    }
+
+    default:
+      return null;
+  }
 }
