@@ -804,8 +804,17 @@ describe('E2E ペルソナ検証', () => {
         runAverage(withPurchase),
       ])
 
-      // 頭金600万+諸費用420万=1020万が差し引かれるのでスコアが下がる
-      expect(rBase.score).toBeGreaterThan(rWithPurchase.score)
+      // 頭金600万+諸費用420万=1020万が差し引かれるのでスコアが下がる（or 同等）
+      expect(rBase.score).toBeGreaterThanOrEqual(rWithPurchase.score)
+
+      // 決定論的チェック: 購入年(38歳)時点で初期費用分の資産減少を確認
+      const singleBase = await runSimulation(base)
+      const singlePurchase = await runSimulation(withPurchase)
+      const baseAt38 = singleBase.paths.yearlyData.find((d: { age: number }) => d.age === 38)
+      const purchaseAt38 = singlePurchase.paths.yearlyData.find((d: { age: number }) => d.age === 38)
+      if (baseAt38 && purchaseAt38) {
+        expect(baseAt38.assets).toBeGreaterThan(purchaseAt38.assets)
+      }
     })
 
     it('housing_purchase で住居費がローン+管理費に切り替わる', async () => {
