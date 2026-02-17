@@ -1,6 +1,7 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
+import { Pencil } from 'lucide-react';
 import type { Branch } from '@/lib/branch';
 import { cn } from '@/lib/utils';
 
@@ -15,9 +16,10 @@ interface BranchNodeProps {
   selected: boolean;
   onToggle: () => void;
   disabled?: boolean;
+  onEdit?: () => void;
 }
 
-export function BranchNode({ branch, selected, onToggle, disabled }: BranchNodeProps) {
+export function BranchNode({ branch, selected, onToggle, disabled, onEdit }: BranchNodeProps) {
   const borderColor = CERTAINTY_BORDER[branch.certainty] ?? 'border-l-border';
 
   return (
@@ -36,7 +38,23 @@ export function BranchNode({ branch, selected, onToggle, disabled }: BranchNodeP
         className="shrink-0"
       />
       <div className="min-w-0 flex-1">
-        <span className="text-sm font-medium text-foreground">{branch.label}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-medium text-foreground">{branch.label}</span>
+          {onEdit && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEdit();
+              }}
+              className="shrink-0 p-0.5 rounded hover:bg-accent transition-colors"
+              aria-label="編集"
+            >
+              <Pencil className="h-3 w-3 text-muted-foreground" />
+            </button>
+          )}
+        </div>
         <p className="text-xs text-muted-foreground truncate">{branch.detail}</p>
       </div>
     </label>

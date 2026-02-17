@@ -9,18 +9,32 @@ import {
   createDefaultBranches,
   generateWorldlineCandidates,
   buildProfileForCandidate,
+  presetToBranch,
+  bundleToBranches,
   type Branch,
   type WorldlineCandidate,
 } from '@/lib/branch';
 import { runSimulation } from '@/lib/engine';
+import { PRESET_EVENTS } from '@/lib/event-catalog';
+import type { PresetEvent, BundlePreset } from '@/lib/event-catalog';
 import { BranchCategory } from '@/components/branch/branch-category';
 import { BranchTreeViz } from '@/components/branch/branch-tree-viz';
 import { WorldlinePreview } from '@/components/branch/worldline-preview';
+import { EventPickerDialog } from '@/components/branch/event-picker-dialog';
+import { EventCustomizeDialog } from '@/components/branch/event-customize-dialog';
 
 export default function BranchPage() {
   const router = useRouter();
-  const { profile, selectedBranchIds, setSelectedBranchIds, addScenarioBatch } =
-    useProfileStore();
+  const {
+    profile,
+    selectedBranchIds,
+    setSelectedBranchIds,
+    customBranches,
+    addCustomBranch,
+    removeCustomBranch,
+    updateCustomBranch,
+    addScenarioBatch,
+  } = useProfileStore();
 
   const [step, setStep] = useState<'select' | 'preview'>('select');
   const [candidates, setCandidates] = useState<WorldlineCandidate[]>([]);
@@ -28,38 +42,49 @@ export default function BranchPage() {
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [selectedCandidateIds, setSelectedCandidateIds] = useState<Set<string>>(new Set());
 
+  // Dialog state
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [customizePreset, setCustomizePreset] = useState<PresetEvent | null>(null);
+  const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
+
   // Generate default branches from profile
   const defaultBranches = useMemo(() => createDefaultBranches(profile), [profile]);
 
+  // All branches = default + custom
+  const allBranches = useMemo(
+    () => [...defaultBranches, ...customBranches],
+    [defaultBranches, customBranches]
+  );
+
   // Available branch IDs for filtering stale selections
-  const availableIds = useMemo(() => new Set(defaultBranches.map((b) => b.id)), [defaultBranches]);
+  const availableIds = useMemo(() => new Set(allBranches.map((b) => b.id)), [allBranches]);
 
   // Active selected IDs (filtered against available)
   const activeSelectedIds = useMemo(() => {
     const ids = selectedBranchIds.filter((id) => availableIds.has(id));
     // Auto branches are always selected
-    const autoIds = defaultBranches.filter((b) => b.auto).map((b) => b.id);
+    const autoIds = allBranches.filter((b) => b.auto).map((b) => b.id);
     return new Set([...autoIds, ...ids]);
-  }, [selectedBranchIds, availableIds, defaultBranches]);
+  }, [selectedBranchIds, availableIds, allBranches]);
 
   // Categorized branches
   const confirmed = useMemo(
-    () => defaultBranches.filter((b) => b.certainty === 'confirmed'),
-    [defaultBranches]
+    () => allBranches.filter((b) => b.certainty === 'confirmed'),
+    [allBranches]
   );
   const planned = useMemo(
-    () => defaultBranches.filter((b) => b.certainty === 'planned'),
-    [defaultBranches]
+    () => allBranches.filter((b) => b.certainty === 'planned'),
+    [allBranches]
   );
   const uncertain = useMemo(
-    () => defaultBranches.filter((b) => b.certainty === 'uncertain'),
-    [defaultBranches]
+    () => allBranches.filter((b) => b.certainty === 'uncertain'),
+    [allBranches]
   );
 
   // Selected branches (full objects)
   const selectedBranches = useMemo(
-    () => defaultBranches.filter((b) => activeSelectedIds.has(b.id)),
-    [defaultBranches, activeSelectedIds]
+    () => allBranches.filter((b) => activeSelectedIds.has(b.id)),
+    [allBranches, activeSelectedIds]
   );
 
   // Non-auto selected count (to determine if generate button should be enabled)
@@ -68,9 +93,15 @@ export default function BranchPage() {
     [selectedBranches]
   );
 
+  // Existing preset IDs for duplicate prevention
+  const existingPresetIds = useMemo(
+    () => new Set(customBranches.map((b) => b.presetId).filter((id): id is string => !!id)),
+    [customBranches]
+  );
+
   const handleToggle = useCallback(
     (id: string) => {
-      const branch = defaultBranches.find((b) => b.id === id);
+      const branch = allBranches.find((b) => b.id === id);
       if (!branch || branch.auto) return;
 
       const current = new Set(selectedBranchIds.filter((sid) => availableIds.has(sid)));
@@ -81,7 +112,7 @@ export default function BranchPage() {
       }
       setSelectedBranchIds(Array.from(current));
     },
-    [selectedBranchIds, availableIds, defaultBranches, setSelectedBranchIds]
+    [selectedBranchIds, availableIds, allBranches, setSelectedBranchIds]
   );
 
   const handleGenerate = useCallback(async () => {
@@ -142,8 +173,68 @@ export default function BranchPage() {
     setStep('select');
   }, []);
 
+  // ── Event flow handlers ──
+
+  const handleSelectPreset = useCallback(
+    (preset: PresetEvent) => {
+      setPickerOpen(false);
+      setCustomizePreset(preset);
+    },
+    []
+  );
+
+  const handleSelectBundle = useCallback(
+    (bundle: BundlePreset) => {
+      const branch = bundleToBranches(bundle, profile);
+      addCustomBranch(branch);
+      // Auto-select the new branch
+      setSelectedBranchIds([...selectedBranchIds, branch.id]);
+      setPickerOpen(false);
+    },
+    [profile, addCustomBranch, selectedBranchIds, setSelectedBranchIds]
+  );
+
+  const handleCustomizeSave = useCallback(
+    (branch: Branch) => {
+      if (editingBranch) {
+        // Editing existing
+        updateCustomBranch(editingBranch.id, branch);
+      } else {
+        // Adding new
+        addCustomBranch(branch);
+        // Auto-select the new branch
+        setSelectedBranchIds([...selectedBranchIds, branch.id]);
+      }
+      setCustomizePreset(null);
+      setEditingBranch(null);
+    },
+    [editingBranch, updateCustomBranch, addCustomBranch, selectedBranchIds, setSelectedBranchIds]
+  );
+
+  const handleCustomizeDelete = useCallback(() => {
+    if (editingBranch) {
+      removeCustomBranch(editingBranch.id);
+      // Remove from selectedBranchIds
+      setSelectedBranchIds(selectedBranchIds.filter((id) => id !== editingBranch.id));
+    }
+    setEditingBranch(null);
+    setCustomizePreset(null);
+  }, [editingBranch, removeCustomBranch, selectedBranchIds, setSelectedBranchIds]);
+
+  const handleEditBranch = useCallback((branch: Branch) => {
+    // Find the preset for this branch
+    const preset = PRESET_EVENTS.find((p) => p.id === branch.presetId);
+    if (preset) {
+      setEditingBranch(branch);
+      setCustomizePreset(preset);
+    }
+  }, []);
+
   // Message for zero uncertain branches selected
   const hasUncertain = selectedBranches.some((b) => b.certainty === 'uncertain');
+
+  // Determine customize dialog open state
+  const customizeOpen = !!customizePreset;
 
   return (
     <div className="max-w-2xl mx-auto md:max-w-5xl px-4 py-6 overflow-x-hidden">
@@ -182,12 +273,16 @@ export default function BranchPage() {
                 branches={planned}
                 selectedIds={activeSelectedIds}
                 onToggle={handleToggle}
+                onAddEvent={() => setPickerOpen(true)}
+                onEditBranch={handleEditBranch}
               />
               <BranchCategory
                 certainty="uncertain"
                 branches={uncertain}
                 selectedIds={activeSelectedIds}
                 onToggle={handleToggle}
+                onAddEvent={() => setPickerOpen(true)}
+                onEditBranch={handleEditBranch}
               />
 
               {!hasUncertain && nonAutoSelectedCount > 0 && (
@@ -226,6 +321,31 @@ export default function BranchPage() {
           )}
         </div>
       </div>
+
+      {/* Dialogs */}
+      <EventPickerDialog
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        onSelectPreset={handleSelectPreset}
+        onSelectBundle={handleSelectBundle}
+        existingPresetIds={existingPresetIds}
+        showPartnerPresets={profile.mode === 'couple'}
+        isRenter={profile.homeStatus === 'renter'}
+      />
+      <EventCustomizeDialog
+        open={customizeOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setCustomizePreset(null);
+            setEditingBranch(null);
+          }
+        }}
+        preset={customizePreset}
+        existingBranch={editingBranch}
+        profile={profile}
+        onSave={handleCustomizeSave}
+        onDelete={editingBranch ? handleCustomizeDelete : undefined}
+      />
 
       <p className="mt-8 text-center text-xs text-muted-foreground">
         本サービスは金融アドバイスではありません。投資判断はご自身の責任で行ってください。

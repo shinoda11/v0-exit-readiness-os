@@ -28,6 +28,8 @@ interface BranchCategoryProps {
   branches: Branch[];
   selectedIds: Set<string>;
   onToggle: (id: string) => void;
+  onAddEvent?: () => void;
+  onEditBranch?: (branch: Branch) => void;
 }
 
 export function BranchCategory({
@@ -35,6 +37,8 @@ export function BranchCategory({
   branches,
   selectedIds,
   onToggle,
+  onAddEvent,
+  onEditBranch,
 }: BranchCategoryProps) {
   if (branches.length === 0) return null;
 
@@ -58,6 +62,7 @@ export function BranchCategory({
             selected={branch.auto || selectedIds.has(branch.id)}
             onToggle={() => onToggle(branch.id)}
             disabled={branch.auto}
+            onEdit={branch.presetId ? () => onEditBranch?.(branch) : undefined}
           />
         ))}
       </div>
@@ -66,11 +71,11 @@ export function BranchCategory({
         <Button
           variant="ghost"
           size="sm"
-          disabled
-          className="w-full justify-start gap-2 text-muted-foreground opacity-50"
+          onClick={() => onAddEvent?.()}
+          className="w-full justify-start gap-2 text-muted-foreground"
         >
           <Plus className="h-4 w-4" />
-          カスタムイベントを追加
+          イベントを追加
         </Button>
       )}
     </div>

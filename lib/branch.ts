@@ -7,7 +7,9 @@
  * expense_increase として変換する。
  */
 
-import type { Profile, LifeEvent, SimulationResult, HousingPurchaseDetails } from './types';
+import type { Profile, LifeEvent, LifeEventType, SimulationResult, HousingPurchaseDetails } from './types';
+import type { PresetEvent, BundlePreset } from './event-catalog';
+import { getDefaultAmount } from './event-catalog';
 
 // ============================================================
 // Types
@@ -24,6 +26,8 @@ export interface Branch {
   auto?: boolean;
   eventType: string;
   eventParams: Record<string, unknown>;
+  directEvents?: LifeEvent[];
+  presetId?: string;
 }
 
 export interface WorldlineCandidate {
@@ -162,7 +166,10 @@ export function createDefaultBranches(profile: Profile): Branch[] {
 // Branch → LifeEvent conversion
 // ============================================================
 
-export function branchToLifeEvents(branch: Branch, profile: Profile): LifeEvent[] {
+export function branchToLifeEvents(branch: Branch, _profile: Profile): LifeEvent[] {
+  if (branch.directEvents) return branch.directEvents;
+
+  const profile = _profile;
   const ts = Date.now();
 
   switch (branch.eventType) {
@@ -366,4 +373,105 @@ export function findMostImpactfulBranch(
   }
 
   return impactBranch ? { branch: impactBranch, scoreDiff: maxDiff } : null;
+}
+
+// ============================================================
+// Preset → Branch conversion
+// ============================================================
+
+export function presetToBranch(
+  preset: PresetEvent,
+  profile: Profile,
+  custom?: { age?: number; amount?: number; duration?: number; certainty?: BranchCertainty }
+): Branch {
+  const age = custom?.age ?? profile.currentAge + preset.ageOffset;
+  const amount = custom?.amount ?? getDefaultAmount(preset, profile);
+  const duration = custom?.duration ?? preset.defaultDuration;
+  const certainty = custom?.certainty ?? 'uncertain';
+  const ts = Date.now();
+
+  const directEvents: LifeEvent[] = [];
+
+  if (preset.engineType === 'housing_purchase') {
+    const pd = preset.purchaseDetails!;
+    directEvents.push({
+      id: `preset-${preset.id}-${ts}`,
+      type: 'housing_purchase',
+      name: preset.name,
+      age,
+      amount: 0,
+      isRecurring: false,
+      purchaseDetails: {
+        ...pd,
+        propertyPrice: amount,
+      },
+    });
+  } else {
+    directEvents.push({
+      id: `preset-${preset.id}-${ts}`,
+      type: preset.engineType as LifeEventType,
+      name: preset.name,
+      age,
+      amount,
+      duration: preset.isRecurring ? duration : undefined,
+      isRecurring: preset.isRecurring,
+      target: preset.target,
+    });
+  }
+
+  const detailParts: string[] = [`${age}歳`];
+  if (amount > 0) detailParts.push(`${amount}万円`);
+  if (preset.isRecurring && duration > 0) detailParts.push(`${duration}年間`);
+
+  return {
+    id: `preset-${preset.id}-${ts}`,
+    label: preset.name,
+    detail: detailParts.join(' / '),
+    certainty,
+    age,
+    eventType: '_direct',
+    eventParams: {},
+    directEvents,
+    presetId: preset.id,
+  };
+}
+
+// ============================================================
+// Bundle → Branch conversion
+// ============================================================
+
+export function bundleToBranches(
+  bundle: BundlePreset,
+  profile: Profile,
+  startAge?: number
+): Branch {
+  const baseAge = startAge ?? profile.currentAge + bundle.defaultAgeOffset;
+  const ts = Date.now();
+  const bundleId = `bundle-${bundle.id}-${ts}`;
+
+  const directEvents: LifeEvent[] = bundle.events.map((ev, i) => ({
+    id: `${bundleId}-ev${i}`,
+    type: ev.engineType as LifeEventType,
+    name: ev.name,
+    age: baseAge + ev.ageOffsetFromBundle,
+    amount: ev.amountFn(profile),
+    duration: ev.isRecurring ? ev.duration : undefined,
+    isRecurring: ev.isRecurring,
+    target: ev.target,
+    bundleId,
+  }));
+
+  const summary = bundle.events.map((ev) => ev.name).join(' + ');
+
+  return {
+    id: bundleId,
+    label: bundle.name,
+    detail: `${baseAge}歳〜 / ${summary}`,
+    certainty: 'uncertain',
+    age: baseAge,
+    eventType: '_direct',
+    eventParams: {},
+    directEvents,
+    presetId: bundle.id,
+  };
 }

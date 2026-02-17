@@ -94,6 +94,7 @@ interface ProfileStore {
   setSelectedBranchIds: (ids: string[]) => void;
   addCustomBranch: (branch: Branch) => void;
   removeCustomBranch: (id: string) => void;
+  updateCustomBranch: (id: string, updates: Partial<Branch>) => void;
   addScenarioBatch: (scenarios: SavedScenario[]) => void;
 
   // Scenario actions
@@ -216,6 +217,12 @@ export const useProfileStore = create<ProfileStore>()(
           set((s) => ({ customBranches: [...s.customBranches, branch] })),
         removeCustomBranch: (id) =>
           set((s) => ({ customBranches: s.customBranches.filter((b) => b.id !== id) })),
+        updateCustomBranch: (id, updates) =>
+          set((s) => ({
+            customBranches: s.customBranches.map((b) =>
+              b.id === id ? { ...b, ...updates } : b
+            ),
+          })),
         addScenarioBatch: (newScenarios) => {
           const { scenarios } = get();
           const nonBranch = scenarios.filter((s) => !s.id.startsWith('branch-'));
