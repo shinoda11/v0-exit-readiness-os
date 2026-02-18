@@ -8,9 +8,10 @@ import { worldlineTemplates } from '@/lib/worldline-templates';
 import { getBranchDerivedLifeEvents } from '@/lib/branch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { X, Save, Check } from 'lucide-react';
+import { X, Save, Check, Share2, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 // Dashboard input cards
 import { ProfileSummaryCard } from '@/components/dashboard/profile-summary-card';
@@ -73,6 +74,12 @@ export default function DashboardPage() {
   // Worldline template flow
   const router = useRouter();
   const [creatingWorldline, setCreatingWorldline] = useState<string | null>(null);
+
+  // Share / capture state
+  const captureRef = useRef<HTMLDivElement>(null);
+  const captureRefMobile = useRef<HTMLDivElement>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const { toast } = useToast();
 
   // Check for first-time visit + FitGate preset
   useEffect(() => {
@@ -245,6 +252,86 @@ export default function DashboardPage() {
     router.push('/app/v2');
   };
 
+  // Handle share / capture
+  const handleShareCapture = async () => {
+    // Pick the visible capture target (mobile vs desktop)
+    const target = captureRefMobile.current?.offsetParent !== null
+      ? captureRefMobile.current
+      : captureRef.current;
+    if (!target || isCapturing) return;
+    setIsCapturing(true);
+
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const sourceCanvas = await html2canvas(target, {
+        backgroundColor: '#FAF9F7',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+
+      // Add footer with logo + date + disclaimer
+      const footerHeight = 60;
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = sourceCanvas.width;
+      finalCanvas.height = sourceCanvas.height + footerHeight * 2; // scale=2
+      const ctx = finalCanvas.getContext('2d')!;
+
+      // Background
+      ctx.fillStyle = '#FAF9F7';
+      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+
+      // Draw captured content
+      ctx.drawImage(sourceCanvas, 0, 0);
+
+      // Footer
+      const footerY = sourceCanvas.height + 20;
+      ctx.fillStyle = '#8A7A62';
+      ctx.font = 'bold 28px sans-serif';
+      ctx.fillText('YOHACK', 32, footerY + 10);
+
+      ctx.fillStyle = '#5A5550';
+      ctx.font = '20px sans-serif';
+      const dateStr = new Date().toLocaleDateString('ja-JP');
+      ctx.fillText(`${dateStr}  ※シミュレーション結果です。金融アドバイスではありません。`, 180, footerY + 10);
+
+      finalCanvas.toBlob(async (blob) => {
+        if (!blob) {
+          toast({ description: '画像の生成に失敗しました', variant: 'destructive' });
+          setIsCapturing(false);
+          return;
+        }
+
+        const file = new File([blob], `yohack-${dateStr}.png`, { type: 'image/png' });
+
+        // Try Web Share API (mobile)
+        if (navigator.share && navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: 'YOHACK シミュレーション結果' });
+            toast({ description: '共有しました' });
+            setIsCapturing(false);
+            return;
+          } catch {
+            // User cancelled or share failed — fall through to download
+          }
+        }
+
+        // Fallback: download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `yohack-${dateStr}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast({ description: '画像を保存しました' });
+        setIsCapturing(false);
+      }, 'image/png');
+    } catch {
+      toast({ description: '画像の生成に失敗しました', variant: 'destructive' });
+      setIsCapturing(false);
+    }
+  };
+
   return (
     <>
       {/* Header */}
@@ -392,24 +479,42 @@ export default function DashboardPage() {
             <div className={cn("lg:col-span-2 min-w-0 overflow-x-hidden", mobileTab === 'input' && 'hidden md:block')}>
               {/* Mobile: flat result list (no sub-tabs) */}
               <div className="md:hidden space-y-6">
-                <div className="grid gap-4">
-                  <ExitReadinessCard
-                    score={simResult?.score ?? null}
-                    isLoading={isLoading && !simResult}
-                  />
-                  <KeyMetricsCard
-                    metrics={simResult?.metrics ?? null}
-                    currentAge={profile.currentAge}
+                <div className="flex justify-end">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-xs gap-1.5"
+                    onClick={handleShareCapture}
+                    disabled={isCapturing || !simResult}
+                  >
+                    {isCapturing ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Share2 className="h-3 w-3" />
+                    )}
+                    共有
+                  </Button>
+                </div>
+                <div ref={captureRefMobile} className="space-y-6">
+                  <div className="grid gap-4">
+                    <ExitReadinessCard
+                      score={simResult?.score ?? null}
+                      isLoading={isLoading && !simResult}
+                    />
+                    <KeyMetricsCard
+                      metrics={simResult?.metrics ?? null}
+                      currentAge={profile.currentAge}
+                      targetRetireAge={profile.targetRetireAge}
+                      isLoading={isLoading}
+                    />
+                  </div>
+                  <AssetProjectionChart
+                    data={simResult?.paths ?? null}
                     targetRetireAge={profile.targetRetireAge}
+                    lifeEvents={chartLifeEvents}
                     isLoading={isLoading}
                   />
                 </div>
-                <AssetProjectionChart
-                  data={simResult?.paths ?? null}
-                  targetRetireAge={profile.targetRetireAge}
-                  lifeEvents={chartLifeEvents}
-                  isLoading={isLoading}
-                />
                 <NextBestActionsCard
                   metrics={simResult?.metrics ?? null}
                   score={simResult?.score ?? null}
@@ -448,7 +553,23 @@ export default function DashboardPage() {
 
                 {/* Summary Tab */}
                 <TabsContent value="summary" className="mt-6 space-y-6">
-                  {/* Save scenario button */}
+                  {/* Save + Share buttons */}
+                  <div className="flex items-center justify-end gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-xs gap-1.5"
+                      onClick={handleShareCapture}
+                      disabled={isCapturing || !simResult}
+                    >
+                      {isCapturing ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <Share2 className="h-3 w-3" />
+                      )}
+                      共有
+                    </Button>
+                  </div>
                   <div className="flex items-center justify-end gap-2">
                     {savedFromSummary ? (
                       <>
@@ -501,27 +622,30 @@ export default function DashboardPage() {
                     )}
                   </div>
 
-                  {/* Top row: Score and metrics */}
-                  <div className="grid gap-6 lg:grid-cols-2">
-                    <ExitReadinessCard
-                      score={simResult?.score ?? null}
-                      isLoading={isLoading && !simResult}
-                    />
-                    <KeyMetricsCard
-                      metrics={simResult?.metrics ?? null}
-                      currentAge={profile.currentAge}
+                  {/* Capture target for share */}
+                  <div ref={captureRef} className="space-y-6">
+                    {/* Top row: Score and metrics */}
+                    <div className="grid gap-6 lg:grid-cols-2">
+                      <ExitReadinessCard
+                        score={simResult?.score ?? null}
+                        isLoading={isLoading && !simResult}
+                      />
+                      <KeyMetricsCard
+                        metrics={simResult?.metrics ?? null}
+                        currentAge={profile.currentAge}
+                        targetRetireAge={profile.targetRetireAge}
+                        isLoading={isLoading}
+                      />
+                    </div>
+
+                    {/* Chart */}
+                    <AssetProjectionChart
+                      data={simResult?.paths ?? null}
                       targetRetireAge={profile.targetRetireAge}
+                      lifeEvents={chartLifeEvents}
                       isLoading={isLoading}
                     />
                   </div>
-
-                  {/* Chart */}
-                  <AssetProjectionChart
-                    data={simResult?.paths ?? null}
-                    targetRetireAge={profile.targetRetireAge}
-                    lifeEvents={chartLifeEvents}
-                    isLoading={isLoading}
-                  />
 
                   {/* Next Best Actions - With quantified impact */}
                   <NextBestActionsCard
