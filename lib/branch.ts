@@ -273,6 +273,92 @@ export function branchToLifeEvents(branch: Branch, _profile: Profile): LifeEvent
 }
 
 // ============================================================
+// Branch → Display Summary (ダッシュボード用)
+// ============================================================
+
+export interface BranchDisplayItem {
+  id: string;
+  label: string;
+  detail: string;
+  age: number | null;
+  certainty: BranchCertainty;
+  icon: string;
+}
+
+const BRANCH_ICONS: Record<string, string> = {
+  housing_purchase: '🏠',
+  child: '👶',
+  income_change: '💼',
+  partner_income_change: '👤',
+  _direct: '📋',
+};
+
+/**
+ * 分岐ビルダーの現在の状態から、ダッシュボード表示用のイベント一覧を生成する。
+ * auto ブランチ（年齢を重ねる、年金受給）は除外。
+ */
+export function getBranchDisplayItems(
+  profile: Profile,
+  customBranches: Branch[],
+  hiddenDefaultBranchIds: string[],
+): BranchDisplayItem[] {
+  const defaults = createDefaultBranches(profile);
+  const overriddenIds = new Set(
+    customBranches
+      .map(b => b.overridesDefaultId)
+      .filter((id): id is string => id != null)
+  );
+  const hiddenIds = new Set(hiddenDefaultBranchIds);
+
+  // デフォルトブランチ（auto除外、hidden/overridden除外）
+  const visibleDefaults = defaults.filter(
+    b => !b.auto && !hiddenIds.has(b.id) && !overriddenIds.has(b.id)
+  );
+
+  const allBranches = [...visibleDefaults, ...customBranches];
+
+  return allBranches.map(b => ({
+    id: b.id,
+    label: b.label,
+    detail: b.detail,
+    age: b.age ?? null,
+    certainty: b.certainty,
+    icon: b.presetId
+      ? '📋'
+      : BRANCH_ICONS[b.eventType] ?? '📋',
+  }));
+}
+
+/**
+ * 分岐ビルダーの現在の状態から、チャートマーカー用の LifeEvent[] を生成する。
+ * auto ブランチは除外。branchToLifeEvents() で変換。
+ */
+export function getBranchDerivedLifeEvents(
+  profile: Profile,
+  customBranches: Branch[],
+  hiddenDefaultBranchIds: string[],
+): LifeEvent[] {
+  const defaults = createDefaultBranches(profile);
+  const overriddenIds = new Set(
+    customBranches
+      .map(b => b.overridesDefaultId)
+      .filter((id): id is string => id != null)
+  );
+  const hiddenIds = new Set(hiddenDefaultBranchIds);
+
+  const visibleDefaults = defaults.filter(
+    b => !b.auto && !hiddenIds.has(b.id) && !overriddenIds.has(b.id)
+  );
+
+  const allBranches = [...visibleDefaults, ...customBranches];
+  const events: LifeEvent[] = [];
+  for (const b of allBranches) {
+    events.push(...branchToLifeEvents(b, profile));
+  }
+  return events;
+}
+
+// ============================================================
 // Worldline Candidate Generation
 // ============================================================
 

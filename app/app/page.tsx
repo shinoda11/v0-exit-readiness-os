@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useProfileStore } from '@/lib/store';
 import { useMainSimulation } from '@/hooks/useSimulation';
 import { worldlineTemplates } from '@/lib/worldline-templates';
+import { getBranchDerivedLifeEvents } from '@/lib/branch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { X, Save, Check } from 'lucide-react';
@@ -53,6 +54,9 @@ export default function DashboardPage() {
     isLoading,
     updateProfile,
     runSimulationAsync,
+    customBranches,
+    hiddenDefaultBranchIds,
+    activeScenarioId,
   } = useProfileStore();
 
   const [activeTab, setActiveTab] = useState('summary');
@@ -109,6 +113,14 @@ export default function DashboardPage() {
   });
 
   const { getFieldError } = useValidation(profile);
+
+  // Chart markers: シナリオロード時は profile.lifeEvents、通常は分岐ビルダー由来
+  const chartLifeEvents = useMemo(() => {
+    if (activeScenarioId && profile.lifeEvents.length > 0) {
+      return profile.lifeEvents;
+    }
+    return getBranchDerivedLifeEvents(profile, customBranches, hiddenDefaultBranchIds);
+  }, [profile, customBranches, hiddenDefaultBranchIds, activeScenarioId]);
 
   // Dismiss first-visit banner when profile is edited
   const profileFingerprint = `${profile.currentAge}-${profile.targetRetireAge}-${profile.grossIncome}-${profile.livingCostAnnual}-${profile.assetCash}-${profile.assetInvest}`;
@@ -443,7 +455,7 @@ export default function DashboardPage() {
                 <AssetProjectionChart
                   data={simResult?.paths ?? null}
                   targetRetireAge={profile.targetRetireAge}
-                  lifeEvents={profile.lifeEvents}
+                  lifeEvents={chartLifeEvents}
                   isLoading={isLoading}
                 />
                 <NextBestActionsCard
@@ -555,7 +567,7 @@ export default function DashboardPage() {
                   <AssetProjectionChart
                     data={simResult?.paths ?? null}
                     targetRetireAge={profile.targetRetireAge}
-                    lifeEvents={profile.lifeEvents}
+                    lifeEvents={chartLifeEvents}
                     isLoading={isLoading}
                   />
 
