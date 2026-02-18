@@ -13,10 +13,9 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 // Dashboard input cards
-import { BasicInfoCard } from '@/components/dashboard/basic-info-card';
+import { ProfileSummaryCard } from '@/components/dashboard/profile-summary-card';
 import { IncomeCard } from '@/components/dashboard/income-card';
 import { ExpenseCard } from '@/components/dashboard/expense-card';
-import { AssetCard } from '@/components/dashboard/asset-card';
 import { InvestmentCard } from '@/components/dashboard/investment-card';
 import { LifeEventsSummaryCard } from '@/components/dashboard/life-events-summary-card';
 import { HousingPlanCard } from '@/components/dashboard/housing-plan-card';
@@ -44,7 +43,7 @@ import { useValidation } from '@/hooks/useValidation';
 // Profile completeness
 import { ProfileCompleteness } from '@/components/dashboard/profile-completeness';
 
-type CardKey = 'basicInfo' | 'income' | 'expense' | 'asset' | 'investment' | 'lifeEvents' | 'housing';
+type CardKey = 'income' | 'expense' | 'investment' | 'lifeEvents' | 'housing';
 
 export default function DashboardPage() {
   const {
@@ -141,10 +140,8 @@ export default function DashboardPage() {
 
   // --- Collapsible card state ---
   const [openCards, setOpenCards] = useState<Record<CardKey, boolean>>({
-    basicInfo: true,
     income: true,
     expense: false,
-    asset: false,
     investment: false,
     lifeEvents: false,
     housing: false,
@@ -155,14 +152,12 @@ export default function DashboardPage() {
 
   // Completion checks
   const cardComplete = useMemo<Record<CardKey, boolean>>(() => ({
-    basicInfo: profile.currentAge !== 30 && profile.targetRetireAge !== 50,
     income: profile.grossIncome !== 800,
     expense: profile.livingCostAnnual !== 300,
-    asset: profile.assetCash !== 500 || profile.assetInvest !== 300,
     investment: profile.expectedReturn !== 5,
     lifeEvents: false,
     housing: false,
-  }), [profile.currentAge, profile.targetRetireAge, profile.grossIncome, profile.livingCostAnnual, profile.assetCash, profile.assetInvest, profile.expectedReturn]);
+  }), [profile.grossIncome, profile.livingCostAnnual, profile.expectedReturn]);
 
   // Auto-close completed cards (only for non-manually-toggled cards)
   useEffect(() => {
@@ -186,10 +181,8 @@ export default function DashboardPage() {
 
   // Card refs for scroll-into-view
   const cardRefs = {
-    basicInfo: useRef<HTMLDivElement>(null),
     income: useRef<HTMLDivElement>(null),
     expense: useRef<HTMLDivElement>(null),
-    asset: useRef<HTMLDivElement>(null),
     investment: useRef<HTMLDivElement>(null),
     lifeEvents: useRef<HTMLDivElement>(null),
     housing: useRef<HTMLDivElement>(null),
@@ -343,16 +336,9 @@ export default function DashboardPage() {
           <div className="mt-4 md:mt-0 grid gap-6 lg:grid-cols-3">
             {/* Left column: Input cards — hidden on mobile when result tab active */}
             <div className={cn("space-y-4 lg:col-span-1 min-w-0 overflow-x-hidden", mobileTab === 'result' && 'hidden md:block')}>
-              {/* Basic Inputs - Collapsible */}
-              <div ref={cardRefs.basicInfo}>
-                <BasicInfoCard
-                  profile={profile}
-                  onUpdate={updateProfile}
-                  getFieldError={getFieldError}
-                  open={openCards.basicInfo}
-                  onOpenChange={(o) => handleCardToggle('basicInfo', o)}
-                />
-              </div>
+              {/* Profile Summary - Read-only */}
+              <ProfileSummaryCard profile={profile} />
+
               <div ref={cardRefs.income}>
                 <IncomeCard
                   profile={profile}
@@ -369,15 +355,7 @@ export default function DashboardPage() {
                   getFieldError={getFieldError}
                   open={openCards.expense}
                   onOpenChange={(o) => handleCardToggle('expense', o)}
-                />
-              </div>
-              <div ref={cardRefs.asset}>
-                <AssetCard
-                  profile={profile}
-                  onUpdate={updateProfile}
-                  getFieldError={getFieldError}
-                  open={openCards.asset}
-                  onOpenChange={(o) => handleCardToggle('asset', o)}
+                  hideHousing
                 />
               </div>
               <div ref={cardRefs.investment}>

@@ -14,10 +14,11 @@ interface ExpenseCardProps {
   getFieldError?: (field: string) => string | undefined;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  hideHousing?: boolean;
 }
 
-export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChange }: ExpenseCardProps) {
-  const totalExpense = profile.livingCostAnnual + profile.housingCostAnnual;
+export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChange, hideHousing }: ExpenseCardProps) {
+  const totalExpense = hideHousing ? profile.livingCostAnnual : profile.livingCostAnnual + profile.housingCostAnnual;
   const icon = <Receipt className="h-5 w-5" />;
   const title = '支出';
 
@@ -39,19 +40,21 @@ export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChan
       </div>
 
       {/* Housing cost (monthly input, stored as annual) */}
-      <div>
-        <SliderInput
-          label="住居費（家賃/ローン・月額）"
-          description="家賃またはローン返済"
-          value={Math.round(profile.housingCostAnnual / 12)}
-          onChange={(value) => onUpdate({ housingCostAnnual: Math.round(value * 12) })}
-          min={0}
-          max={50}
-          step={1}
-          unit="万円/月"
-        />
-        <FieldError message={getFieldError?.('housingCostAnnual')} />
-      </div>
+      {!hideHousing && (
+        <div>
+          <SliderInput
+            label="住居費（家賃/ローン・月額）"
+            description="家賃またはローン返済"
+            value={Math.round(profile.housingCostAnnual / 12)}
+            onChange={(value) => onUpdate({ housingCostAnnual: Math.round(value * 12) })}
+            min={0}
+            max={50}
+            step={1}
+            unit="万円/月"
+          />
+          <FieldError message={getFieldError?.('housingCostAnnual')} />
+        </div>
+      )}
 
       {/* Total summary */}
       <div className="rounded-lg bg-muted/50 p-4">
@@ -69,7 +72,12 @@ export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChan
   );
 
   if (open !== undefined && onOpenChange) {
-    const summary = (
+    const summary = hideHousing ? (
+      <>
+        {'生活費 '}
+        <span className="font-medium text-foreground">{profile.livingCostAnnual}万</span>
+      </>
+    ) : (
       <>
         {'生活費 '}
         <span className="font-medium text-foreground">{profile.livingCostAnnual}万</span>
