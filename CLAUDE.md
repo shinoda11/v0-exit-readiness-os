@@ -21,7 +21,7 @@ YOHACK — 住宅購入の意思決定を「世界線比較」で支援するシ
 - Zustand 5（状態管理）、Recharts（グラフ）
 - shadcn/ui + Tailwind CSS 4（UI）
 - Vercel（デプロイ、GitHub main ブランチ連携）
-- テスト: vitest 185本（`lib/__tests__/` に5ファイル）
+- テスト: vitest 191本（`lib/__tests__/` に5ファイル）
 - **未導入**: Supabase（認証）、Stripe（決済）、SendGrid（メール）→ すべて Phase 2-3
 
 ## 現在のルート構成
@@ -76,7 +76,8 @@ app/
   middleware.ts         ← /app/* にBasic認証
 
 components/
-  dashboard/            ← 18ファイル（入力カード・結果カード・オンボーディング）
+  dashboard/            ← 20ファイル（入力カード・結果カード・オンボーディング）
+                           profile-summary-card（前提サマリー読み取り専用）、retirement-card（リタイア設定）を含む
   branch/               ← 7ファイル（branch-tree-viz, branch-timeline, branch-category,
                            branch-node, worldline-preview, event-picker-dialog, event-customize-dialog）
   v2/                   ← 3ファイル（V2ResultSection, V2ComparisonView, MoneyMarginCard）
@@ -90,9 +91,10 @@ components/
 
 lib/
   store.ts              ← Zustand SoT（377行）
-  engine.ts             ← モンテカルロシミュレーション（821行）
+  engine.ts             ← モンテカルロシミュレーション（~835行）
   housing-sim.ts        ← 住宅シミュレーション（779行）
-  branch.ts             ← 分岐ビルダーロジック（677行）
+  benchmarks.ts         ← ケース台帳C01-C18ハードコード結果（ダッシュボード参照用）
+  branch.ts             ← 分岐ビルダーロジック（~690行）
   event-catalog.ts      ← ライフイベントプリセット23種 + バンドル3種（570行）
   types.ts              ← 型定義（232行）
   fitgate.ts            ← FitGate判定 + Profile変換 + メアド収集（149行）
@@ -101,7 +103,7 @@ lib/
   glossary.ts           ← 用語集（14行）
   utils.ts              ← ユーティリティ（6行）
   v2/                   ← 5ファイル（adapter, margin, store, worldline, readinessConfig）
-  __tests__/            ← 5テストファイル（185テスト）
+  __tests__/            ← 5テストファイル（191テスト）
     engine.test.ts, adapter.test.ts, housing-sim.test.ts, e2e-personas.test.ts, e02-regression.test.ts
 
 hooks/                  ← 8ファイル（useMargin, useStrategy, useSimulation, useHousingScenarios,
@@ -165,6 +167,21 @@ docs/
 - 唯一の部分接続: `profile.mortgageInterestRate`（保留）
 - 詳細は `HARIBOTE-AUDIT.md`
 
+## ダッシュボード左カラム構成 (`app/app/page.tsx`)
+
+| # | カード | 種別 | 説明 |
+|---|--------|------|------|
+| 1 | ProfileSummaryCard | 読み取り専用 | 前提表示（年齢/世帯/家賃/資産）。「編集 →」で `/app/profile` に遷移 |
+| 2 | IncomeCard | レバー | 本人年収・パートナー年収・副業収入 |
+| 3 | RetirementCard | レバー | リタイア年齢スライダー・退職後事業収入・終了年齢 |
+| 4 | ExpenseCard | レバー | 生活費のみ（`hideHousing` で家賃非表示。家賃はサマリーに移動） |
+| 5 | InvestmentCard | レバー | 期待リターン・インフレ率 |
+| 6 | HousingPlanCard | レバー | 住宅シナリオ設定 |
+
+- BasicInfoCard / AssetCard はダッシュボードから除外（`/app/profile` のみに存在）
+- LifeEventsSummaryCard もダッシュボードから除外（分岐ビルダー `/app/branch` で管理）
+- ExitReadinessCard 内に折りたたみベンチマークセクション（`lib/benchmarks.ts` の C01-C18 データ参照）
+
 ## エンジン仕様 (`lib/engine.ts`)
 
 ### 税金・社保（自動計算）
@@ -196,8 +213,14 @@ docs/
 - → 投資リターン設定UI（3%保守的/5%標準/7%積極的のプリセット）は実装済み
 - エンジン前提変更時は `pnpm run case-sim` で18ケース再検証
 
-### デフォルトプロファイル（L780-）
-35歳 / solo / 年収1,200万 / 資産2,500万（現金500+投資2,000+DC300）/ 家賃月15万 / 期待リターン5% / インフレ2% / 家賃インフレ0.5%
+### 退職後事業収入
+- `postRetireIncome`: 退職後の年間事業収入（万円、デフォルト0）。顧問・コンサル等
+- `postRetireIncomeEndAge`: 事業収入が続く年齢（デフォルト75）
+- retireAge〜postRetireIncomeEndAge の間、事業収入を税率20%固定で手取り加算
+- 実装: `calculateNetIncome()` / `calculateCashFlow()` 内
+
+### デフォルトプロファイル（L800-）
+35歳 / solo / 年収1,200万 / 資産2,500万（現金500+投資2,000+DC300）/ 家賃月15万 / 期待リターン5% / インフレ2% / 家賃インフレ0.5% / 退職後事業収入0万
 
 ## 住宅シミュレーション (`lib/housing-sim.ts`)
 
@@ -229,6 +252,13 @@ docs/
 - デフォルトブランチ: 削除ボタンなし（チェックボックスでON/OFF）
 - カスタムブランチ: インラインXボタンで削除
 - オーバーライドブランチ: 削除するとデフォルト版を復元
+
+### 教育費自動バンドル
+- 子どもイベント（`eventType: 'child'`）追加時、`branchToLifeEvents()` が3段階の教育費イベントを自動生成
+  - 保育料 50万/年 × 6年（0-5歳）
+  - 学費+塾 100万/年 × 12年（6-17歳）
+  - 大学費用 200万/年 × 4年（18-21歳）
+- UIに「教育費自動加算: 保育50万→学費100万→大学200万/年」の注釈表示（`branch-node.tsx`）
 
 ### 設計判断（確定済み）
 - 世界線候補: 最大5本。ベースライン（確定+計画のみ）は必ず含む
@@ -285,7 +315,7 @@ docs/
 | `pnpm dev` | 開発サーバー |
 | `pnpm build` | ビルド |
 | `pnpm lint` | ESLint |
-| `pnpm test` | vitest実行（185本） |
+| `pnpm test` | vitest実行（191本） |
 | `pnpm test:watch` | vitestウォッチ |
 | `pnpm run case-sim` | ケース台帳シミュレーション（C01-C18） |
 | `npm run check:store` | SoTガードレールチェック |
