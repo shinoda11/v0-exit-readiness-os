@@ -13,6 +13,8 @@ import {
 import type { ExitScoreDetail } from '@/lib/types';
 import { getScoreBgColor, getScoreColor } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { findSimilarCases } from '@/lib/benchmarks';
+import { useProfileStore } from '@/lib/store';
 
 interface ExitReadinessCardProps {
   score: ExitScoreDetail | null;
@@ -318,7 +320,51 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
 
         {/* Score breakdown */}
         {showBreakdown && <ScoreBreakdown score={score} />}
+
+        {/* Benchmark */}
+        <BenchmarkSection userScore={score.overall} />
       </div>
     </SectionCard>
+  );
+}
+
+function BenchmarkSection({ userScore }: { userScore: number }) {
+  const [open, setOpen] = useState(false);
+  const profile = useProfileStore((s) => s.profile);
+  const userGrossIncome = profile.grossIncome + (profile.mode === 'couple' ? profile.partnerGrossIncome : 0);
+  const cases = findSimilarCases(userScore, profile.mode, userGrossIncome);
+
+  return (
+    <div className="w-full border-t pt-3 mt-4">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ChevronDown className={cn('h-4 w-4 transition-transform', open && 'rotate-180')} />
+        ベンチマーク（似た条件のケース）
+      </button>
+      {open && (
+        <div className="mt-3 space-y-1.5">
+          {cases.map((c) => {
+            const diff = c.score - userScore;
+            const color = diff > 0 ? '#C8B89A' : diff < 0 ? '#8A7A62' : '#5A5550';
+            return (
+              <div key={c.id} className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {c.id} {c.label}
+                </span>
+                <span className="font-semibold tabular-nums" style={{ color }}>
+                  {c.score}点
+                  {diff !== 0 && (
+                    <span className="text-xs ml-1">({diff > 0 ? '+' : ''}{diff})</span>
+                  )}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
