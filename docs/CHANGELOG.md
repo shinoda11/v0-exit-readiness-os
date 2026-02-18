@@ -2,12 +2,20 @@
 
 ## 2025-02-18
 
-### R01-Step3: calc-parity テスト作成
-- 新規: `lib/__tests__/calc-parity.test.ts`（61件）
-- calc-core の全公開関数を直接テスト（calculateNetIncomeForAge, calculateExpensesForAge, calculateAssetGainForAge, calculateIncomeAdjustment, calculateRentalIncome, calculateAnnualPension, calculateEffectiveTaxRate, getEstimatedTaxRates）
-- Step2 で解消した4件の不整合の再発防止テスト（個人別税率, rental_income一元化, target分離, expense インフレ調整）
-- 複合シナリオ（solo/couple/退職後）で境界条件を網羅
-- テスト: 252/252 パス（既存191 + 新規61）
+### R01-Step3: パリティテスト
+- 61件の新規テスト（合計252）
+- calc-core 10関数の単体テスト + engine/housing-sim整合性テスト
+- Step2で解消した4件の不整合の再発防止ガード
+
+### オンボーディングUX修正（Playwright監査ベース）
+- Fix A+D: BrandStoryDialog — Welcome完了時にbrand-story-seenセット、pathname変更で自動クローズ
+- Fix B: 差分バッジ — 初回はdelta非表示、Welcome完了時にメトリクスリセット
+- Fix C: モバイルタブ — 入力タブでConclusionSummaryCard非表示、入力カード直接表示
+
+### 分岐ビルダー修正
+- Fix 1: 空カテゴリでもヘッダー+追加ボタンを常時表示
+- Fix 2: DEFAULT_BRANCHESから海外駐在を削除、income_down_30を復元
+- デフォルト不確定: 年収ダウン-20%, -30%, ペースダウン, パートナー退職（coupleのみ）
 
 ### R01-Step2: housing-sim.ts → calc-core 接続
 - 変更: housing-sim.ts のローカル計算関数（calculateNetIncome, calculateExpenses, calculateIncomeAdjustment）を削除し、calc-core.ts の共通関数に置換

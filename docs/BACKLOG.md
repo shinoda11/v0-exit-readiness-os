@@ -20,12 +20,17 @@
 - [x] G7: 退職後事業収入エンジン
 - [x] 削除バグ修正（ダイアログ+インライン）
 - [x] フレイキーテスト修正（testTimeout）
-
-### 進行中
 - [x] R01: calc-core.ts 共通ロジック抽出 — 全3ステップ完了
   - [x] Step 1: engine.ts から共通関数を抽出（375行）
   - [x] Step 2: housing-sim.ts を calc-core に接続
   - [x] Step 3: パリティテスト作成（61件）
+- [x] オンボーディングUX修正（Playwright監査ベース）
+  - [x] Fix A+D: BrandStoryDialog自動クローズ
+  - [x] Fix B: 差分バッジ初回非表示
+  - [x] Fix C: モバイルタブ入力カード直接表示
+- [x] 分岐ビルダー修正
+  - [x] Fix 1: 空カテゴリ常時表示
+  - [x] Fix 2: DEFAULT_BRANCHES見直し（海外駐在削除、income_down_30復元）
 
 ### 未着手（プロダクト完成前に必要）
 - [ ] B01: 住み替えシナリオ（持ち家→売却→賃貸）
