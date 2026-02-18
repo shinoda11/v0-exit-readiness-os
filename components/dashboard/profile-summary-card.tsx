@@ -27,7 +27,7 @@ export function ProfileSummaryCard({ profile }: ProfileSummaryCardProps) {
   if (profile.assetDefinedContributionJP > 0) assetParts.push(`DC${profile.assetDefinedContributionJP}`);
 
   return (
-    <Card className="overflow-hidden border-border bg-muted/30">
+    <Card className="overflow-hidden border-border bg-muted/50">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

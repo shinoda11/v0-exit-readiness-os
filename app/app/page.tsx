@@ -15,9 +15,9 @@ import { cn } from '@/lib/utils';
 // Dashboard input cards
 import { ProfileSummaryCard } from '@/components/dashboard/profile-summary-card';
 import { IncomeCard } from '@/components/dashboard/income-card';
+import { RetirementCard } from '@/components/dashboard/retirement-card';
 import { ExpenseCard } from '@/components/dashboard/expense-card';
 import { InvestmentCard } from '@/components/dashboard/investment-card';
-import { LifeEventsSummaryCard } from '@/components/dashboard/life-events-summary-card';
 import { HousingPlanCard } from '@/components/dashboard/housing-plan-card';
 
 // Dashboard result cards
@@ -43,7 +43,7 @@ import { useValidation } from '@/hooks/useValidation';
 // Profile completeness
 import { ProfileCompleteness } from '@/components/dashboard/profile-completeness';
 
-type CardKey = 'income' | 'expense' | 'investment' | 'lifeEvents' | 'housing';
+type CardKey = 'income' | 'retirement' | 'expense' | 'investment' | 'housing';
 
 export default function DashboardPage() {
   const {
@@ -141,9 +141,9 @@ export default function DashboardPage() {
   // --- Collapsible card state ---
   const [openCards, setOpenCards] = useState<Record<CardKey, boolean>>({
     income: true,
+    retirement: false,
     expense: false,
     investment: false,
-    lifeEvents: false,
     housing: false,
   });
 
@@ -153,11 +153,11 @@ export default function DashboardPage() {
   // Completion checks
   const cardComplete = useMemo<Record<CardKey, boolean>>(() => ({
     income: profile.grossIncome !== 800,
+    retirement: profile.targetRetireAge !== 55,
     expense: profile.livingCostAnnual !== 300,
     investment: profile.expectedReturn !== 5,
-    lifeEvents: false,
     housing: false,
-  }), [profile.grossIncome, profile.livingCostAnnual, profile.expectedReturn]);
+  }), [profile.grossIncome, profile.targetRetireAge, profile.livingCostAnnual, profile.expectedReturn]);
 
   // Auto-close completed cards (only for non-manually-toggled cards)
   useEffect(() => {
@@ -182,9 +182,9 @@ export default function DashboardPage() {
   // Card refs for scroll-into-view
   const cardRefs = {
     income: useRef<HTMLDivElement>(null),
+    retirement: useRef<HTMLDivElement>(null),
     expense: useRef<HTMLDivElement>(null),
     investment: useRef<HTMLDivElement>(null),
-    lifeEvents: useRef<HTMLDivElement>(null),
     housing: useRef<HTMLDivElement>(null),
   };
 
@@ -348,6 +348,14 @@ export default function DashboardPage() {
                   onOpenChange={(o) => handleCardToggle('income', o)}
                 />
               </div>
+              <div ref={cardRefs.retirement}>
+                <RetirementCard
+                  profile={profile}
+                  onUpdate={updateProfile}
+                  open={openCards.retirement}
+                  onOpenChange={(o) => handleCardToggle('retirement', o)}
+                />
+              </div>
               <div ref={cardRefs.expense}>
                 <ExpenseCard
                   profile={profile}
@@ -365,15 +373,6 @@ export default function DashboardPage() {
                   getFieldError={getFieldError}
                   open={openCards.investment}
                   onOpenChange={(o) => handleCardToggle('investment', o)}
-                />
-              </div>
-
-              {/* Life Events - サマリー + ライフプランへのリンク */}
-              <div ref={cardRefs.lifeEvents}>
-                <LifeEventsSummaryCard
-                  profile={profile}
-                  open={openCards.lifeEvents}
-                  onOpenChange={(o) => handleCardToggle('lifeEvents', o)}
                 />
               </div>
 

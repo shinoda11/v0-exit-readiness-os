@@ -10,6 +10,7 @@ import { RotateCcw, ArrowLeft } from 'lucide-react';
 // Input cards
 import { BasicInfoCard } from '@/components/dashboard/basic-info-card';
 import { IncomeCard } from '@/components/dashboard/income-card';
+import { RetirementCard } from '@/components/dashboard/retirement-card';
 import { ExpenseCard } from '@/components/dashboard/expense-card';
 import { AssetCard } from '@/components/dashboard/asset-card';
 import { InvestmentCard } from '@/components/dashboard/investment-card';
@@ -28,7 +29,7 @@ import { useValidation } from '@/hooks/useValidation';
 // Profile completeness
 import { ProfileCompleteness } from '@/components/dashboard/profile-completeness';
 
-type CardKey = 'basicInfo' | 'income' | 'expense' | 'asset' | 'investment' | 'lifeEvents' | 'housing';
+type CardKey = 'basicInfo' | 'income' | 'retirement' | 'expense' | 'asset' | 'investment' | 'lifeEvents' | 'housing';
 
 export default function ProfilePage() {
   const {
@@ -69,6 +70,7 @@ export default function ProfilePage() {
   const [openCards, setOpenCards] = useState<Record<CardKey, boolean>>({
     basicInfo: true,
     income: true,
+    retirement: false,
     expense: false,
     asset: false,
     investment: false,
@@ -81,6 +83,7 @@ export default function ProfilePage() {
   const cardComplete = useMemo<Record<CardKey, boolean>>(() => ({
     basicInfo: profile.currentAge !== 30 && profile.targetRetireAge !== 50,
     income: profile.grossIncome !== 800,
+    retirement: profile.targetRetireAge !== 55,
     expense: profile.livingCostAnnual !== 300,
     asset: profile.assetCash !== 500 || profile.assetInvest !== 300,
     investment: profile.expectedReturn !== 5,
@@ -110,6 +113,7 @@ export default function ProfilePage() {
   const cardRefs = {
     basicInfo: useRef<HTMLDivElement>(null),
     income: useRef<HTMLDivElement>(null),
+    retirement: useRef<HTMLDivElement>(null),
     expense: useRef<HTMLDivElement>(null),
     asset: useRef<HTMLDivElement>(null),
     investment: useRef<HTMLDivElement>(null),
@@ -201,6 +205,14 @@ export default function ProfilePage() {
             getFieldError={getFieldError}
             open={openCards.income}
             onOpenChange={(o) => handleCardToggle('income', o)}
+          />
+        </div>
+        <div ref={cardRefs.retirement}>
+          <RetirementCard
+            profile={profile}
+            onUpdate={updateProfile}
+            open={openCards.retirement}
+            onOpenChange={(o) => handleCardToggle('retirement', o)}
           />
         </div>
         <div ref={cardRefs.expense}>
