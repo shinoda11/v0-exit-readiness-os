@@ -123,6 +123,7 @@ export function IncomeCard({ profile, onUpdate, getFieldError, open, onOpenChang
       <>
         <span className="font-medium text-foreground">年収 {formatCurrency(profile.grossIncome)}</span>
         {profile.rsuAnnual > 0 && ` / RSU ${formatCurrency(profile.rsuAnnual)}`}
+        {profile.sideIncomeNet > 0 && ` / 副業 ${formatCurrency(profile.sideIncomeNet)}`}
         {isCouple && ` / パートナー ${formatCurrency(profile.partnerGrossIncome)}`}
       </>
     );

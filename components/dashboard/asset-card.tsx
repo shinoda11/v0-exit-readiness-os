@@ -170,11 +170,15 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
   );
 
   if (open !== undefined && onOpenChange) {
+    const parts: string[] = [];
+    if (profile.assetCash > 0) parts.push(`現金${profile.assetCash.toLocaleString()}`);
+    if (profile.assetInvest > 0) parts.push(`投資${profile.assetInvest.toLocaleString()}`);
+    if (profile.assetDefinedContributionJP > 0) parts.push(`DC${profile.assetDefinedContributionJP.toLocaleString()}`);
     const summary = (
       <>
         {'総資産 '}
         <span className="font-medium text-foreground">{formatCurrency(totalAssets)}</span>
-        {`（現金${profile.assetCash.toLocaleString()} / 投資${profile.assetInvest.toLocaleString()} / DC${profile.assetDefinedContributionJP.toLocaleString()}）`}
+        {parts.length > 0 && `（${parts.join(' / ')}）`}
       </>
     );
     return (
