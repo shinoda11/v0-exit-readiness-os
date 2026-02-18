@@ -14,7 +14,6 @@ import { ExpenseCard } from '@/components/dashboard/expense-card';
 import { AssetCard } from '@/components/dashboard/asset-card';
 import { InvestmentCard } from '@/components/dashboard/investment-card';
 import { LifeEventsSummaryCard } from '@/components/dashboard/life-events-summary-card';
-import { AdvancedInputPanel, type AdvancedSettings } from '@/components/dashboard/advanced-input-panel';
 import { HousingPlanCard } from '@/components/dashboard/housing-plan-card';
 
 // Onboarding
@@ -60,16 +59,6 @@ export default function ProfilePage() {
       setShowWelcome(true);
     }
   }, []);
-
-  // Advanced settings state
-  const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
-    incomeTrajectory: 'flat',
-    realEstateValue: 0,
-    cryptoValue: 0,
-    otherAssets: 0,
-    workStyleGoal: 'full_fire',
-    legacyStance: 'spend_all',
-  });
 
   const { getFieldError } = useValidation(profile);
 
@@ -152,10 +141,6 @@ export default function ProfilePage() {
       localStorage.setItem('yohack-onboarding-complete', 'complete');
       localStorage.setItem('yohack-profile-edited', '1');
     }
-  };
-
-  const handleAdvancedUpdate = (updates: Partial<AdvancedSettings>) => {
-    setAdvancedSettings(prev => ({ ...prev, ...updates }));
   };
 
   return (
@@ -246,13 +231,6 @@ export default function ProfilePage() {
           />
         </div>
 
-        <AdvancedInputPanel
-          profile={profile}
-          onUpdate={updateProfile}
-          advancedSettings={advancedSettings}
-          onAdvancedUpdate={handleAdvancedUpdate}
-        />
-
         <div ref={cardRefs.lifeEvents}>
           <LifeEventsSummaryCard
             profile={profile}
@@ -264,6 +242,7 @@ export default function ProfilePage() {
         <div ref={cardRefs.housing}>
           <HousingPlanCard
             profile={profile}
+            onUpdate={updateProfile}
             open={openCards.housing}
             onOpenChange={(o) => handleCardToggle('housing', o)}
           />

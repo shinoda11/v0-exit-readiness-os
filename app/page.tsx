@@ -67,18 +67,6 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Video placeholder */}
-          <div
-            className="mt-14 mx-auto max-w-lg rounded-xl flex items-center justify-center"
-            style={{
-              backgroundColor: '#E8E4DE',
-              height: '240px',
-            }}
-          >
-            <p className="text-sm" style={{ color: '#8A7A62' }}>
-              デモ動画 — 準備中
-            </p>
-          </div>
         </div>
       </section>
 

@@ -33,16 +33,6 @@ export default function PrepPage() {
           </ul>
         </div>
 
-        {/* Email registration stub */}
-        <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(138, 122, 98, 0.05)' }}>
-          <h3 className="font-semibold mb-2 text-sm" style={{ color: '#5A5550' }}>
-            メールレターに登録する（準備中）
-          </h3>
-          <p className="text-xs mb-3" style={{ color: '#8A7A62' }}>
-            メールレター機能は現在準備中です。近日公開予定。
-          </p>
-        </div>
-
         <div className="pt-4 border-t">
           <Button
             variant="outline"

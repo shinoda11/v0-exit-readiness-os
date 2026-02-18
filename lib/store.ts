@@ -357,6 +357,10 @@ export const useProfileStore = create<ProfileStore>()(
           if (state.profile.rentInflationRate === undefined) {
             state.profile.rentInflationRate = 0.5;
           }
+          // Migrate: housingPlans が未定義の既存プロファイルに空配列を設定
+          if (!state.profile.housingPlans) {
+            state.profile.housingPlans = [];
+          }
           // 復元後にシミュレーションを再実行
           state._storageInitialized = true;
           setTimeout(() => {

@@ -79,25 +79,33 @@ export function createDefaultBranches(profile: Profile): Branch[] {
     ...(profile.homeStatus === 'renter'
       ? [
           (() => {
-            // プロファイルの資産情報から頭金を推定（現金の30%、上限20%の物件価格）
-            const estimatedPrice = Math.min(12000, Math.max(5000, Math.round(totalIncome * 5 / 100) * 100));
-            const estimatedDown = Math.min(
-              Math.max(500, Math.round(profile.assetCash * 0.3 / 100) * 100),
-              Math.round(estimatedPrice * 0.2)
-            );
+            // HousingPlanCard のプランがあればそれを使う、なければ推定
+            const hp = profile.housingPlans?.[0];
+            const estimatedPrice = hp
+              ? hp.price
+              : Math.min(12000, Math.max(5000, Math.round(totalIncome * 5 / 100) * 100));
+            const estimatedDown = hp
+              ? hp.downPayment
+              : Math.min(
+                  Math.max(500, Math.round(profile.assetCash * 0.3 / 100) * 100),
+                  Math.round(estimatedPrice * 0.2)
+                );
+            const loanYears = hp ? hp.years : 35;
+            const interestRate = hp ? hp.rate : 0.5;
+            const ownerAnnualCost = hp ? hp.maintenanceCost : 40;
             return {
               id: 'housing_purchase',
               label: '住宅購入',
-              detail: `${estimatedPrice}万円（頭金${estimatedDown}万円・35年）`,
+              detail: `${estimatedPrice}万円（頭金${estimatedDown}万円・${loanYears}年）`,
               certainty: 'planned' as const,
               age: profile.currentAge + 2,
               eventType: 'housing_purchase',
               eventParams: {
                 propertyPrice: estimatedPrice,
                 downPayment: estimatedDown,
-                loanYears: 35,
-                interestRate: 0.5,
-                ownerAnnualCost: 40,
+                loanYears,
+                interestRate,
+                ownerAnnualCost,
               },
             };
           })(),

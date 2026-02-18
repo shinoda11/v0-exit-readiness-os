@@ -242,7 +242,19 @@ export function AssetProjectionChart({
               tickLine={false}
               axisLine={false}
               tick={{ fontSize: 11 }}
-              tickFormatter={(value) => `${value}歳`}
+              tickFormatter={(value: number) => `${value}歳`}
+              ticks={(() => {
+                if (chartData.length === 0) return [];
+                const startAge = chartData[0].age;
+                const endAge = chartData[chartData.length - 1].age;
+                const result: number[] = [];
+                // Start from nearest 5-year mark at or after startAge
+                const first = Math.ceil(startAge / 5) * 5;
+                for (let age = first; age <= endAge; age += 5) {
+                  result.push(age);
+                }
+                return result;
+              })()}
             />
             <YAxis
               tickLine={false}
@@ -334,20 +346,14 @@ export function AssetProjectionChart({
               }}
             />
             
-            {/* Life event markers */}
+            {/* Life event markers (vertical lines only — names are in the timeline) */}
             {lifeEvents.map((event) => (
               <ReferenceLine
                 key={event.id}
                 x={event.age}
-                stroke="hsl(var(--chart-4))"
+                stroke="#C8B89A"
                 strokeWidth={1}
                 strokeDasharray="3 3"
-                label={{
-                  value: event.name.slice(0, 6),
-                  position: 'insideBottomRight',
-                  fill: 'hsl(var(--chart-4))',
-                  fontSize: 9,
-                }}
               />
             ))}
             

@@ -814,6 +814,8 @@ export function createDefaultProfile(): Profile {
     retireSpendingMultiplier: 0.8,
     retirePassiveIncome: 0,
     
-    lifeEvents: []
+    lifeEvents: [],
+
+    housingPlans: [],
   };
 }

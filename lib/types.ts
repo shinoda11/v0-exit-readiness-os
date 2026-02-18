@@ -46,6 +46,18 @@ export interface LifeEvent {
   purchaseDetails?: HousingPurchaseDetails; // housing_purchase 専用
 }
 
+// Housing plan for comparison (HousingPlanCard)
+export interface HousingPlan {
+  id: string;
+  name: string;
+  price: number;           // 物件価格（万円）
+  downPayment: number;     // 頭金（万円）
+  rate: number;            // 金利（%）
+  years: number;           // ローン年数
+  maintenanceCost: number; // メンテ費（万円/年）
+  purchaseCostRate: number; // 諸費用率（%）
+}
+
 // User profile / input data
 export interface Profile {
   // Basic info
@@ -92,6 +104,9 @@ export interface Profile {
   
   // Life events
   lifeEvents: LifeEvent[];
+
+  // Housing plans (HousingPlanCard comparison plans)
+  housingPlans: HousingPlan[];
 }
 
 // Asset data point for charts

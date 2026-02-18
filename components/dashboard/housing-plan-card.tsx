@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { Home, Plus, Trash2, Sparkles } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
@@ -28,7 +28,7 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { formatCurrency } from '@/lib/types';
-import type { Profile } from '@/lib/types';
+import type { Profile, HousingPlan } from '@/lib/types';
 import { calculateEffectiveTaxRate, calculateAnnualPension } from '@/lib/engine';
 import { computeMonthlyPaymentManYen } from '@/lib/housing-sim';
 import { isPro } from '@/lib/plan';
@@ -44,18 +44,6 @@ import { cn } from '@/lib/utils';
 const RENT_COLOR = '#2563EB';
 const PLAN_COLORS = ['#C8B89A', '#16A34A', '#9333EA'] as const;
 const PLAN_LETTERS = ['A', 'B', 'C'] as const;
-
-// --- 型定義 ---
-interface HousingPlan {
-  id: string;
-  name: string;
-  price: number;
-  downPayment: number;
-  rate: number;
-  years: number;
-  maintenanceCost: number;
-  purchaseCostRate: number;
-}
 
 interface ProjectionPoint {
   age: number;
@@ -89,19 +77,27 @@ function createDefaultPlan(index: number): HousingPlan {
 // --- コンポーネント ---
 interface HousingPlanCardProps {
   profile: Profile;
+  onUpdate: (updates: Partial<Profile>) => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
-export function HousingPlanCard({ profile, open, onOpenChange }: HousingPlanCardProps) {
-  const [rentAnnual, setRentAnnual] = useState(profile.housingCostAnnual);
-  const [plans, setPlans] = useState<HousingPlan[]>([createDefaultPlan(0)]);
+export function HousingPlanCard({ profile, onUpdate, open, onOpenChange }: HousingPlanCardProps) {
   const [showProDialog, setShowProDialog] = useState(false);
 
-  // プロファイルの家賃変更を同期
+  // Store から plans を取得。空なら初回のみデフォルトプランを生成して保存
+  const plans = profile.housingPlans.length > 0
+    ? profile.housingPlans
+    : [createDefaultPlan(0)];
+
+  // 初回表示時にデフォルトプランが未保存の場合、storeに同期
   useEffect(() => {
-    setRentAnnual(profile.housingCostAnnual);
-  }, [profile.housingCostAnnual]);
+    if (profile.housingPlans.length === 0) {
+      onUpdate({ housingPlans: [createDefaultPlan(0)] });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const rentAnnual = profile.housingCostAnnual;
 
   // --- プラン操作 ---
   const addPlan = () => {
@@ -110,15 +106,21 @@ export function HousingPlanCard({ profile, open, onOpenChange }: HousingPlanCard
       setShowProDialog(true);
       return;
     }
-    setPlans(prev => [...prev, createDefaultPlan(prev.length)]);
+    onUpdate({ housingPlans: [...plans, createDefaultPlan(plans.length)] });
   };
 
   const removePlan = (id: string) => {
-    setPlans(prev => prev.filter(p => p.id !== id));
+    onUpdate({ housingPlans: plans.filter(p => p.id !== id) });
   };
 
   const updatePlan = (id: string, updates: Partial<HousingPlan>) => {
-    setPlans(prev => prev.map(p => (p.id === id ? { ...p, ...updates } : p)));
+    onUpdate({
+      housingPlans: plans.map(p => (p.id === id ? { ...p, ...updates } : p)),
+    });
+  };
+
+  const handleRentChange = (value: number) => {
+    onUpdate({ housingCostAnnual: value });
   };
 
   // --- 決定論的資産予測 ---
@@ -325,7 +327,7 @@ export function HousingPlanCard({ profile, open, onOpenChange }: HousingPlanCard
           <SliderInput
             label="年間家賃"
             value={rentAnnual}
-            onChange={setRentAnnual}
+            onChange={handleRentChange}
             min={36}
             max={600}
             step={12}

@@ -19,7 +19,6 @@ import { ExpenseCard } from '@/components/dashboard/expense-card';
 import { AssetCard } from '@/components/dashboard/asset-card';
 import { InvestmentCard } from '@/components/dashboard/investment-card';
 import { LifeEventsSummaryCard } from '@/components/dashboard/life-events-summary-card';
-import { AdvancedInputPanel, type AdvancedSettings } from '@/components/dashboard/advanced-input-panel';
 import { HousingPlanCard } from '@/components/dashboard/housing-plan-card';
 
 // Dashboard result cards
@@ -100,16 +99,6 @@ export default function DashboardPage() {
       setShowFirstVisitBanner(true);
     }
   }, []);
-
-  // Advanced settings state (separate from main profile for UI purposes)
-  const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>({
-    incomeTrajectory: 'flat',
-    realEstateValue: 0,
-    cryptoValue: 0,
-    otherAssets: 0,
-    workStyleGoal: 'full_fire',
-    legacyStance: 'spend_all',
-  });
 
   const { getFieldError } = useValidation(profile);
 
@@ -237,11 +226,6 @@ export default function DashboardPage() {
   // Handle applying recommended actions
   const handleApplyAction = (updates: Partial<typeof profile>) => {
     updateProfile(updates);
-  };
-
-  // Handle advanced settings update
-  const handleAdvancedUpdate = (updates: Partial<AdvancedSettings>) => {
-    setAdvancedSettings(prev => ({ ...prev, ...updates }));
   };
 
   // Handle worldline template selection
@@ -406,14 +390,6 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Advanced Settings - Progressive Disclosure (has its own toggle) */}
-              <AdvancedInputPanel
-                profile={profile}
-                onUpdate={updateProfile}
-                advancedSettings={advancedSettings}
-                onAdvancedUpdate={handleAdvancedUpdate}
-              />
-
               {/* Life Events - サマリー + ライフプランへのリンク */}
               <div ref={cardRefs.lifeEvents}>
                 <LifeEventsSummaryCard
@@ -427,6 +403,7 @@ export default function DashboardPage() {
               <div ref={cardRefs.housing}>
                 <HousingPlanCard
                   profile={profile}
+                  onUpdate={updateProfile}
                   open={openCards.housing}
                   onOpenChange={(o) => handleCardToggle('housing', o)}
                 />
