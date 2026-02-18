@@ -22,10 +22,10 @@
 - [x] フレイキーテスト修正（testTimeout）
 
 ### 進行中
-- [ ] R01: calc-core.ts 共通ロジック抽出 — Step 1-2 完了、Step 3 未着手
+- [x] R01: calc-core.ts 共通ロジック抽出 — 全3ステップ完了
   - [x] Step 1: engine.ts から共通関数を抽出（375行）
   - [x] Step 2: housing-sim.ts を calc-core に接続
-  - [ ] Step 3: パリティテスト作成
+  - [x] Step 3: パリティテスト作成（61件）
 
 ### 未着手（プロダクト完成前に必要）
 - [ ] B01: 住み替えシナリオ（持ち家→売却→賃貸）

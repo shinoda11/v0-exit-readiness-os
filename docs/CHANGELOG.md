@@ -2,6 +2,13 @@
 
 ## 2025-02-18
 
+### R01-Step3: calc-parity テスト作成
+- 新規: `lib/__tests__/calc-parity.test.ts`（61件）
+- calc-core の全公開関数を直接テスト（calculateNetIncomeForAge, calculateExpensesForAge, calculateAssetGainForAge, calculateIncomeAdjustment, calculateRentalIncome, calculateAnnualPension, calculateEffectiveTaxRate, getEstimatedTaxRates）
+- Step2 で解消した4件の不整合の再発防止テスト（個人別税率, rental_income一元化, target分離, expense インフレ調整）
+- 複合シナリオ（solo/couple/退職後）で境界条件を網羅
+- テスト: 252/252 パス（既存191 + 新規61）
+
 ### R01-Step2: housing-sim.ts → calc-core 接続
 - 変更: housing-sim.ts のローカル計算関数（calculateNetIncome, calculateExpenses, calculateIncomeAdjustment）を削除し、calc-core.ts の共通関数に置換
 - 追加: `calculateExpensesWithOverride` ブリッジヘルパー（housingCostSchedule の数値オーバーライドを calc-core の型に変換）
