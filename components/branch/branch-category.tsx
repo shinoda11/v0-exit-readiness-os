@@ -32,6 +32,8 @@ interface BranchCategoryProps {
   onEditBranch?: (branch: Branch) => void;
   onDeleteBranch?: (branch: Branch) => void;
   deletableBranchIds?: Set<string>;
+  onHideBranch?: (branch: Branch) => void;
+  hidableBranchIds?: Set<string>;
 }
 
 export function BranchCategory({
@@ -43,6 +45,8 @@ export function BranchCategory({
   onEditBranch,
   onDeleteBranch,
   deletableBranchIds,
+  onHideBranch,
+  hidableBranchIds,
 }: BranchCategoryProps) {
   if (branches.length === 0) return null;
 
@@ -68,6 +72,7 @@ export function BranchCategory({
             disabled={branch.auto}
             onEdit={!branch.auto && onEditBranch ? () => onEditBranch(branch) : undefined}
             onDelete={deletableBranchIds?.has(branch.id) && onDeleteBranch ? () => onDeleteBranch(branch) : undefined}
+            onHide={hidableBranchIds?.has(branch.id) && onHideBranch ? () => onHideBranch(branch) : undefined}
           />
         ))}
       </div>

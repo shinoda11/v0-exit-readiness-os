@@ -132,6 +132,12 @@ export default function BranchPage() {
     [customBranches]
   );
 
+  // Hidable branch IDs = non-auto default branches
+  const hidableBranchIds = useMemo(
+    () => new Set(defaultBranches.filter((b) => !b.auto).map((b) => b.id)),
+    [defaultBranches]
+  );
+
   const handleToggle = useCallback(
     (id: string) => {
       const branch = allBranches.find((b) => b.id === id);
@@ -325,6 +331,11 @@ export default function BranchPage() {
     setCustomizePreset(null);
   }, [editingBranch, hideDefaultBranch, selectedBranchIds, setSelectedBranchIds]);
 
+  const handleHideBranch = useCallback((branch: Branch) => {
+    hideDefaultBranch(branch.id);
+    setSelectedBranchIds(selectedBranchIds.filter((id) => id !== branch.id));
+  }, [hideDefaultBranch, selectedBranchIds, setSelectedBranchIds]);
+
   const handleDeleteBranch = useCallback((branch: Branch) => {
     removeCustomBranch(branch.id);
     if (branch.overridesDefaultId) {
@@ -410,6 +421,8 @@ export default function BranchPage() {
                 onEditBranch={handleEditBranch}
                 onDeleteBranch={handleDeleteBranch}
                 deletableBranchIds={deletableBranchIds}
+                onHideBranch={handleHideBranch}
+                hidableBranchIds={hidableBranchIds}
               />
               <BranchCategory
                 certainty="uncertain"
@@ -420,6 +433,8 @@ export default function BranchPage() {
                 onEditBranch={handleEditBranch}
                 onDeleteBranch={handleDeleteBranch}
                 deletableBranchIds={deletableBranchIds}
+                onHideBranch={handleHideBranch}
+                hidableBranchIds={hidableBranchIds}
               />
 
               {/* Mobile: Timeline after checklists */}

@@ -1,7 +1,7 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import { Pencil, X } from 'lucide-react';
+import { Pencil, X, Trash2 } from 'lucide-react';
 import type { Branch } from '@/lib/branch';
 import { cn } from '@/lib/utils';
 
@@ -18,9 +18,10 @@ interface BranchNodeProps {
   disabled?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  onHide?: () => void;
 }
 
-export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDelete }: BranchNodeProps) {
+export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDelete, onHide }: BranchNodeProps) {
   const borderColor = CERTAINTY_BORDER[branch.certainty] ?? 'border-l-border';
 
   return (
@@ -61,6 +62,20 @@ export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDel
           <p className="text-[10px] text-muted-foreground/70 mt-0.5">教育費自動加算: 保育50万→学費100万→大学200万/年</p>
         )}
       </div>
+      {onHide && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onHide();
+          }}
+          className="shrink-0 p-1 rounded hover:bg-accent transition-colors"
+          aria-label="非表示"
+        >
+          <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+        </button>
+      )}
       {onDelete && (
         <button
           type="button"
