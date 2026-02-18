@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { User } from 'lucide-react';
 import {
@@ -13,12 +14,33 @@ import type { Profile } from '@/lib/types';
 
 interface ProfileSummaryCardProps {
   profile: Profile;
+  onUpdate?: (updates: Partial<Profile>) => void;
 }
 
-export function ProfileSummaryCard({ profile }: ProfileSummaryCardProps) {
+export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProps) {
   const modeLabel = profile.mode === 'couple' ? '夫婦' : '個人';
   const monthlyRent = Math.round(profile.housingCostAnnual / 12);
   const totalAssets = profile.assetCash + profile.assetInvest + profile.assetDefinedContributionJP;
+
+  // Inline rent editing
+  const [editingRent, setEditingRent] = useState(false);
+  const [rentDraft, setRentDraft] = useState(String(monthlyRent));
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingRent) {
+      setRentDraft(String(monthlyRent));
+      setTimeout(() => inputRef.current?.select(), 0);
+    }
+  }, [editingRent]);
+
+  const commitRent = () => {
+    const parsed = parseInt(rentDraft, 10);
+    if (!isNaN(parsed) && parsed >= 0 && onUpdate) {
+      onUpdate({ housingCostAnnual: parsed * 12 });
+    }
+    setEditingRent(false);
+  };
 
   // Build asset breakdown parts
   const assetParts: string[] = [];
@@ -60,7 +82,38 @@ export function ProfileSummaryCard({ profile }: ProfileSummaryCardProps) {
 
           <div className="flex items-baseline justify-between">
             <dt className="text-muted-foreground">家賃</dt>
-            <dd className="font-medium">月{monthlyRent}万</dd>
+            <dd className="font-medium">
+              {editingRent ? (
+                <span className="inline-flex items-center gap-1">
+                  <span className="text-muted-foreground">月</span>
+                  <input
+                    ref={inputRef}
+                    type="number"
+                    inputMode="numeric"
+                    value={rentDraft}
+                    onChange={(e) => setRentDraft(e.target.value)}
+                    onBlur={commitRent}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') commitRent();
+                      if (e.key === 'Escape') setEditingRent(false);
+                    }}
+                    className="w-16 rounded border border-[#C8B89A] bg-transparent px-1.5 py-0.5 text-right text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#C8B89A]"
+                    min={0}
+                    max={100}
+                  />
+                  <span className="text-muted-foreground">万</span>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onUpdate && setEditingRent(true)}
+                  className="border-b border-dashed border-[#C8B89A] hover:border-[#8A7A62] transition-colors cursor-pointer"
+                  title="クリックして編集"
+                >
+                  月{monthlyRent}万
+                </button>
+              )}
+            </dd>
           </div>
 
           <div className="flex items-baseline justify-between">

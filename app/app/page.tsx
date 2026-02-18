@@ -438,7 +438,7 @@ export default function DashboardPage() {
             {/* Left column: Input cards — hidden on mobile when result tab active */}
             <div className={cn("space-y-4 lg:col-span-1 min-w-0 overflow-x-hidden", mobileTab === 'result' && 'hidden md:block')}>
               {/* Profile Summary - Read-only */}
-              <ProfileSummaryCard profile={profile} />
+              <ProfileSummaryCard profile={profile} onUpdate={updateProfile} />
 
               <div ref={cardRefs.income}>
                 <IncomeCard
