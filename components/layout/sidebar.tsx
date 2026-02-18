@@ -70,6 +70,11 @@ export function Sidebar() {
     }
   }, []);
 
+  // Auto-close brand story on page navigation
+  useEffect(() => {
+    setIsBrandDialogOpen(false);
+  }, [pathname]);
+
   const handleBrandDialogChange = (open: boolean) => {
     setIsBrandDialogOpen(open);
     if (!open && typeof window !== 'undefined') {

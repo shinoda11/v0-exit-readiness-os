@@ -38,6 +38,9 @@ import { OnboardingSteps } from '@/components/dashboard/onboarding-steps';
 // FitGate preset
 import { loadFitGateAnswers, fitGateToProfile, clearFitGateAnswers } from '@/lib/fitgate';
 
+// Types
+import type { KeyMetrics, ExitScoreDetail } from '@/lib/types';
+
 // Validation
 import { useValidation } from '@/hooks/useValidation';
 
@@ -131,16 +134,20 @@ export default function DashboardPage() {
   useMainSimulation();
 
   // --- Previous metrics for change feedback ---
-  const previousMetrics = useRef(simResult?.metrics ?? null);
-  const previousScore = useRef(simResult?.score ?? null);
-  const [prevMetricsSnapshot, setPrevMetricsSnapshot] = useState(simResult?.metrics ?? null);
-  const [prevScoreSnapshot, setPrevScoreSnapshot] = useState(simResult?.score ?? null);
+  // Initialize to null so delta badges don't show on first load / welcome completion
+  const previousMetrics = useRef<KeyMetrics | null>(null);
+  const previousScore = useRef<ExitScoreDetail | null>(null);
+  const [prevMetricsSnapshot, setPrevMetricsSnapshot] = useState<KeyMetrics | null>(null);
+  const [prevScoreSnapshot, setPrevScoreSnapshot] = useState<ExitScoreDetail | null>(null);
 
   useEffect(() => {
     if (!simResult) return;
-    // Save old values before updating to new ones
-    setPrevMetricsSnapshot(previousMetrics.current);
-    setPrevScoreSnapshot(previousScore.current);
+    // Only create snapshot when a meaningful previous value exists
+    // (skip the very first simResult transition to avoid false deltas)
+    if (previousMetrics.current) {
+      setPrevMetricsSnapshot(previousMetrics.current);
+      setPrevScoreSnapshot(previousScore.current);
+    }
     previousMetrics.current = simResult.metrics;
     previousScore.current = simResult.score;
   }, [simResult]);
@@ -217,9 +224,15 @@ export default function DashboardPage() {
     updateProfile(profileData);
     setShowWelcome(false);
     setShowFirstVisitBanner(false);
+    // Reset previous metrics to prevent showing delta badges from welcome changes
+    previousMetrics.current = null;
+    previousScore.current = null;
+    setPrevMetricsSnapshot(null);
+    setPrevScoreSnapshot(null);
     if (typeof window !== 'undefined') {
       localStorage.setItem('yohack-onboarding-complete', 'complete');
       localStorage.setItem('yohack-profile-edited', '1');
+      localStorage.setItem('yohack-brand-story-seen', '1');
     }
   };
 
@@ -374,8 +387,8 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Conclusion Summary - Always visible at top */}
-          <div className="mb-6">
+          {/* Conclusion Summary - visible on result tab (mobile) or always (desktop) */}
+          <div className={cn("mb-6", mobileTab === 'input' && 'hidden md:block')}>
             <ConclusionSummaryCard
               score={simResult?.score ?? null}
               metrics={simResult?.metrics ?? null}
