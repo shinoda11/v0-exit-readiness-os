@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Briefcase, ChevronDown } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { CollapsibleCard } from '@/components/ui/collapsible-card';
-import { SliderInput } from '@/components/slider-input';
+import { CurrencyInput } from '@/components/currency-input';
 import { FieldError } from '@/components/ui/field-error';
 import { formatCurrency } from '@/lib/types';
 import type { Profile } from '@/lib/types';
@@ -33,33 +33,25 @@ export function IncomeCard({ profile, onUpdate, getFieldError, open, onOpenChang
   const title = '収入';
 
   const content = (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Gross income */}
       <div>
-        <SliderInput
+        <CurrencyInput
           label={isCouple ? "あなたの年収" : "年収"}
           description="額面"
           value={profile.grossIncome}
           onChange={(value) => onUpdate({ grossIncome: value })}
-          min={0}
-          max={5000}
-          step={50}
-          unit="万円"
         />
         <FieldError message={getFieldError?.('grossIncome')} />
       </div>
 
       {/* Partner income (only for couple mode) - always visible */}
       {isCouple && (
-        <SliderInput
+        <CurrencyInput
           label="パートナー年収"
           description="額面"
           value={profile.partnerGrossIncome}
           onChange={(value) => onUpdate({ partnerGrossIncome: value })}
-          min={0}
-          max={5000}
-          step={50}
-          unit="万円"
         />
       )}
 
@@ -75,42 +67,30 @@ export function IncomeCard({ profile, onUpdate, getFieldError, open, onOpenChang
       </button>
 
       {showExtra && (
-        <div className="space-y-6 pl-3 border-l-2 border-muted">
+        <div className="space-y-4 pl-3 border-l-2 border-muted">
           {/* RSU annual */}
-          <SliderInput
+          <CurrencyInput
             label="RSU/株式報酬"
             description="年間付与額"
             value={profile.rsuAnnual}
             onChange={(value) => onUpdate({ rsuAnnual: value })}
-            min={0}
-            max={3000}
-            step={50}
-            unit="万円"
           />
 
           {/* Side income */}
-          <SliderInput
+          <CurrencyInput
             label="副業収入"
             description="手取り"
             value={profile.sideIncomeNet}
             onChange={(value) => onUpdate({ sideIncomeNet: value })}
-            min={0}
-            max={1000}
-            step={10}
-            unit="万円"
           />
 
           {/* Partner RSU (only for couple mode) */}
           {isCouple && (
-            <SliderInput
+            <CurrencyInput
               label="パートナーRSU"
               description="年間付与額"
               value={profile.partnerRsuAnnual}
               onChange={(value) => onUpdate({ partnerRsuAnnual: value })}
-              min={0}
-              max={3000}
-              step={50}
-              unit="万円"
             />
           )}
         </div>
