@@ -390,9 +390,23 @@ export function AssetProjectionChart({
         if (uniqueEvents.length === 0) return null;
 
         const toPercent = (age: number) => ((age - startAge) / range) * 100;
-        const truncLabel = (name: string) => name.length > 6 ? name.slice(0, 5) + '…' : name;
+        const truncLabel = (name: string) => name.length > 8 ? name.slice(0, 7) + '…' : name;
         const pensionAge = 65;
         const showPension = pensionAge >= startAge && pensionAge <= endAge;
+
+        // Assign tier (0=top, 1=middle, 2=bottom) to avoid overlap on nearby events (±2 age)
+        const tiers: number[] = [];
+        for (let i = 0; i < uniqueEvents.length; i++) {
+          const prevAge = i > 0 ? uniqueEvents[i - 1].age : -Infinity;
+          const prevTier = i > 0 ? tiers[i - 1] : -1;
+          const isNear = uniqueEvents[i].age - prevAge <= 2;
+          if (!isNear) {
+            tiers.push(0); // top — no conflict
+          } else {
+            // Cycle through tiers: prev was 0→next 2, prev was 2→next 1, prev was 1→next 0
+            tiers.push(prevTier === 0 ? 2 : prevTier === 2 ? 1 : 0);
+          }
+        }
 
         return (
           <div
@@ -434,7 +448,13 @@ export function AssetProjectionChart({
 
               {/* Event dots + labels */}
               {uniqueEvents.map((event, i) => {
-                const isUpper = i % 2 === 0;
+                const tier = tiers[i];
+                // tier 0: label top, tier 1: label beside dot (middle), tier 2: label bottom
+                const labelStyle: React.CSSProperties =
+                  tier === 0 ? { top: 0 }
+                  : tier === 2 ? { bottom: 0 }
+                  : { top: 'calc(50% + 6px)' }; // middle: just below dot
+
                 return (
                   <div
                     key={event.id}
@@ -448,12 +468,12 @@ export function AssetProjectionChart({
                   >
                     {/* Label */}
                     <span
-                      className="absolute whitespace-nowrap max-w-[48px] truncate text-center"
+                      className="absolute whitespace-nowrap text-center"
                       style={{
                         fontSize: 9,
                         color: '#8A7A62',
                         lineHeight: '12px',
-                        ...(isUpper ? { top: 0 } : { bottom: 0 }),
+                        ...labelStyle,
                       }}
                     >
                       {truncLabel(event.name)}
