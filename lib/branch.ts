@@ -153,15 +153,6 @@ export function createDefaultBranches(profile: Profile): Branch[] {
       eventType: 'income_change',
       eventParams: { changePercent: -50 },
     },
-    {
-      id: 'expat',
-      label: '海外駐在',
-      detail: '年収 +30%、2年間',
-      certainty: 'uncertain',
-      age: profile.currentAge + 3,
-      eventType: 'income_change',
-      eventParams: { changePercent: 30, duration: 2 },
-    },
     ...(profile.mode === 'couple'
       ? [
           {

@@ -48,9 +48,8 @@ export function BranchCategory({
   onHideBranch,
   hidableBranchIds,
 }: BranchCategoryProps) {
-  if (branches.length === 0) return null;
-
   const meta = CATEGORY_META[certainty];
+  const showAddButton = certainty !== 'confirmed' && onAddEvent;
 
   return (
     <div className="space-y-2">
@@ -62,26 +61,32 @@ export function BranchCategory({
         <span className="text-xs text-muted-foreground">— {meta.description}</span>
       </div>
 
-      <div className="space-y-1">
-        {branches.map((branch) => (
-          <BranchNode
-            key={branch.id}
-            branch={branch}
-            selected={branch.auto || selectedIds.has(branch.id)}
-            onToggle={() => onToggle(branch.id)}
-            disabled={branch.auto}
-            onEdit={!branch.auto && onEditBranch ? () => onEditBranch(branch) : undefined}
-            onDelete={deletableBranchIds?.has(branch.id) && onDeleteBranch ? () => onDeleteBranch(branch) : undefined}
-            onHide={hidableBranchIds?.has(branch.id) && onHideBranch ? () => onHideBranch(branch) : undefined}
-          />
-        ))}
-      </div>
+      {branches.length > 0 ? (
+        <div className="space-y-1">
+          {branches.map((branch) => (
+            <BranchNode
+              key={branch.id}
+              branch={branch}
+              selected={branch.auto || selectedIds.has(branch.id)}
+              onToggle={() => onToggle(branch.id)}
+              disabled={branch.auto}
+              onEdit={!branch.auto && onEditBranch ? () => onEditBranch(branch) : undefined}
+              onDelete={deletableBranchIds?.has(branch.id) && onDeleteBranch ? () => onDeleteBranch(branch) : undefined}
+              onHide={hidableBranchIds?.has(branch.id) && onHideBranch ? () => onHideBranch(branch) : undefined}
+            />
+          ))}
+        </div>
+      ) : showAddButton ? (
+        <p className="text-xs text-muted-foreground px-3 py-2">
+          まだイベントがありません
+        </p>
+      ) : null}
 
-      {certainty === 'uncertain' && (
+      {showAddButton && (
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onAddEvent?.()}
+          onClick={() => onAddEvent()}
           className="w-full justify-start gap-2 text-muted-foreground"
         >
           <Plus className="h-4 w-4" />
