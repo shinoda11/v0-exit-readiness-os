@@ -36,7 +36,6 @@ export default function BranchPage() {
     removeCustomBranch,
     updateCustomBranch,
     hiddenDefaultBranchIds,
-    hideDefaultBranch,
     addScenarioBatch,
   } = useProfileStore();
 
@@ -116,6 +115,12 @@ export default function BranchPage() {
   // Existing preset IDs for duplicate prevention
   const existingPresetIds = useMemo(
     () => new Set(customBranches.map((b) => b.presetId).filter((id): id is string => !!id)),
+    [customBranches]
+  );
+
+  // Deletable branch IDs = all custom branches (including overrides)
+  const deletableBranchIds = useMemo(
+    () => new Set(customBranches.map((b) => b.id)),
     [customBranches]
   );
 
@@ -288,22 +293,39 @@ export default function BranchPage() {
     if (editingBranch) {
       const isDefault = defaultBranchIds.has(editingBranch.id);
       if (isDefault) {
-        // Deleting a default branch → hide it
-        hideDefaultBranch(editingBranch.id);
-        setSelectedBranchIds(selectedBranchIds.filter((id) => id !== editingBranch.id));
+        // Default branches cannot be deleted — just close dialog
       } else {
         // Deleting a custom branch
         removeCustomBranch(editingBranch.id);
-        // If it overrides a default, also hide the default
         if (editingBranch.overridesDefaultId) {
-          hideDefaultBranch(editingBranch.overridesDefaultId);
+          // Override branch: restore the default by re-selecting its ID
+          setSelectedBranchIds([
+            ...selectedBranchIds.filter((id) => id !== editingBranch.id),
+            editingBranch.overridesDefaultId,
+          ]);
+        } else {
+          // Pure custom branch: just remove from selection
+          setSelectedBranchIds(selectedBranchIds.filter((id) => id !== editingBranch.id));
         }
-        setSelectedBranchIds(selectedBranchIds.filter((id) => id !== editingBranch.id));
       }
     }
     setEditingBranch(null);
     setCustomizePreset(null);
-  }, [editingBranch, defaultBranchIds, removeCustomBranch, hideDefaultBranch, selectedBranchIds, setSelectedBranchIds]);
+  }, [editingBranch, defaultBranchIds, removeCustomBranch, selectedBranchIds, setSelectedBranchIds]);
+
+  const handleDeleteBranch = useCallback((branch: Branch) => {
+    removeCustomBranch(branch.id);
+    if (branch.overridesDefaultId) {
+      // Override branch: restore the default by re-selecting its ID
+      setSelectedBranchIds([
+        ...selectedBranchIds.filter((id) => id !== branch.id),
+        branch.overridesDefaultId,
+      ]);
+    } else {
+      // Pure custom branch: just remove from selection
+      setSelectedBranchIds(selectedBranchIds.filter((id) => id !== branch.id));
+    }
+  }, [removeCustomBranch, selectedBranchIds, setSelectedBranchIds]);
 
   const handleEditBranch = useCallback((branch: Branch) => {
     // Try real preset first (for custom branches from event catalog)
@@ -374,6 +396,8 @@ export default function BranchPage() {
                 onToggle={handleToggle}
                 onAddEvent={() => setPickerOpen(true)}
                 onEditBranch={handleEditBranch}
+                onDeleteBranch={handleDeleteBranch}
+                deletableBranchIds={deletableBranchIds}
               />
               <BranchCategory
                 certainty="uncertain"
@@ -382,6 +406,8 @@ export default function BranchPage() {
                 onToggle={handleToggle}
                 onAddEvent={() => setPickerOpen(true)}
                 onEditBranch={handleEditBranch}
+                onDeleteBranch={handleDeleteBranch}
+                deletableBranchIds={deletableBranchIds}
               />
 
               {/* Mobile: Timeline after checklists */}
@@ -451,7 +477,7 @@ export default function BranchPage() {
         existingBranch={editingBranch}
         profile={profile}
         onSave={handleCustomizeSave}
-        onDelete={editingBranch ? handleCustomizeDelete : undefined}
+        onDelete={editingBranch && !defaultBranchIds.has(editingBranch.id) ? handleCustomizeDelete : undefined}
       />
 
       <p className="mt-8 text-center text-xs text-muted-foreground">

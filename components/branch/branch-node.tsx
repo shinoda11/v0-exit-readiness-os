@@ -1,7 +1,7 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import { Pencil } from 'lucide-react';
+import { Pencil, X } from 'lucide-react';
 import type { Branch } from '@/lib/branch';
 import { cn } from '@/lib/utils';
 
@@ -17,9 +17,10 @@ interface BranchNodeProps {
   onToggle: () => void;
   disabled?: boolean;
   onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export function BranchNode({ branch, selected, onToggle, disabled, onEdit }: BranchNodeProps) {
+export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDelete }: BranchNodeProps) {
   const borderColor = CERTAINTY_BORDER[branch.certainty] ?? 'border-l-border';
 
   return (
@@ -57,6 +58,20 @@ export function BranchNode({ branch, selected, onToggle, disabled, onEdit }: Bra
         </div>
         <p className="text-xs text-muted-foreground truncate">{branch.detail}</p>
       </div>
+      {onDelete && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="shrink-0 p-1 rounded hover:bg-destructive/10 transition-colors"
+          aria-label="削除"
+        >
+          <X className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+        </button>
+      )}
     </label>
   );
 }

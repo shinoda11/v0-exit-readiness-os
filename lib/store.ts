@@ -361,6 +361,10 @@ export const useProfileStore = create<ProfileStore>()(
           if (!state.profile.housingPlans) {
             state.profile.housingPlans = [];
           }
+          // Migrate: hiddenDefaultBranchIds をクリア（削除ボタンバグで溜まったデータを復元）
+          if (state.hiddenDefaultBranchIds && state.hiddenDefaultBranchIds.length > 0) {
+            state.hiddenDefaultBranchIds = [];
+          }
           // 復元後にシミュレーションを再実行
           state._storageInitialized = true;
           setTimeout(() => {
