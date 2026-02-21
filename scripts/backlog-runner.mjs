@@ -68,6 +68,8 @@ const state = {
   offset: 0,
 };
 
+const processedUpdates = new Set();
+
 // ── BACKLOG.md パーサー ─────────────────────────────────────────────────────
 
 function parseBacklog() {
@@ -285,6 +287,13 @@ async function executeTask(task) {
 // ── メッセージ/コールバック処理 ─────────────────────────────────────────────
 
 async function handleUpdate(update) {
+  if (processedUpdates.has(update.update_id)) return;
+  processedUpdates.add(update.update_id);
+  if (processedUpdates.size > 100) {
+    const first = processedUpdates.values().next().value;
+    processedUpdates.delete(first);
+  }
+
   console.log("[Update received]", JSON.stringify(update).slice(0, 200));
   // /start コマンド or テキストメッセージ
   if (update.message) {
