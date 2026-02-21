@@ -169,35 +169,27 @@ async function sendNextTaskPrompt(task) {
 // ── Claude Code 実行 ────────────────────────────────────────────────────────
 
 async function runClaude(task) {
-  console.log(`[Claude] instructions length: ${task.instructions.length}`);
-  console.log(`[Claude] instructions preview: ${task.instructions.substring(0, 100)}...`);
+  const promptFile = join(REPO_DIR, ".claude-prompt.txt");
+
   const prompt = `あなたはYOHACKプロジェクトの開発者です。以下のタスクを実行してください。
 
-# プロジェクト情報
-- 技術スタック: Next.js 16, React 19, TypeScript, Zustand, Tailwind CSS, shadcn/ui
-- カラーパレット: #C8B89A（ゴールド）, #5A5550（テキスト）, #FAF9F7（背景）
+プロジェクト: Next.js 16, React 19, TypeScript, Zustand, Tailwind CSS
+カラー: #C8B89A #5A5550 #FAF9F7
 
-# タスク: ${task.id} - ${task.title}
+タスク: ${task.id} - ${task.title}
 
 ${task.instructions}
 
-# 注意事項
-- git commit は指示通りに実行する
-- pnpm build が通ることを必ず確認する
-- 完了後は「✅ 完了:」で始まる1行サマリーを出力する`;
+注意: git commitは指示通り実行。pnpm buildが通ることを確認。完了後「✅ 完了:」で始まる1行サマリーを出力。`;
+
+  writeFileSync(promptFile, prompt, "utf-8");
 
   return new Promise((resolve) => {
     console.log(`[Claude] Starting: ${task.id}`);
-    console.log(`[Claude] Command: ${CLAUDE_CMD}`);
     const proc = spawn(
       CLAUDE_CMD,
-      ["--dangerously-skip-permissions", "-p", prompt],
-      {
-        cwd: REPO_DIR,
-        shell: true,
-        windowsHide: false,
-        env: { ...process.env },
-      }
+      ["--dangerously-skip-permissions", "-p", `@${promptFile}`],
+      { cwd: REPO_DIR, shell: true, env: { ...process.env } }
     );
 
     let output = "";
@@ -206,11 +198,12 @@ ${task.instructions}
 
     const timeout = setTimeout(() => {
       proc.kill();
-      resolve({ output: "⏰ タイムアウト（15分）", success: false });
+      resolve({ output: "タイムアウト（15分）", success: false });
     }, 15 * 60 * 1000);
 
     proc.on("close", code => {
       clearTimeout(timeout);
+      try { require("fs").unlinkSync(promptFile); } catch {}
       resolve({ output: output.slice(-3000), success: code === 0 });
     });
   });
