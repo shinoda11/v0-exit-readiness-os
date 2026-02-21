@@ -31,3 +31,6 @@ next-env.d.ts
 
 # archives
 *.zip
+
+# screenshots
+/screenshots-onboarding/
