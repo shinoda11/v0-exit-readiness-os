@@ -11,6 +11,11 @@
  *   $env:TELEGRAM_CHAT_ID="your_chat_id"
  */
 
+import { createRequire } from "module";
+const _require = createRequire(import.meta.url);
+import { readFileSync as _rfs } from "fs";
+try { _rfs(new URL("../.env", import.meta.url), "utf-8").split("\n").forEach(l => { const [k,...v]=l.split("="); if(k?.trim()) process.env[k.trim()]=v.join("=").trim(); }); } catch {}
+
 import { execSync, spawn } from "child_process";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
