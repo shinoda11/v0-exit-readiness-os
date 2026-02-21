@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { Gauge, Calendar, PiggyBank, ShieldCheck } from 'lucide-react';
+import { Gauge, Calendar, PiggyBank, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TermTooltip } from '@/components/ui/term-tooltip';
@@ -64,17 +64,33 @@ function MetricItem({
   highlight,
 }: MetricItemProps) {
   const styles = getHighlightStyles(highlight);
-  
+  const isDanger = highlight === 'danger';
+  const isWarning = highlight === 'warning';
+  const showAlert = isDanger || isWarning;
+
   return (
-    <div className={cn("flex items-center gap-3 py-3 px-2 rounded-lg", styles.bg)}>
+    <div className={cn(
+      "flex items-center gap-3 py-3 px-2 rounded-lg transition-all duration-[600ms] ease-out",
+      styles.bg,
+      isDanger && "border-2 border-[#CC3333]/40 dark:border-[#CC3333]/30",
+      isWarning && "border border-amber-400/40 dark:border-amber-500/30",
+    )}>
       <div className={cn("flex h-8 w-8 items-center justify-center", styles.icon)}>
         {icon}
       </div>
       <div className="flex-1">
         <p className="text-xs text-[#8A7A62] dark:text-[#8A7A62]/60">{label}</p>
-        <p className={cn("text-lg font-semibold tabular-nums", styles.value)}>
-          {value}
-        </p>
+        <div className="flex items-center gap-1.5">
+          <p className={cn("text-lg font-semibold tabular-nums transition-colors duration-[600ms]", styles.value)}>
+            {value}
+          </p>
+          {showAlert && (
+            <AlertTriangle className={cn(
+              "h-4 w-4 flex-shrink-0",
+              isDanger ? "text-[#CC3333] dark:text-red-400" : "text-amber-500 dark:text-amber-400",
+            )} />
+          )}
+        </div>
         {subValue && (
           <p className="text-xs text-[#8A7A62]/60 dark:text-[#8A7A62]">{subValue}</p>
         )}

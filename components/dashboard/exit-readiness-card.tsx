@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 
-import { Target, ShieldCheck, Heart, Activity, Droplets, ChevronDown, Lightbulb } from 'lucide-react';
+import { Target, ShieldCheck, Heart, Activity, Droplets, ChevronDown, Lightbulb, AlertTriangle } from 'lucide-react';
 import { SectionCard } from '@/components/section-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -15,6 +15,8 @@ import { getScoreBgColor, getScoreColor } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { findSimilarCases } from '@/lib/benchmarks';
 import { useProfileStore } from '@/lib/store';
+import { useScoreChange } from '@/hooks/useScoreChange';
+import { useAnimatedValue } from '@/hooks/useScoreAnimation';
 
 interface ExitReadinessCardProps {
   score: ExitScoreDetail | null;
@@ -26,15 +28,26 @@ interface SubScoreProps {
   value: number;
   icon: React.ReactNode;
   description: string;
+  warningThreshold?: number;
 }
 
-function SubScore({ label, value, icon, description }: SubScoreProps) {
+function SubScore({ label, value, icon, description, warningThreshold = 50 }: SubScoreProps) {
+  const belowSafety = value < warningThreshold;
   return (
     <HoverCard openDelay={200}>
       <HoverCardTrigger asChild>
-        <div className="flex cursor-help flex-col items-center rounded-lg bg-muted/50 p-3 transition-colors hover:bg-muted">
+        <div className={cn(
+          "flex cursor-help flex-col items-center rounded-lg bg-muted/50 p-3 transition-all duration-[600ms] hover:bg-muted",
+          belowSafety && "border-2 border-[#CC3333]/40 bg-red-50/50 dark:bg-red-950/10",
+        )}>
           <div className="mb-1 text-muted-foreground">{icon}</div>
-          <div className="text-xl font-bold">{value}</div>
+          <div className="flex items-center gap-1">
+            {belowSafety && <AlertTriangle className="h-3.5 w-3.5 text-[#CC3333]" />}
+            <div className={cn(
+              "text-xl font-bold tabular-nums transition-all duration-[600ms]",
+              belowSafety && "text-[#CC3333]",
+            )}>{value}</div>
+          </div>
           <div className="text-xs text-muted-foreground">{label}</div>
         </div>
       </HoverCardTrigger>
@@ -153,6 +166,11 @@ function ScoreBreakdown({ score }: { score: ExitScoreDetail }) {
 }
 
 export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) {
+  const [showBreakdown, setShowBreakdown] = useState(false);
+  const scoreDirection = useScoreChange(score?.overall, 2000);
+  const scoreFlash = useScoreChange(score?.overall, 300);
+  const animatedOverall = useAnimatedValue(score?.overall ?? 0, 600);
+
   if (isLoading || !score) {
     return (
       <SectionCard
@@ -173,8 +191,6 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
     );
   }
 
-  const [showBreakdown, setShowBreakdown] = useState(false);
-
   const levelText = {
     GREEN: '十分',
     YELLOW: '良好',
@@ -187,6 +203,11 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
       icon={<Target className="h-5 w-5" />}
       title="余白スコア"
       description="目標達成度の総合評価"
+      className={cn(
+        'transition-all duration-[600ms]',
+        scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(74,124,89,0.2)]',
+        scoreFlash === 'down' && 'border-[#CC3333] border-2',
+      )}
     >
       <div className="flex flex-col items-center">
         {/* Main score - SVG Progress Ring */}
@@ -194,9 +215,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
           const radius = 58;
           const strokeWidth = 8;
           const circumference = 2 * Math.PI * radius;
-          const progress = Math.min(Math.max(score.overall, 0), 100);
+          const progress = Math.min(Math.max(animatedOverall, 0), 100);
           const offset = circumference - (progress / 100) * circumference;
-          const strokeColor = score.overall >= 80 ? '#4A7C59' : score.overall >= 50 ? '#C8B89A' : '#CC3333';
+          const strokeColor = animatedOverall >= 80 ? '#4A7C59' : animatedOverall >= 50 ? '#C8B89A' : '#CC3333';
 
           return (
             <div className="relative">
@@ -222,7 +243,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
                   strokeLinecap="round"
                   strokeDasharray={circumference}
                   strokeDashoffset={offset}
-                  className="transition-all duration-700 ease-out"
+                  className="transition-all duration-[600ms] ease-out"
                   style={{ transform: 'rotate(-90deg)', transformOrigin: '72px 72px' }}
                 />
                 {/* Center text */}
@@ -233,14 +254,14 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
                   dominantBaseline="central"
                   className={cn(
                     "text-5xl font-bold tabular-nums",
-                    score.overall >= 80 && "fill-[#4A7C59] dark:fill-[#6BA368]",
-                    score.overall >= 50 && score.overall < 80 && "fill-[#8A7A62] dark:fill-[#C8B89A]",
-                    score.overall < 50 && "fill-[#CC3333] dark:fill-[#E05555]",
+                    animatedOverall >= 80 && "fill-[#4A7C59] dark:fill-[#6BA368]",
+                    animatedOverall >= 50 && animatedOverall < 80 && "fill-[#8A7A62] dark:fill-[#C8B89A]",
+                    animatedOverall < 50 && "fill-[#CC3333] dark:fill-[#E05555]",
                   )}
                   fontSize="48"
                   fontWeight="bold"
                 >
-                  {score.overall}
+                  {animatedOverall}
                 </text>
                 <text
                   x="72"

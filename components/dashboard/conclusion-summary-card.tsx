@@ -7,6 +7,8 @@ import { CheckCircle2, AlertTriangle, XCircle, Loader2, ArrowRight, GitBranch } 
 import type { ExitScoreDetail, KeyMetrics, Profile } from '@/lib/types';
 import { worldlineTemplates } from '@/lib/worldline-templates';
 import { cn } from '@/lib/utils';
+import { useScoreChange } from '@/hooks/useScoreChange';
+import { useAnimatedValue } from '@/hooks/useScoreAnimation';
 
 type Status = 'GREEN' | 'YELLOW' | 'RED' | 'CALCULATING';
 
@@ -275,6 +277,13 @@ export function ConclusionSummaryCard({
 
   const config = getStatusConfig(displayStatus);
 
+  // Track score direction for animations
+  const scoreDirection = useScoreChange(score?.overall, 2000);
+  // Separate shorter timer for the red border flash
+  const scoreFlash = useScoreChange(score?.overall, 300);
+  // Smooth counter animation for the score number
+  const animatedScore = useAnimatedValue(score?.overall ?? 0, 600);
+
   const { stateLine, actionLine, actionType, effectEstimate, detailText } = useMemo(
     () => generateConclusion(displayStatus, score, metrics, targetRetireAge),
     [displayStatus, score, metrics, targetRetireAge]
@@ -306,7 +315,13 @@ export function ConclusionSummaryCard({
   }[actionType];
 
   return (
-    <Card className={cn('border relative', config.bgColor, config.borderColor)}>
+    <Card className={cn(
+      'border relative transition-all duration-[600ms] ease-out',
+      config.bgColor,
+      config.borderColor,
+      scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(200,184,154,0.3)]',
+      scoreFlash === 'down' && 'border-[#CC3333] border-2',
+    )}>
       {/* 計算中オーバーレイ（初回ロード時） */}
       {isLoading && !score && (
         <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/60">
@@ -350,13 +365,15 @@ export function ConclusionSummaryCard({
             </div>
             {score && (
               <span className={cn(
-                "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0 self-start sm:self-auto",
+                "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0 self-start sm:self-auto transition-all duration-[600ms] ease-out",
                 score.overall >= 70 ? "bg-[#C8B89A]/20 text-[#8A7A62] dark:bg-[#C8B89A]/10 dark:text-[#C8B89A]" :
                 score.overall >= 40 ? "bg-[#5A5550]/15 text-[#5A5550] dark:bg-[#5A5550]/15 dark:text-[#DDD0B8]" :
                 "bg-red-50/80 text-red-700 dark:bg-red-900/20 dark:text-red-300",
-                isLoading && "opacity-50"
+                isLoading && "opacity-50",
+                scoreDirection === 'up' && "scale-110",
+                scoreDirection === 'down' && "scale-95",
               )}>
-                {score.overall.toFixed(0)}
+                {animatedScore}
               </span>
             )}
           </div>
