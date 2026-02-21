@@ -126,18 +126,24 @@ estimate: L
 
 ### instructions
 ```
+デザイン哲学 docs/YOHACK_DESIGN_PHILOSOPHY.md を必ず読んでから実装すること。
+
+【原則1: 削ることが設計である】に基づくレイアウト再構成:
+
 1. app/app/page.tsx のレイアウトを分析する
-2. 現状のコンポーネント配置をF字動線・Z字動線の観点で評価する
-3. 以下の優先順位でレイアウトを再構成する:
-   - 最重要: ConclusionSummaryCard（結論）を最上部・最大サイズに
-   - 第二: スコアと安心ラインを横並びで視覚的に強調
-   - 第三: グラフエリアを結論の直下に配置
-   - 入力カードは左カラムに収める（現状維持だが余白を整理）
-4. Tailwindのgrid/flexレイアウトを調整してF字動線を実現
-5. pnpm build で確認
-6. git add -A && git commit -m "ui: redesign dashboard layout for visual flow"
+2. この画面の「主役」を定義する: ConclusionSummaryCard（結論）が主役
+3. 主役を最上部・最大サイズに配置し、それ以外は脇役として視覚的な重みを下げる:
+   - 結論カードの padding を現状の1.5倍に拡大
+   - スコアと安心ラインを結論の直下に横並びで配置（第二の視覚要素）
+   - グラフエリアをその下に配置（第三の視覚要素）
+   - 入力カードは左カラムに収め、余白を十分に確保
+4. F字動線を意識してTailwindのgrid/flexレイアウトを調整
+5. 「あった方がいい」要素を特定し、デフォルト非表示にする
+6. pnpm build で確認
+7. git add -A && git commit -m "ui: redesign dashboard layout for visual flow"
 
 完了条件: ダッシュボードを開いた瞬間に「結論→根拠→詳細」の順で目が流れる
+チェック: デザイン哲学の実装チェックリスト全項目を満たすこと
 ```
 
 ## P1-5: グラフを意思決定支援に昇華
@@ -150,18 +156,25 @@ estimate: L
 
 ### instructions
 ```
+デザイン哲学 docs/YOHACK_DESIGN_PHILOSOPHY.md を必ず読んでから実装すること。
+
+【原則3: 応答が信頼を作る】に基づくグラフの意思決定支援化:
+
 1. components/dashboard/ 以下のグラフコンポーネントを特定する
-2. 以下の視覚要素を追加する:
-   - 安心ラインを水平の参照線（ReferenceLine）で表示、#CC3333で「ここを割ると危険」を表現
+2. 「カラーの意味」に従って視覚要素を追加する:
+   - 安心ラインを水平の参照線（ReferenceLine）で表示、ウォーニングレッド #CC3333
+   - 安全圏はセーフグリーン #4A7C59、警告圏はウォームゴールド #C8B89A
    - 世界線A/Bを比較する場合、線の太さと透明度で主従を表現
-   - グラフの余白（margin）を現状の1.5倍に拡大
-   - 軸ラベルを日本語・万円単位に統一
-   - ツールチップをカスタム化（#FAF9F7背景、#5A5550テキスト）
-3. カラーパレット: 安全=#4A7C59、警告=#C8B89A、危険=#CC3333
-4. pnpm build で確認
-5. git add -A && git commit -m "ui: enhance charts with decision-support visual design"
+3. 【原則1: 削ることが設計である】に従い余白を確保:
+   - グラフの margin を現状の1.5倍に拡大
+   - 軸ラベルを日本語・万円単位に統一（端数は見せない）
+4. ツールチップをカスタム化（オフホワイト #FAF9F7 背景、ダークテキスト #5A5550）
+5. 【原則3】グラフの線は左から右へアニメーション描画する
+6. pnpm build で確認
+7. git add -A && git commit -m "ui: enhance charts with decision-support visual design"
 
 完了条件: グラフを見た瞬間に「安全か危険か」が色と線で直感的にわかる
+チェック: デザイン哲学の実装チェックリスト全項目を満たすこと
 ```
 
 ---
@@ -237,18 +250,25 @@ estimate: M
 
 ### instructions
 ```
+デザイン哲学 docs/YOHACK_DESIGN_PHILOSOPHY.md を必ず読んでから実装すること。
+
+【原則2: 数字は人生の重さを持つ】に基づく数値表示の再設計:
+
 1. 全dashboardコンポーネントの数字表示を棚卸しする
-2. 数字の階層を3段階に整理する:
-   - 大: スコア・総資産・物件価格（text-3xl以上、DM Sans Bold）
-   - 中: 年収・月額・年齢（text-xl、DM Sans Medium）
-   - 小: 補足数値・パーセント（text-sm、通常weight）
-3. 金額表示のformatCurrency()が億円自動変換していることを確認
-4. スコア表示に変化のアニメーション追加（0→実値へのcount-up、CSS transitionで実装）
-5. 重要数値の背景に薄いハイライト（#C8B89A 10%opacity）を追加
-6. pnpm build で確認
-7. git add -A && git commit -m "ui: add visual weight hierarchy to numbers"
+2. 「タイポグラフィの意味」に従い3段階の階層を適用:
+   - 大（重要なことを言う時）: スコア・総資産・物件価格 → text-4xl以上、DM Sans Bold、#5A5550
+   - 中（機能を説明する時）: 年収・月額・年齢 → text-xl、DM Sans Regular
+   - 小（寄り添って話す時）: 補足数値・パーセント → text-sm、Noto Sans JP
+3. 金額は万円・億円単位で表示、細かい端数は見せない（formatCurrency()確認）
+4. 【原則3】数値の変化には必ずtransitionを付ける（0.3s ease）:
+   - スコア表示に0→実値へのcount-upアニメーション
+5. 重要数値の周囲には必ず余白を確保（他の要素と詰めない）
+6. 重要数値の背景に薄いハイライト（ウォームゴールド #C8B89A 10%opacity）を追加
+7. pnpm build で確認
+8. git add -A && git commit -m "ui: add visual weight hierarchy to numbers"
 
 完了条件: 画面を見た3秒以内に最重要数値が目に入る
+チェック: デザイン哲学の実装チェックリスト全項目を満たすこと
 ```
 
 ## P2-5: 入力フローの再設計
@@ -261,17 +281,27 @@ estimate: L
 
 ### instructions
 ```
+デザイン哲学 docs/YOHACK_DESIGN_PHILOSOPHY.md を必ず読んでから実装すること。
+
+【原則1: 削ることが設計である】+【原則3: 応答が信頼を作る】に基づく入力体験の再設計:
+
 1. 左カラムの入力カード群（BasicInfoCard, IncomeCard等）を分析する
-2. 以下の改善を実施する:
-   - 各カードのタイトルを「基本情報」→「あなたのプロフィール」のように一人称的な表現に
-   - 入力フィールドにplaceholderを追加（例: 年収「例: 1,200万円」）
-   - 入力完了したカードにチェックマーク表示（profileの充足度を視覚化）
-   - カード間の区切りを明確にし、「次に入力すべき項目」がわかるよう未入力カードを強調
-3. ProfileCompletenessコンポーネントと連動させる
-4. pnpm build で確認
-5. git add -A && git commit -m "ui: redesign input flow for conversational experience"
+2. 【原則1】1画面の主役を明確にする:
+   - 「次に入力すべきカード」だけを主役として視覚的に強調
+   - 入力完了カードは脇役として折りたたみ、チェックマーク表示
+   - カード間の余白を現状の1.5倍に拡大
+3. 入力体験を「フォームを埋める」→「自分のことを話す」に変える:
+   - カードタイトルを一人称的な表現に（「基本情報」→「あなたのプロフィール」）
+   - 入力フィールドにplaceholder追加（例: 年収「例: 1,200万円」）
+4. 【原則3】入力に対する応答を設計する:
+   - ProfileCompletenessコンポーネントと連動し、入力するたびに充足度が上がる視覚フィードバック
+   - 入力完了時にカードが自然に折りたたまれるtransition（0.3s ease）
+5. エラーと空状態を必ず設計する（未定義の状態を作らない）
+6. pnpm build で確認
+7. git add -A && git commit -m "ui: redesign input flow for conversational experience"
 
 完了条件: 入力しながら「自分のシミュレーションが育っている」感覚が得られる
+チェック: デザイン哲学の実装チェックリスト全項目を満たすこと
 ```
 
 ---

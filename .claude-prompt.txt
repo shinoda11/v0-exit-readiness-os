@@ -3,38 +3,12 @@
 プロジェクト: Next.js 16, React 19, TypeScript, Zustand, Tailwind CSS
 カラー: #C8B89A #5A5550 #FAF9F7
 
-タスク: P1-2 - Alpha Tester 向け利用状況ログ
+タスク: P0-1 - ゼロ状態の設計
 
-1. lib/analytics.ts を新規作成:
-
-   export type AnalyticsEvent = 
-     | { type: 'worldline_created'; count: number }
-     | { type: 'branch_viewed' }
-     | { type: 'simulation_run' }
-
-   export function trackEvent(event: AnalyticsEvent) {
-     // localStorage に蓄積
-     const key = 'yohack_events'
-     const existing = JSON.parse(localStorage.getItem(key) || '[]')
-     existing.push({ ...event, timestamp: new Date().toISOString() })
-     localStorage.setItem(key, JSON.stringify(existing))
-     
-     // コンソールにも出力（alpha期間のデバッグ用）
-     console.log('[YOHACK Analytics]', event)
-   }
-
-   export function getWorldlineCount(): number {
-     const events = JSON.parse(localStorage.getItem('yohack_events') || '[]')
-     return events.filter((e: any) => e.type === 'worldline_created').length
-   }
-
-2. app/app/worldline/page.tsx で世界線作成時に trackEvent({ type: 'worldline_created', count: getWorldlineCount() + 1 }) を呼ぶ
-
-3. app/app/branch/page.tsx で分岐ビルダー表示時に trackEvent({ type: 'branch_viewed' }) を呼ぶ
-
-4. pnpm build && pnpm test 確認
-5. git add -A && git commit -m "feat: add lightweight analytics for alpha KPI tracking"
-
-完了条件: 世界線作成時にlocalStorageのyohack_eventsにイベントが記録される
+1. app/worldline/page.tsx で世界線が0本のとき表示するEmptyStateコンポーネントを作成
+2. コピー: 「まず、あなたの家の選択肢を世界線として並べてみましょう」
+3. 「最初の世界線を作る →」ボタンを配置（/app/branch へ）
+4. ダッシュボードの入力未完了状態にも同様のガイダンスを追加
+5. pnpm build && git add -A && git commit -m "feat: add empty state design"
 
 注意: git commitは指示通り実行。pnpm buildが通ることを確認。完了後「✅ 完了:」で始まる1行サマリーを出力。
