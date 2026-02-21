@@ -187,9 +187,13 @@ ${task.instructions}
   return new Promise((resolve) => {
     console.log(`[Claude] Starting: ${task.id}`);
     const proc = spawn(
-      CLAUDE_CMD,
-      ["--dangerously-skip-permissions", "-p", `@${promptFile}`],
-      { cwd: REPO_DIR, shell: true, env: { ...process.env } }
+      "claude",
+      ["--dangerously-skip-permissions", "-p", prompt],
+      {
+        cwd: REPO_DIR,
+        env: { ...process.env },
+        stdio: ["ignore", "pipe", "pipe"]
+      }
     );
 
     let output = "";

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { runSimulation, computeExitScore, createDefaultProfile, validateProfile } from '../engine'
 import { branchToLifeEvents } from '../branch'
 import type { Profile, SimulationPath, KeyMetrics } from '../types'
@@ -497,25 +497,35 @@ describe('退職後事業収入', () => {
   })
 
   it('postRetireIncomeEndAge < retireAge の場合、退職後収入なし', async () => {
+    // Math.random をシード固定でモックし、モンテカルロの分散を排除
+    let seed = 12345
+    const seededRandom = () => {
+      seed = (seed * 16807) % 2147483647
+      return (seed - 1) / 2147483646
+    }
+    const mockRandom = vi.spyOn(Math, 'random').mockImplementation(seededRandom)
+
     const retireAge = 55
+    seed = 12345
     const base = await runSimulation(profileWith({
       targetRetireAge: retireAge,
       postRetireIncome: 0,
       postRetireIncomeEndAge: 50, // retireAge より前
     }))
+    seed = 12345 // 同じ乱数列でリセット
     const withIncome = await runSimulation(profileWith({
       targetRetireAge: retireAge,
       postRetireIncome: 500,
       postRetireIncomeEndAge: 50, // retireAge より前 → 効果なし
     }))
 
-    // endAge < retireAge なので収入は発生せず、結果はほぼ同じ
+    mockRandom.mockRestore()
+
+    // 同じ乱数列 + endAge < retireAge なので収入は発生せず、結果は一致するはず
     const baseAt100 = base.paths.yearlyData[base.paths.yearlyData.length - 1].assets
     const withAt100 = withIncome.paths.yearlyData[withIncome.paths.yearlyData.length - 1].assets
-    // モンテカルロの揺らぎがあるが、大きな差はないはず
     const diff = Math.abs(withAt100 - baseAt100)
-    const tolerance = Math.abs(baseAt100) * 0.5 + 1000 // 50% + 1000万の許容誤差（モンテカルロ分散考慮）
-    expect(diff).toBeLessThan(tolerance)
+    expect(diff).toBeLessThan(1)
   })
 })
 

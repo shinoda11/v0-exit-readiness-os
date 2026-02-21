@@ -1,0 +1,20 @@
+あなたはYOHACKプロジェクトの開発者です。以下のタスクを実行してください。
+
+プロジェクト: Next.js 16, React 19, TypeScript, Zustand, Tailwind CSS
+カラー: #C8B89A #5A5550 #FAF9F7
+
+タスク: P0-1 - フレイキーテスト修正
+
+以下を実行してフレイキーテストを修正する。
+
+1. pnpm test 2>&1 を実行して失敗しているテストを特定する
+2. 失敗テスト: "退職後収入なし" に関するテストを lib/ 以下で探す
+3. 原因: モンテカルロシミュレーションの分散により、境界値でテストが不安定
+4. 修正方針: アサーションの許容範囲を広げる（exactマッチ → rangeチェック）
+   または、テスト用のシード固定（Math.random をモック）で再現性を確保する
+5. pnpm test を3回実行して全て252/252 passed になることを確認
+6. git add -A && git commit -m "fix: stabilize flaky Monte Carlo test"
+
+完了条件: pnpm test を3回連続実行して全て252/252 passed
+
+注意: git commitは指示通り実行。pnpm buildが通ることを確認。完了後「✅ 完了:」で始まる1行サマリーを出力。
