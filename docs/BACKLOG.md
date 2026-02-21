@@ -36,7 +36,7 @@ estimate: M
 ```
 
 ## P0-3: 数字の変化に文脈を与える
-status: todo
+status: done
 priority: 0
 estimate: S
 

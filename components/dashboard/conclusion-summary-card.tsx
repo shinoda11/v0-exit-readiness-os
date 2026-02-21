@@ -7,8 +7,7 @@ import { CheckCircle2, AlertTriangle, XCircle, Loader2, ArrowRight, GitBranch } 
 import type { ExitScoreDetail, KeyMetrics, Profile } from '@/lib/types';
 import { worldlineTemplates } from '@/lib/worldline-templates';
 import { cn } from '@/lib/utils';
-import { useScoreChange } from '@/hooks/useScoreChange';
-import { useAnimatedValue } from '@/hooks/useScoreAnimation';
+import { useScoreAnimation, useAnimatedValue } from '@/hooks/useScoreAnimation';
 
 type Status = 'GREEN' | 'YELLOW' | 'RED' | 'CALCULATING';
 
@@ -277,10 +276,8 @@ export function ConclusionSummaryCard({
 
   const config = getStatusConfig(displayStatus);
 
-  // Track score direction for animations
-  const scoreDirection = useScoreChange(score?.overall, 2000);
-  // Separate shorter timer for the red border flash
-  const scoreFlash = useScoreChange(score?.overall, 300);
+  // Track score direction for card elevation/flash
+  const scoreDirection = useScoreAnimation(score?.overall ?? null);
   // Smooth counter animation for the score number
   const animatedScore = useAnimatedValue(score?.overall ?? 0, 600);
 
@@ -320,7 +317,7 @@ export function ConclusionSummaryCard({
       config.bgColor,
       config.borderColor,
       scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(200,184,154,0.3)]',
-      scoreFlash === 'down' && 'border-[#CC3333] border-2',
+      scoreDirection === 'down' && 'border-[#CC3333]',
     )}>
       {/* 計算中オーバーレイ（初回ロード時） */}
       {isLoading && !score && (

@@ -11,12 +11,10 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import type { ExitScoreDetail } from '@/lib/types';
-import { getScoreBgColor, getScoreColor } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { findSimilarCases } from '@/lib/benchmarks';
 import { useProfileStore } from '@/lib/store';
-import { useScoreChange } from '@/hooks/useScoreChange';
-import { useAnimatedValue } from '@/hooks/useScoreAnimation';
+import { useScoreAnimation, useAnimatedValue } from '@/hooks/useScoreAnimation';
 
 interface ExitReadinessCardProps {
   score: ExitScoreDetail | null;
@@ -138,7 +136,7 @@ function ScoreBreakdown({ score }: { score: ExitScoreDetail }) {
               </div>
               <div className="h-2 w-full rounded-full bg-muted/50">
                 <div
-                  className={cn('h-full rounded-full transition-all duration-500', getBarColor(value))}
+                  className={cn('h-full rounded-full transition-all duration-[600ms]', getBarColor(value))}
                   style={{ width: `${value}%` }}
                 />
               </div>
@@ -167,9 +165,8 @@ function ScoreBreakdown({ score }: { score: ExitScoreDetail }) {
 
 export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) {
   const [showBreakdown, setShowBreakdown] = useState(false);
-  const scoreDirection = useScoreChange(score?.overall, 2000);
-  const scoreFlash = useScoreChange(score?.overall, 300);
-  const animatedOverall = useAnimatedValue(score?.overall ?? 0, 600);
+  const scoreDirection = useScoreAnimation(score?.overall ?? null);
+  const animatedScore = useAnimatedValue(score?.overall ?? 0, 600);
 
   if (isLoading || !score) {
     return (
@@ -206,7 +203,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
       className={cn(
         'transition-all duration-[600ms]',
         scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(74,124,89,0.2)]',
-        scoreFlash === 'down' && 'border-[#CC3333] border-2',
+        scoreDirection === 'down' && 'border-[#CC3333] border-2',
       )}
     >
       <div className="flex flex-col items-center">
@@ -215,9 +212,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
           const radius = 58;
           const strokeWidth = 8;
           const circumference = 2 * Math.PI * radius;
-          const progress = Math.min(Math.max(animatedOverall, 0), 100);
+          const progress = Math.min(Math.max(animatedScore, 0), 100);
           const offset = circumference - (progress / 100) * circumference;
-          const strokeColor = animatedOverall >= 80 ? '#4A7C59' : animatedOverall >= 50 ? '#C8B89A' : '#CC3333';
+          const strokeColor = animatedScore >= 80 ? '#4A7C59' : animatedScore >= 50 ? '#C8B89A' : '#CC3333';
 
           return (
             <div className="relative">
@@ -253,15 +250,15 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
                   textAnchor="middle"
                   dominantBaseline="central"
                   className={cn(
-                    "text-5xl font-bold tabular-nums",
-                    animatedOverall >= 80 && "fill-[#4A7C59] dark:fill-[#6BA368]",
-                    animatedOverall >= 50 && animatedOverall < 80 && "fill-[#8A7A62] dark:fill-[#C8B89A]",
-                    animatedOverall < 50 && "fill-[#CC3333] dark:fill-[#E05555]",
+                    "text-5xl font-bold tabular-nums transition-[fill] duration-[600ms]",
+                    animatedScore >= 80 && "fill-[#4A7C59] dark:fill-[#6BA368]",
+                    animatedScore >= 50 && animatedScore < 80 && "fill-[#8A7A62] dark:fill-[#C8B89A]",
+                    animatedScore < 50 && "fill-[#CC3333] dark:fill-[#E05555]",
                   )}
                   fontSize="48"
                   fontWeight="bold"
                 >
-                  {animatedOverall}
+                  {animatedScore}
                 </text>
                 <text
                   x="72"
@@ -276,7 +273,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
               </svg>
               <div
                 className={cn(
-                  "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold border",
+                  "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold border transition-colors duration-[600ms]",
                   score.overall >= 80 && "bg-[#4A7C59] text-white border-[#4A7C59]",
                   score.overall >= 50 && score.overall < 80 && "bg-[#C8B89A] text-[#1A1916] border-[#C8B89A]",
                   score.overall < 50 && "bg-[#CC3333] text-white border-[#CC3333]",
@@ -290,7 +287,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
 
         {/* Level description */}
         <p className={cn(
-          "mt-6 text-sm font-medium",
+          "mt-6 text-sm font-medium transition-colors duration-[600ms]",
           score.overall >= 80 && "text-[#4A7C59] dark:text-[#6BA368]",
           score.overall >= 50 && score.overall < 80 && "text-[#8A7A62] dark:text-[#C8B89A]",
           score.overall < 50 && "text-[#CC3333] dark:text-[#E05555]",
@@ -308,24 +305,28 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
             value={score.survival}
             icon={<ShieldCheck className="h-4 w-4" />}
             description="資産が尽きない確率。シミュレーションで資産がマイナスにならなかったシナリオの割合です。"
+            warningThreshold={70}
           />
           <SubScore
             label="生活水準"
             value={score.lifestyle}
             icon={<Heart className="h-4 w-4" />}
             description="退職後も望む生活水準を維持できる可能性。資産に対する年間支出の比率で評価します。"
+            warningThreshold={50}
           />
           <SubScore
             label="リスク"
             value={score.risk}
             icon={<Activity className="h-4 w-4" />}
             description="ポートフォリオのリスク評価（高いほど安全）。投資資産比率とボラティリティを考慮しています。"
+            warningThreshold={50}
           />
           <SubScore
             label="流動性"
             value={score.liquidity}
             icon={<Droplets className="h-4 w-4" />}
             description="緊急時に使える現金の割合。予期せぬ支出に対応できる余裕度を示します。"
+            warningThreshold={50}
           />
         </div>
 
