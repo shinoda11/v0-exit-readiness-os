@@ -52,7 +52,7 @@ const state = {
 function parseBacklog() {
   const content = readFileSync(BACKLOG_FILE, "utf-8");
   const pattern =
-    /## (P\d+-\d+: .+?)\nstatus: (\w+)\npriority: (\d+)\nestimate: (\w+).*?### instructions\n```\n([\s\S]*?)```/g;
+    /## (P\d+-\d+: .+?)\r?\nstatus: (\w+)\r?\npriority: (\d+)\r?\nestimate: (\w+)[\s\S]*?### instructions\r?\n```\r?\n([\s\S]*?)```/g;
 
   const tasks = [];
   let m;
