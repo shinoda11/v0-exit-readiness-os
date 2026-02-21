@@ -37,7 +37,7 @@ function findClaude() {
   ];
   for (const p of candidates) {
     try {
-      if (require("fs").existsSync(p)) return p;
+      if (existsSync(p)) return p;
     } catch {}
   }
   return "claude";
