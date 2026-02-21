@@ -87,7 +87,7 @@ export function BranchCategory({
           variant="ghost"
           size="sm"
           onClick={() => onAddEvent()}
-          className="w-full justify-start gap-2 text-muted-foreground"
+          className="w-full min-h-[44px] justify-start gap-2 text-muted-foreground"
         >
           <Plus className="h-4 w-4" />
           イベントを追加

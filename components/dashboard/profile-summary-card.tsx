@@ -60,7 +60,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
           </div>
           <Link
             href="/app/profile"
-            className="text-xs text-[#C8B89A] hover:text-[#8A7A62] transition-colors"
+            className="text-xs text-[#C8B89A] hover:text-[#8A7A62] transition-colors inline-flex items-center min-h-[44px] px-2"
           >
             編集 →
           </Link>

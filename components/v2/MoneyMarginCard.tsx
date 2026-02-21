@@ -118,8 +118,8 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
                   <p className="text-sm text-muted-foreground">{metric.label}</p>
                   <HoverCard>
                     <HoverCardTrigger asChild>
-                      <button className="text-muted-foreground hover:text-foreground">
-                        <Info className="h-3 w-3" />
+                      <button className="text-muted-foreground hover:text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center">
+                        <Info className="h-4 w-4" />
                       </button>
                     </HoverCardTrigger>
                     <HoverCardContent className="w-72">

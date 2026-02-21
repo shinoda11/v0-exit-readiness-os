@@ -9,10 +9,10 @@ export function MobileHeader() {
 
   return (
     <>
-      <header className="md:hidden flex items-center gap-2 px-4 h-11 border-b border-[#F0ECE4]">
+      <header className="md:hidden flex items-center gap-2 px-4 min-h-[44px] border-b border-[#F0ECE4]">
         <button
           onClick={() => setShowBrand(true)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 min-h-[44px]"
           aria-label="ブランドストーリーを表示"
         >
           <YohackSymbol size={20} />

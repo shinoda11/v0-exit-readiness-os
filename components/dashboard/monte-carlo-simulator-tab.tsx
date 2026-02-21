@@ -271,7 +271,7 @@ export function MonteCarloSimulatorTab({
             </div>
             <HoverCard>
               <HoverCardTrigger asChild>
-                <button className="rounded-full p-1 hover:bg-muted">
+                <button className="rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-muted">
                   <Info className="h-4 w-4 text-muted-foreground" />
                 </button>
               </HoverCardTrigger>

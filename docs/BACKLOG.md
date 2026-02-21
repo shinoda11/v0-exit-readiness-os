@@ -53,7 +53,7 @@ estimate: S
 ```
 
 ## P0-4: モバイル体験の統一
-status: todo
+status: done
 priority: 0
 estimate: M
 

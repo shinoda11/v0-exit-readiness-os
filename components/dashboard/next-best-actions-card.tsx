@@ -323,7 +323,7 @@ export function NextBestActionsCard({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-7 gap-1.5 bg-transparent text-xs px-3 py-1"
+                      className="min-h-[44px] gap-1.5 bg-transparent text-xs px-4 py-2"
                       onClick={() => handleCalculateImpact(action)}
                       disabled={isCalculating}
                     >
@@ -342,7 +342,7 @@ export function NextBestActionsCard({
                   ) : (
                     <Button
                       size="sm"
-                      className="h-7 gap-1.5 text-xs px-3 py-1 bg-[#C8B89A] text-[#1A1916] hover:bg-[#C8B89A]/90"
+                      className="min-h-[44px] gap-1.5 text-xs px-4 py-2 bg-[#C8B89A] text-[#1A1916] hover:bg-[#C8B89A]/90"
                       onClick={() => handleApplyAction(action)}
                     >
                       <ArrowRight className="h-3 w-3" />

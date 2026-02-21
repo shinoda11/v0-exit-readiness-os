@@ -241,7 +241,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                         type="button"
                         onClick={() => toggleComparisonId(scenario.id)}
                         className={cn(
-                          "px-2 py-1 rounded text-xs font-medium transition-colors",
+                          "px-3 py-2 min-h-[44px] rounded text-xs font-medium transition-colors",
                           selectedComparisonIds.includes(scenario.id)
                             ? "bg-accent text-accent-foreground"
                             : "bg-secondary text-secondary-foreground hover:bg-secondary/80"

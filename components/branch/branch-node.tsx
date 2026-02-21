@@ -50,10 +50,10 @@ export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDel
                 e.stopPropagation();
                 onEdit();
               }}
-              className="shrink-0 p-0.5 rounded hover:bg-accent transition-colors"
+              className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded hover:bg-accent transition-colors -my-2"
               aria-label="編集"
             >
-              <Pencil className="h-3 w-3 text-muted-foreground" />
+              <Pencil className="h-4 w-4 text-muted-foreground" />
             </button>
           )}
         </div>
@@ -70,10 +70,10 @@ export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDel
             e.stopPropagation();
             onHide();
           }}
-          className="shrink-0 p-1 rounded hover:bg-accent transition-colors"
+          className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded hover:bg-accent transition-colors"
           aria-label="非表示"
         >
-          <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+          <Trash2 className="h-4 w-4 text-muted-foreground hover:text-foreground" />
         </button>
       )}
       {onDelete && (
@@ -84,10 +84,10 @@ export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDel
             e.stopPropagation();
             onDelete();
           }}
-          className="shrink-0 p-1 rounded hover:bg-destructive/10 transition-colors"
+          className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded hover:bg-destructive/10 transition-colors"
           aria-label="削除"
         >
-          <X className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+          <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
         </button>
       )}
     </label>

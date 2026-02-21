@@ -89,7 +89,7 @@ export function EventPickerDialog({
               key={cat.key}
               onClick={() => setActiveCategory(cat.key)}
               className={cn(
-                'flex items-center gap-1 shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[32px]',
+                'flex items-center gap-1 shrink-0 px-4 py-2.5 rounded-full text-xs font-medium transition-colors min-h-[44px]',
                 activeCategory === cat.key
                   ? 'bg-[#1A1916] text-[#F0ECE4]'
                   : 'bg-accent/50 text-muted-foreground hover:bg-accent'
@@ -135,7 +135,7 @@ export function EventPickerDialog({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="shrink-0 h-8 w-8"
+                    className="shrink-0 h-11 w-11"
                     disabled={isAdded}
                     onClick={() => onSelectPreset(preset)}
                   >
@@ -185,7 +185,7 @@ export function EventPickerDialog({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="shrink-0 h-8 w-8"
+                        className="shrink-0 h-11 w-11"
                         disabled={isAdded}
                         onClick={() => onSelectBundle(bundle)}
                       >

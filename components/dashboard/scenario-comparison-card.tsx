@@ -116,10 +116,10 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                 className="flex-1 h-8 text-sm"
                 autoFocus
               />
-              <Button size="sm" variant="ghost" onClick={handleSave} disabled={!newScenarioName.trim()}>
+              <Button size="sm" variant="ghost" className="min-h-[44px] min-w-[44px]" onClick={handleSave} disabled={!newScenarioName.trim()}>
                 <Check className="h-4 w-4" />
               </Button>
-              <Button size="sm" variant="ghost" onClick={() => { setIsSaving(false); setNewScenarioName(''); }}>
+              <Button size="sm" variant="ghost" className="min-h-[44px] min-w-[44px]" onClick={() => { setIsSaving(false); setNewScenarioName(''); }}>
                 <X className="h-4 w-4" />
               </Button>
             </>
@@ -128,7 +128,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
               size="sm" 
               variant="outline" 
               onClick={() => setIsSaving(true)}
-              className="text-xs bg-transparent"
+              className="min-h-[44px] text-xs bg-transparent"
             >
               <Save className="h-3 w-3 mr-1" />
               現在の状態を保存
@@ -201,7 +201,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
               {scenarios.map((scenario) => (
                 <div 
                   key={scenario.id}
-                  className="flex items-center justify-between py-1.5 group"
+                  className="flex items-center justify-between min-h-[44px] py-2 group"
                 >
                   <div className="flex items-center gap-2">
                     <Checkbox
@@ -209,7 +209,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                       checked={comparisonIds.includes(scenario.id)}
                       onCheckedChange={() => toggleComparison(scenario.id)}
                       disabled={!comparisonIds.includes(scenario.id) && comparisonIds.length >= 2}
-                      className="h-3.5 w-3.5"
+                      className="h-4 w-4"
                     />
                     <label 
                       htmlFor={`compare-${scenario.id}`}
@@ -221,24 +221,24 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                       {formatRelativeTime(scenario.createdAt)}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 text-[#8A7A62]/60 hover:text-[#8A7A62]"
+                      className="h-11 w-11 text-[#8A7A62]/60 hover:text-[#8A7A62]"
                       onClick={() => loadScenario(scenario.id)}
                       title="読み込む"
                     >
-                      <RotateCcw className="h-3 w-3" />
+                      <RotateCcw className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 text-[#8A7A62]/60 hover:text-red-700"
+                      className="h-11 w-11 text-[#8A7A62]/60 hover:text-red-700"
                       onClick={() => deleteScenario(scenario.id)}
                       title="削除"
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
             variant="ghost"
             size="sm"
             onClick={clearComparison}
-            className="text-xs text-[#8A7A62]/60 hover:text-[#8A7A62]"
+            className="min-h-[44px] text-xs text-[#8A7A62]/60 hover:text-[#8A7A62]"
           >
             比較をクリア
           </Button>

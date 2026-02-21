@@ -399,7 +399,7 @@ export default function DashboardPage() {
                     localStorage.setItem('yohack-profile-edited', '1');
                   }
                 }}
-                className="flex-shrink-0 rounded p-1 text-[#8A7A62]/60 hover:text-[#8A7A62] dark:text-[#C8B89A]/60 dark:hover:text-[#C8B89A] transition-colors"
+                className="flex-shrink-0 rounded p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-[#8A7A62]/60 hover:text-[#8A7A62] dark:text-[#C8B89A]/60 dark:hover:text-[#C8B89A] transition-colors"
                 aria-label="閉じる"
               >
                 <X className="h-4 w-4" />
@@ -427,12 +427,12 @@ export default function DashboardPage() {
           </div>
 
           {/* Mobile: 入力/結果 Tab Bar */}
-          <div className="md:hidden sticky top-16 z-20 -mx-4 bg-[#FAF9F7] border-b border-[#F0ECE4]">
+          <div className="md:hidden sticky top-14 z-20 -mx-4 bg-[#FAF9F7] border-b border-[#F0ECE4]">
             <div className="flex">
               <button
                 onClick={() => setMobileTab('input')}
                 className={cn(
-                  'flex-1 py-3 text-sm font-medium text-center transition-colors',
+                  'flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors',
                   mobileTab === 'input'
                     ? 'text-[#1A1916] border-b-2 border-[#C8B89A]'
                     : 'text-[#8A7A62]'
@@ -443,7 +443,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => setMobileTab('result')}
                 className={cn(
-                  'flex-1 py-3 text-sm font-medium text-center transition-colors',
+                  'flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors',
                   mobileTab === 'result'
                     ? 'text-[#1A1916] border-b-2 border-[#C8B89A]'
                     : 'text-[#8A7A62]'
