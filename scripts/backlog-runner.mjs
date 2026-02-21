@@ -267,6 +267,7 @@ async function executeTask(task) {
 // ── メッセージ/コールバック処理 ─────────────────────────────────────────────
 
 async function handleUpdate(update) {
+  console.log("[Update received]", JSON.stringify(update).slice(0, 200));
   // /start コマンド or テキストメッセージ
   if (update.message) {
     const text = update.message.text || "";
@@ -355,7 +356,7 @@ async function poll() {
     try {
       const res = await tgRequest("getUpdates", {
         offset: state.offset,
-        timeout: 30,
+        timeout: 10,
         allowed_updates: ["message", "callback_query"],
       });
 
