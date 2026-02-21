@@ -19,7 +19,7 @@ import https from "https";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_DIR    = join(__dirname, "..");
-const BACKLOG_FILE = join(REPO_DIR, "BACKLOG.md");
+const BACKLOG_FILE = join(REPO_DIR, "docs", "BACKLOG.md");
 const TOKEN       = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID     = process.env.TELEGRAM_CHAT_ID;
 const COMMIT_BATCH = 3;
