@@ -35,7 +35,7 @@ estimate: S
 ---
 
 ## P0-2: metadataBase 設定（OGP対応）
-status: todo
+status: done
 priority: 0
 estimate: S
 

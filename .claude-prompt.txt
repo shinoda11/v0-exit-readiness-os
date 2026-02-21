@@ -3,30 +3,38 @@
 プロジェクト: Next.js 16, React 19, TypeScript, Zustand, Tailwind CSS
 カラー: #C8B89A #5A5550 #FAF9F7
 
-タスク: P0-2 - metadataBase 設定（OGP対応）
+タスク: P1-2 - Alpha Tester 向け利用状況ログ
 
-1. app/layout.tsx を開く
-2. metadata オブジェクトに以下を追加:
-   metadataBase: new URL('https://yohack.jp')
-   
-   また以下のOGP設定を追加:
-   openGraph: {
-     title: 'YOHACK — 人生の選択肢を世界線で比較する',
-     description: 'この家を買ったあと、年収が20%下がっても、まだ動けるか。世界線比較で確認する。',
-     url: 'https://yohack.jp',
-     siteName: 'YOHACK',
-     locale: 'ja_JP',
-     type: 'website',
-   },
-   twitter: {
-     card: 'summary_large_image',
-     title: 'YOHACK — 人生の選択肢を世界線で比較する',
-     description: 'この家を買ったあと、年収が20%下がっても、まだ動けるか。',
+1. lib/analytics.ts を新規作成:
+
+   export type AnalyticsEvent = 
+     | { type: 'worldline_created'; count: number }
+     | { type: 'branch_viewed' }
+     | { type: 'simulation_run' }
+
+   export function trackEvent(event: AnalyticsEvent) {
+     // localStorage に蓄積
+     const key = 'yohack_events'
+     const existing = JSON.parse(localStorage.getItem(key) || '[]')
+     existing.push({ ...event, timestamp: new Date().toISOString() })
+     localStorage.setItem(key, JSON.stringify(existing))
+     
+     // コンソールにも出力（alpha期間のデバッグ用）
+     console.log('[YOHACK Analytics]', event)
    }
 
-3. pnpm build でエラーなし確認
-4. git add app/layout.tsx && git commit -m "feat: add metadataBase and OGP tags"
+   export function getWorldlineCount(): number {
+     const events = JSON.parse(localStorage.getItem('yohack_events') || '[]')
+     return events.filter((e: any) => e.type === 'worldline_created').length
+   }
 
-完了条件: pnpm buildが通り、metadataBaseの警告が消える
+2. app/app/worldline/page.tsx で世界線作成時に trackEvent({ type: 'worldline_created', count: getWorldlineCount() + 1 }) を呼ぶ
+
+3. app/app/branch/page.tsx で分岐ビルダー表示時に trackEvent({ type: 'branch_viewed' }) を呼ぶ
+
+4. pnpm build && pnpm test 確認
+5. git add -A && git commit -m "feat: add lightweight analytics for alpha KPI tracking"
+
+完了条件: 世界線作成時にlocalStorageのyohack_eventsにイベントが記録される
 
 注意: git commitは指示通り実行。pnpm buildが通ることを確認。完了後「✅ 完了:」で始まる1行サマリーを出力。

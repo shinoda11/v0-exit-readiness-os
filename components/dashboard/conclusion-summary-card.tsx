@@ -455,14 +455,18 @@ export function ConclusionSummaryCard({
                 </>
               )}
 
-              {/* 分岐ビルダーリンク（3本未満のとき） */}
-              {scenarioCount < 3 && (
-                <Link href="/app/branch" className="flex items-center gap-2 text-sm text-[#8A7A62] hover:text-[#C8B89A] dark:text-[#C8B89A] dark:hover:text-[#C8B89A]/80 transition-colors pt-1">
-                  <GitBranch className="h-4 w-4" />
+              <div className="mt-4 pt-4 border-t border-border">
+                <p className="text-xs text-muted-foreground mb-2">
+                  もっと詳しく分岐を設計したい場合
+                </p>
+                <a
+                  href="/app/branch"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-[#C8B89A] hover:text-[#8A7A62] transition-colors"
+                >
                   分岐ビルダーを使う
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              )}
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
           );
         })()}
