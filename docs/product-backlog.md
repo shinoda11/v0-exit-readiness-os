@@ -202,7 +202,7 @@ export async function POST(req: Request) {
 ## 🟡 P1 — 今週中
 
 ### [P1-1] LP グラフプレビューをシナリオ連動に修正
-**status:** [ ]
+**status:** [x]
 
 **意図:** LP S1のSVGグラフを6,000万 vs 8,000万シナリオに連動させ、世界線Aが安心ライン上、世界線Bが下落する軌跡にする。
 
