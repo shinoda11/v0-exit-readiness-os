@@ -245,7 +245,7 @@ export async function POST(req: Request) {
 - `app/page.tsx` をダッシュボードのみに戻す
 
 ### [P2-2] チラ見せ動画（15秒）撮影・埋め込み
-**status:** [ ]
+**status:** [x]
 
 - 年収スライダー → グラフ変化のキャプチャ
 - 数字はダミーデータ
