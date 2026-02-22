@@ -289,7 +289,7 @@ export async function POST(req: Request) {
 ---
 
 ### [DS-1] ダッシュボードの警告色を排除する
-**status:** [ ]
+**status:** [x]
 
 **意図:**
 黄色・赤・緑のボックスがウォームゴールドの世界観を壊している。
