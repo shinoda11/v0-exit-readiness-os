@@ -1,121 +1,290 @@
-# YOHACK プロダクトバックログ（2/17 更新）
-
-2/16 作成の docs/product-backlog.md をマスターとし、2/17 までの進捗を反映。
-
----
-
-## A. プロダクト — エンジン
-
-| ID | 内容 | 状態 | 備考 |
-|----|------|------|------|
-| E03 | 年金へのライフイベント反映 | ✅ 完了 | ENGINE_VERSION 導入と同時実装 |
-| E04 | 相続・贈与イベント（asset_gain） | ✅ 完了 | |
-| E05 | 介護費用プリセット | ✅ 完了 | |
-| — | 住宅購入遷移（賃貸→持ち家） | ✅ 完了 | E01とは別。housing_purchase イベント |
-| — | テスト強化（28リグレッション、C01-C24） | ✅ 完了 | E02とは別。ベースライン凍結済み |
-| — | 初期オーナーのローン完済バグ修正 | ✅ 完了 | C18/C19 に影響 |
-| — | スコアウェイト・金利・年金計算の調整 | ✅ 完了 | 感度分析済み |
-| E01 | 住み替えシナリオ（homeStatus遷移: 持ち家→賃貸） | 🔮 Future | エンジン設計変更が必要 |
-| E02 | 複数物件比較（A/B/C） | 🔮 Future | E01と独立して可能 |
-| E06 | 不動産出口戦略 | 🔮 Future | E01依存 |
-
-**エンジン版数: v1.0.0 — 凍結。E01/E02/E06 は販売後のロードマップ。**
+# YOHACK プロダクトバックログ
+> 最終更新: 2026-02-22
+> 粒度: Claude Codeにそのまま渡せるレベルで記載
 
 ---
 
-## B. プロダクト — UX
+## ✅ 完了済み（2026-02-22）
 
-| ID | 内容 | 状態 | 備考 |
-|----|------|------|------|
-| U01 | /v2 で「3本目の世界線を追加」導線 | 未着手・小 | 世界線3本 = アクティベーション指標 |
-| U02 | 世界線テンプレート → /v2 遷移の安定性検証 | 未着手・小 | |
-| U03 | モバイル最適化 | 🟡 部分完了 | 基本レスポンシブ済み、Instagram流入テスト未 |
-| U04 | 結果の共有機能（スクショ or PDF） | 未着手・中 | パートナーとの意思決定に必要 |
-| U05 | パートナー招待（同じシミュレーションを2人で） | 未着手 | Supabase 依存 |
-| U06 | 料金モデル整合（pricing page vs ¥29,800/90日 Pass） | 未着手・小 | Stripe 前に確定必要 |
-| — | オンボーディングウィザード（4ステップ） | ✅ 完了 | |
-| — | スコア説明 UI（4軸分解 + 改善ヒント） | ✅ 完了 | |
-| — | ブランドシステム統一（Night/Linen/Gold） | ✅ 完了 | |
+| タスク | 変更ファイル | 結果 |
+|---|---|---|
+| IncomeCard RSU・パートナー収入フィールド追加 | components/dashboard/income-card.tsx +55行 | 252/252 passed |
+| イベントアイコン26件 絵文字→Lucide + カテゴリ左ボーダー | lib/event-catalog.ts / components/branch/event-icon.tsx（新規）/ event-picker-dialog.tsx / event-customize-dialog.tsx | 絵文字残存ゼロ |
+| LP S2 決断連鎖シナリオ差し替え | app/page.tsx | 6,000万 vs 8,000万 → 転職 → 教育費 |
 
 ---
 
-## C. インフラ — 認証・データ・決済
-
-| ID | 内容 | 状態 | 備考 |
-|----|------|------|------|
-| I01 | Supabase 導入（認証） | 🔴 Phase 2 未着手 | |
-| I02 | localStorage → Supabase DB 移行 | 🔴 I01 依存 | |
-| I03 | FitGate 回答 → プロファイル自動プリセット | 🟡 部分完了 | FitGate 移植済み、Supabase 連携は未 |
-| I04 | Stripe Pass 決済 | 🔴 Phase 3, I01 依存 | |
-| I05 | Pass 期間管理（90日カウント） | 🔴 I04 依存 | |
-| I06 | URL アクセス制御（未認証ブロック） | 🔴 I01 依存 | 現在 Basic Auth で仮対応 |
-| I07 | 1on1 裏メニュー表示ロジック | 🔴 I01, I05 依存 | 世界線3本 or 60日経過 |
+## 🔴 P0 — 次に着手（優先度順）
 
 ---
 
-## D. マーケティング — LP・Instagram・ファネル
+### P0-FG-1: FitGate 招待トークン欄を条件付き表示に変更
 
-| ID | 内容 | 状態 | 備考 |
-|----|------|------|------|
-| M01 | LP 改修（7セクション） | ✅ 完了 | 3コミット済み |
-| M02 | FitGate 実装（12問、自動判定） | ✅ 完了 | Next.js 移植済み |
-| M03 | チラ見せ動画（15秒） | 未着手・小 | Playwright で録画 → 数字ぼかし |
-| M04 | Instagram 初回投稿（グリッド9枚） | 🔴 未着手・中 | 設計完了、実行ゼロ |
-| M05 | Instagram 自動化（n8n + Claude API） | 🔴 未着手・大 | M04 後 |
-| M06 | GA4 イベント計測 | 未着手・小 | |
-| — | Instagram アカウント開設 + FB紐付け | 🔴 未着手 | Graph API 前提条件 |
-| — | OGP / メタタグ設定 | 未着手・小 | |
-| — | FitGate 自由記述質問追加 | 未着手・小 | 「モヤモヤ」→ コンテンツネタ |
-| — | LP フッター disclaimer | 未着手・極小 | |
+**対象:** `app/fit/page.tsx`（フォーム末尾）
 
----
+**現状の問題:** 招待トークン欄が全ユーザーに常時表示。「一見さんお断り」戦略と矛盾。
 
-## E. 技術的負債
+**変更内容:**
+```tsx
+// URLパラメータがある場合のみ表示
+const searchParams = useSearchParams();
+const hasToken = searchParams.get('token');
 
-| ID | 内容 | 状態 | 備考 |
-|----|------|------|------|
-| T01 | store.ts コメント「Exit Readiness OS」→ YOHACK | 未着手・極小 | |
-| T02 | DecisionHost.tsx L58 の古い TODO 削除 | 未着手・極小 | |
-| T03 | housing-sim.ts のユニットテスト | 未着手・中 | |
-| T04 | v2/page.tsx のサイズ確認（1,421行） | 未着手・小 | 分割リファクタ予定 |
-
----
-
-## F. 法務
-
-| ID | 内容 | 状態 | 備考 |
-|----|------|------|------|
-| L01 | 特商法対応 | 🔴 未着手 | バーチャルオフィス or 合同会社 |
-| L02 | プライバシーポリシー | 未着手 | Supabase で個人情報保持するなら必須 |
-| L03 | 利用規約 | 未着手 | |
-
----
-
-## クリティカルパス
-
-```
-エンジン安定  →  LP + FitGate  →  Instagram  →  Supabase   →  Stripe   →  販売
-  ✅ 完了         ✅ 完了         🔴 今ここ    Phase 2      Phase 3     7月
-                                  (3月)        (5月)        (6月)
+{hasToken && (
+  <div className="pt-4 border-t">
+    <label>招待トークン</label>
+    <Input defaultValue={hasToken} {...register('token')} />
+  </div>
+)}
 ```
 
----
-
-## 次にやること（優先順）
-
-| # | タスク | 根拠 | 所要時間 |
-|---|--------|------|---------|
-| 1 | T01 + T02 | 極小負債消化 | 10分 |
-| 2 | Instagram アカウント開設 | フォロワー蓄積は時間がかかる | 1時間 |
-| 3 | M04: 初回投稿9枚制作 | テンプレート → Puppeteer パイプライン | 1-2日 |
-| 4 | M03: チラ見せ動画 | LP の S1 に埋め込む | 半日 |
-| 5 | U06: 料金モデル確定 | Phase 2 に入る前に決める | 議論のみ |
-| 6 | U01: 世界線3本目導線 | アクティベーション指標に直結 | 小 |
-| 7 | I01: Supabase 導入 | Phase 2 の起点 | 1-2日 |
+**完了条件:**
+- `/fit` → トークン欄が表示されない
+- `/fit?token=ALPHA-2025` → トークン欄が表示され値がプリセットされている
 
 ---
 
-_更新履歴:_
-- _2/16: 初版作成（docs/product-backlog.md）_
-- _2/17: E03-E05 完了、エンジン v1.0.0 凍結、ローン完済バグ修正、LP/FitGate 完了反映_
-- _2/17: ID体系を 2/16 版に統一。実装時の E01/E02 番号衝突を解消_
+### P0-FG-2: FitGateヘッダーに「← 戻る」リンク追加
+
+**対象:** `app/fit/layout.tsx`
+
+**変更内容:**
+```tsx
+import { ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
+
+// ヘッダー左側に追加
+<Link
+  href="/"
+  className="text-xs text-[#8A7A62] flex items-center gap-1 hover:text-[#5A5550] transition-colors"
+>
+  <ChevronLeft className="w-3 h-3" />
+  戻る
+</Link>
+```
+
+**完了条件:** FitGate画面ヘッダー左上に「← 戻る」が表示され、クリックでLPへ遷移する。
+
+---
+
+### P0-FG-3: Ready判定画面の「無料で〜」テキスト削除 + 文言修正
+
+**対象:** `app/fit/result/page.tsx`（Ready表示部分）
+
+**変更内容:**
+```tsx
+// Before
+<p>無料でシミュレーションをお試しください</p>
+
+// After
+<p>YOHACKでシミュレーションを開始できます</p>
+{/* TODO Phase2: ここにStripe Checkout ボタンが入る */}
+{/* <Button onClick={handleStripeCheckout}>Passを購入する（¥29,800）</Button> */}
+<Button asChild>
+  <Link href="/?from=fitgate">シミュレーションを開始する →</Link>
+</Button>
+```
+
+**完了条件:** Ready画面に「無料」という文言が一切含まれていない。
+
+---
+
+### P0-FG-4: FitGate回答 → ダッシュボードプロファイル自動プリセット 動作確認・修正
+
+**対象:** `lib/fitgate.ts`（`fitGateToProfile()`）/ `app/page.tsx`（プリセット読み込み）
+
+**確認手順:**
+1. `/fit?token=ALPHA-2025` にアクセスし12問を回答
+2. Ready判定 →「シミュレーションを開始する」でダッシュボードへ遷移
+3. IncomeCard・AssetCard の値を確認
+
+**期待する挙動（変換テーブル）:**
+
+| FitGate回答 | プロファイルフィールド | 変換値 |
+|---|---|---|
+| 世帯年収 2,000〜2,499万 | grossIncome | 2200 |
+| 年齢 35〜39歳 | currentAge | 37 |
+| 家賃 20〜25万 | housingCostAnnual | 264（月22万×12） |
+| 検討物件 7,000〜9,999万 | housingPlans[0].price | 8500 |
+| 金融資産 2,000〜4,999万 | assetCash + assetInvest | 1050 + 2450（3:7按分） |
+| 家族構成「夫婦」 | mode | couple |
+
+**動作しない場合の確認:**
+```bash
+# fitGateToProfile() に渡るデータをログ確認
+# saveFitGateAnswers() と loadFitGateAnswers() のlocalStorageキー名が一致しているか確認
+grep -n "fitgate\|fitGate\|FITGATE" lib/fitgate.ts | head -20
+```
+
+**完了条件:** FitGate回答後にダッシュボードへ遷移すると、年収・家賃・資産の3項目が正しい値でプリセットされている。
+
+---
+
+### P0-FG-5: Prep判定後のメール登録を最低限機能させる
+
+**対象:** `app/api/prep-register/route.ts`（新規）/ `app/fit/result/page.tsx`
+
+**APIルート（新規）:**
+```tsx
+// app/api/prep-register/route.ts
+export async function POST(req: Request) {
+  const { email, fitgateAnswers } = await req.json();
+  // TODO Phase2: Supabase prepModeSubscribers テーブルに保存
+  // TODO Phase2: SendGrid でレター送信
+  console.log('[Prep登録]', email, JSON.stringify(fitgateAnswers), new Date().toISOString());
+  return Response.json({ ok: true });
+}
+```
+
+**Prep画面のフォーム:**
+```tsx
+const [email, setEmail] = useState('');
+const [submitted, setSubmitted] = useState(false);
+
+const handleSubmit = async () => {
+  await fetch('/api/prep-register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, fitgateAnswers: loadFitGateAnswers() }),
+  });
+  setSubmitted(true);
+};
+
+{submitted
+  ? <p className="text-sm text-[#8A7A62]">登録しました。条件が整いましたらご連絡します。</p>
+  : (
+    <div className="flex gap-2">
+      <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" />
+      <Button onClick={handleSubmit}>登録する</Button>
+    </div>
+  )
+}
+```
+
+**完了条件:**
+- Prep判定後にメールアドレスを入力して送信できる
+- 送信後に完了メッセージが表示される
+- `pnpm dev` のログに `[Prep登録]` が出力される
+
+---
+
+### P0-1: LP Y字アニメーション高速化
+
+**対象:** `app/page.tsx`（S0セクション内 CSS animation 定義）
+
+**変更後:**
+```css
+.y-svg .stem  { animation: draw 0.5s ease forwards 0.1s; }
+.y-svg .left  { animation: draw 0.4s ease forwards 0.4s; }
+.y-svg .right { animation: draw 0.4s ease forwards 0.4s; }
+.y-svg .node  { animation: appear 0.2s ease forwards 0.7s; }
+.y-svg .dot-l { animation: appear 0.2s ease forwards 0.75s; }
+.y-svg .dot-r { animation: appear 0.2s ease forwards 0.8s; }
+```
+
+**完了条件:** ページリロード後、Y字の枝が0.4s以内に見え始める。
+
+---
+
+### P0-2: LP → FitGate 導線接続（UTMパラメータ付き）
+
+**対象:** `app/page.tsx`（LPのCTAボタン2箇所）
+
+```tsx
+// S0 ヒーローCTA
+<a href="/fit?utm_source=lp&utm_medium=hero_cta" className="cta-btn ...">
+  12問で確認する
+</a>
+
+// S5 ボトムCTA
+<a href="/fit?utm_source=lp&utm_medium=bottom_cta" className="cta-btn ...">
+  12問で確認する
+</a>
+```
+
+**完了条件:** クリックで `/fit?utm_source=lp&utm_medium=...` に遷移する。
+
+---
+
+## 🟡 P1 — 今週中
+
+### P1-1: LP グラフプレビューをシナリオ連動に修正
+
+**対象:** `app/page.tsx`（S2内のSVGグラフ）
+
+世界線A（6,000万）パス:
+```tsx
+d="M0,140 C80,120 160,90 240,70 S360,45 480,35 S560,30 600,28"
+```
+
+世界線B（8,000万）パス:
+```tsx
+d="M0,140 C80,130 160,122 240,118 S320,115 380,118 S480,125 600,138"
+stroke="#CC3333" strokeWidth="2" fill="none" strokeDasharray="8 5"
+```
+
+安心ラインラベル:
+```tsx
+<text x="8" y="97" fontSize="9" fill="#8A7A62" fontFamily="DM Mono">安心ライン</text>
+```
+
+スコア:
+```tsx
+// A: <div className="score-value safe">78</div> / 転職後も安心ライン上
+// B: <div style={{ color: '#CC3333' }}>54</div> / 42歳の転職断念で下落
+```
+
+### P1-2: モバイルLP 375px確認・修正
+
+| 確認箇所 | 崩れていた場合の修正 |
+|---|---|
+| S0 Y字 中央寄せ | `flex justify-center` を親に追加 |
+| S2 2列比較 | `grid-cols-1 sm:grid-cols-2` に変更 |
+| 文字サイズ | `text-[10px]` → `text-xs`（12px）に引き上げ |
+| スクロールアニメ | `threshold: 0.1` → `threshold: 0.05` に下げる |
+
+---
+
+## 🟢 P2 — 来週以降
+
+### P2-1: LP Next.js本実装
+- `app/(marketing)/lp/page.tsx` に切り出し
+- Framer Motion で CSS animation を置換
+- `app/page.tsx` をダッシュボードのみに戻す
+
+### P2-2: チラ見せ動画（15秒）撮影・埋め込み
+- 年収スライダー → グラフ変化のキャプチャ
+- 数字はダミーデータ
+- LP S0に埋め込み、`autoPlay loop muted playsInline`
+
+### P2-3: ケース台帳LP展開（6ケース）
+- C01〜C18 + C19（6,000万 vs 8,000万）から6件選定
+- LP S3 を `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` に拡張
+
+### P2-4: 1on1裏メニュー表示ロジック
+- トリガー: 世界線3本以上 OR Pass購入から60日経過
+- 表示場所: `/worldline` ページ末尾
+- 一度閉じたら再表示しない（localStorage）
+
+### P2-5: Stripe Checkout接続（Phase 2）
+- Ready判定 → Stripe Checkout → ¥29,800 Pass購入 → アクセス権付与
+- `passSubscriptions` テーブル（Supabase）
+- Webhook: `checkout.session.completed` → Pass有効化
+
+### P2-6: Supabase導入（Phase 2）
+- 認証: Supabase Auth
+- テーブル: fitGateResponses / passSubscriptions / prepModeSubscribers
+- localStorage → Supabase DB への移行
+
+---
+
+## 未解決の問い
+
+| # | 問い | 判断者 |
+|---|---|---|
+| Q1 | 物件6,000万〜8,000万はDINKS（世帯年収1,500〜2,500万）に「自分ごと」に感じるか？ | Toshiya |
+| Q2 | S0の背景色: ダーク（#1A1916）維持か、オフホワイト（#FAF9F7）統一か？ | Toshiya |
+| Q3 | グラフスコア参考値（78/54）をLPに出すか、完全ぼかしか？ | Toshiya |
+| Q4 | S2シナリオ: 夫婦1組に絞るか、「夫婦」「ソロ」2パターンか？ | Toshiya |
+| Q5 | アルファテスター10名への周知タイミングと通知方法 | Toshiya |
+| Q6 | FitGate通過後、Stripe接続までの間（現Phase1）はどこで¥29,800を案内するか？ | Toshiya |

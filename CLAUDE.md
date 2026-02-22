@@ -446,6 +446,37 @@ docs/
 - metadataBase 未設定（OGP用）
 - SendGrid 連携（FitGate メール送信のスタブ実装を本番化）
 
+## FitGate 現状と既知の問題
+
+### 実装済みだが未接続・張りぼての箇所
+
+| 箇所 | 現状 | 修正タスク |
+|---|---|---|
+| Ready判定後の導線 | 無料でダッシュボードへ遷移。Stripe未接続 | P0-FG-3, Phase2でStripe接続 |
+| Prep判定後のメール登録 | UIのみ。送信してもどこにも届かない | P0-FG-5 |
+| 招待トークン欄 | 全ユーザーに常時表示。「一見さんお断り」と矛盾 | P0-FG-1 |
+| FitGate→プロファイルプリセット | 実動作未確認 | P0-FG-4 |
+| LP←戻るリンク | FitGateヘッダーに存在しない | P0-FG-2 |
+| 「無料で〜」テキスト | Ready画面に残存。¥29,800モデルと矛盾 | P0-FG-3 |
+
+### FitGate → プロファイル変換ルール（`lib/fitgate.ts`）
+
+| FitGate回答 | プロファイルフィールド | 変換値 |
+|---|---|---|
+| 世帯年収レンジ | grossIncome | レンジ中央値（万円） |
+| 年齢レンジ | currentAge | レンジ中央値 |
+| 現在の家賃 | housingCostAnnual | 月額中央値 × 12 |
+| 検討物件価格帯 | housingPlans[0].price | レンジ中央値 |
+| 貯蓄＋投資合計 | assetCash + assetInvest | 合計を 3:7 で按分 |
+| 家族構成「夫婦」 | mode | couple |
+| 家族構成それ以外 | mode | solo |
+
+### Stripe 接続のフェーズ計画
+
+- **Phase 1（現在）**: FitGate完成・プロファイルプリセット・UI整備
+- **Phase 2**: Supabase導入（認証・fitGateResponses・passSubscriptions テーブル）
+- **Phase 3**: Stripe Checkout接続。Ready → ¥29,800 Pass購入 → アクセス権付与
+
 ## デザイン哲学
 docs/YOHACK_DESIGN_PHILOSOPHY.md を参照。
 コアコンセプトは「決断の静けさ」。
