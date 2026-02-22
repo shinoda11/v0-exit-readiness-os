@@ -258,7 +258,7 @@ export async function POST(req: Request) {
 - LP S3 を `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` に拡張
 
 ### [P2-4] 1on1裏メニュー表示ロジック
-**status:** [ ]
+**status:** [x]
 
 - トリガー: 世界線3本以上 OR Pass購入から60日経過
 - 表示場所: `/worldline` ページ末尾
