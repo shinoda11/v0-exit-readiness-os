@@ -17,7 +17,7 @@ export default function CommercialPage() {
       <div className="max-w-3xl mx-auto space-y-8">
         {/* 戻るリンク */}
         <Link
-          href="/"
+          href="/lp"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />

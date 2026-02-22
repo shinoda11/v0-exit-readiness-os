@@ -11,7 +11,7 @@ export default function FitLayout({ children }: { children: React.ReactNode }) {
       <header className="border-b bg-white/80 backdrop-blur-sm" style={{ borderColor: '#E8E4DE' }}>
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-2">
           <Link
-            href="/"
+            href="/lp"
             className="text-xs text-brand-bronze flex items-center gap-1 hover:text-brand-stone transition-colors"
           >
             <ChevronLeft className="w-3 h-3" />
