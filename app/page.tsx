@@ -13,7 +13,7 @@ export default function LandingPage() {
             <line x1="90" y1="94" x2="90" y2="156" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
             <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
           </svg>
-          <span className="text-lg font-semibold text-brand-night">YOHACK</span>
+          <span className="text-lg font-bold text-brand-night">YOHACK</span>
         </div>
       </header>
 
@@ -60,7 +60,7 @@ export default function LandingPage() {
           <div className="mt-10">
             <Link
               href="/fit"
-              className="inline-block px-8 py-4 rounded-lg text-base font-semibold text-white transition-colors hover:opacity-90 bg-brand-gold"
+              className="inline-block px-8 py-4 rounded-lg text-base font-bold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
               あなたのケースで確認する
             </Link>
@@ -84,13 +84,13 @@ export default function LandingPage() {
               className="rounded-xl p-8"
               style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-2 text-brand-night">
+              <h3 className="text-base font-bold mb-2 text-brand-night">
                 世帯年収 2,400万・家賃 32万の夫婦
               </h3>
               <p className="text-sm mb-4 leading-relaxed text-brand-bronze">
                 外資 IT ＋メガバンク。都心 8,500万の 2LDK を検討中。海外転職も視野。
               </p>
-              <p className="text-sm font-medium leading-relaxed text-brand-stone">
+              <p className="text-sm font-normal leading-relaxed text-brand-stone">
                 「家を買う / 買わない」より「駐在を取るかどうか」の方が、全体の余白に効いていた。
               </p>
               <p className="mt-4 text-xs text-brand-bronze">
@@ -103,13 +103,13 @@ export default function LandingPage() {
               className="rounded-xl p-8"
               style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-2 text-brand-night">
+              <h3 className="text-base font-bold mb-2 text-brand-night">
                 世帯年収 2,400万・コンサル × 事業会社
               </h3>
               <p className="text-sm mb-4 leading-relaxed text-brand-bronze">
                 ペースダウンしたい気持ちはあるが、今のうちに買うべきか迷っている。
               </p>
-              <p className="text-sm font-medium leading-relaxed text-brand-stone">
+              <p className="text-sm font-normal leading-relaxed text-brand-stone">
                 年収 1,800万 → 1,200万のペースダウンを織り込んでも、8,000万ラインなら安心ラインを割らなかった。
               </p>
               <p className="mt-4 text-xs text-brand-bronze">
@@ -143,7 +143,7 @@ export default function LandingPage() {
                   <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold mb-2 text-brand-night">
+              <h3 className="text-base font-bold mb-2 text-brand-night">
                 世界線
               </h3>
               <p className="text-sm leading-relaxed text-brand-stone">
@@ -162,7 +162,7 @@ export default function LandingPage() {
                   <line x1="4" y1="20" x2="28" y2="20" stroke="var(--brand-bronze)" strokeWidth="1.5" strokeDasharray="3 3" />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold mb-2 text-brand-night">
+              <h3 className="text-base font-bold mb-2 text-brand-night">
                 安心ライン
               </h3>
               <p className="text-sm leading-relaxed text-brand-stone">
@@ -181,7 +181,7 @@ export default function LandingPage() {
                   <rect x="9" y="9" width="14" height="14" rx="2" fill="var(--brand-gold)" fillOpacity="0.2" />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold mb-2 text-brand-night">
+              <h3 className="text-base font-bold mb-2 text-brand-night">
                 余白
               </h3>
               <p className="text-sm leading-relaxed text-brand-stone">
@@ -228,7 +228,7 @@ export default function LandingPage() {
               className="rounded-xl p-8"
               style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-4 text-brand-night">
+              <h3 className="text-base font-bold mb-4 text-brand-night">
                 ✓ 向いている人
               </h3>
               <ul className="space-y-3 text-sm text-brand-stone">
@@ -256,7 +256,7 @@ export default function LandingPage() {
               className="rounded-xl p-8"
               style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-4 text-brand-night">
+              <h3 className="text-base font-bold mb-4 text-brand-night">
                 ✗ 向いていない人
               </h3>
               <ul className="space-y-3 text-sm text-brand-stone">
@@ -309,7 +309,7 @@ export default function LandingPage() {
           <div className="mt-10">
             <Link
               href="/fit"
-              className="inline-block px-8 py-4 rounded-lg text-base font-semibold text-white transition-colors hover:opacity-90 bg-brand-gold"
+              className="inline-block px-8 py-4 rounded-lg text-base font-bold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
               適合チェックに進む
             </Link>

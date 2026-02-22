@@ -16,7 +16,7 @@ export function MobileHeader() {
           aria-label="ブランドストーリーを表示"
         >
           <YohackSymbol size={20} />
-          <span className="text-sm font-semibold tracking-wider text-brand-gold">
+          <span className="text-sm font-bold tracking-wider text-brand-gold">
             YOHACK
           </span>
         </button>

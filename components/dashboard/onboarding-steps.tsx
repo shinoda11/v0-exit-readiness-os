@@ -71,7 +71,7 @@ export function OnboardingSteps({ profile }: OnboardingStepsProps) {
       )}
     >
       {allComplete ? (
-        <p className="text-sm text-center text-brand-gold font-medium">
+        <p className="text-sm text-center text-brand-gold font-normal">
           入力完了。結果が表示されています
         </p>
       ) : (
@@ -83,13 +83,13 @@ export function OnboardingSteps({ profile }: OnboardingStepsProps) {
                   <Check className="h-3.5 w-3.5 text-brand-night" />
                 </div>
               ) : (
-                <div className="flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/30 text-muted-foreground text-xs font-medium">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/30 text-muted-foreground text-xs font-normal">
                   {i + 1}
                 </div>
               )}
               <span className={cn(
                 'text-sm',
-                completed[i] ? 'text-foreground font-medium' : 'text-muted-foreground'
+                completed[i] ? 'text-foreground font-normal' : 'text-muted-foreground'
               )}>
                 {label}
               </span>

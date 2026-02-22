@@ -221,7 +221,7 @@ export function BranchTreeViz({
   if (uncertain.length === 0) {
     return (
       <div className="rounded-lg border border-border bg-card p-4">
-        <p className="text-xs font-medium text-muted-foreground mb-2">デシジョンツリー</p>
+        <p className="text-xs font-normal text-muted-foreground mb-2">デシジョンツリー</p>
         <svg viewBox={`0 0 ${SVG_W} 120`} className="w-full h-auto" role="img" aria-label="デシジョンツリー">
           <circle cx={PAD_X} cy={50} r={6} fill="var(--brand-night)" />
           <line x1={PAD_X} y1={50} x2={SVG_W - PAD_RIGHT} y2={50} stroke="var(--safe)" strokeWidth={2} strokeLinecap="round" />
@@ -273,7 +273,7 @@ export function BranchTreeViz({
 
   return (
     <div className="rounded-lg border border-border bg-card p-4">
-      <p className="text-xs font-medium text-muted-foreground mb-2">デシジョンツリー</p>
+      <p className="text-xs font-normal text-muted-foreground mb-2">デシジョンツリー</p>
       <svg
         viewBox={`0 0 ${SVG_W} ${SVG_H}`}
         className="w-full h-auto"

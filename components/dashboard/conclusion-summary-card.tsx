@@ -242,7 +242,7 @@ function ChangeBadge({ value, unit, invertColor = false }: {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-medium transition-opacity duration-500',
+        'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-normal transition-opacity duration-500',
         isImprovement
           ? 'bg-safe/10 text-safe'
           : 'bg-danger/10 text-danger',
@@ -470,7 +470,7 @@ export function ConclusionSummaryCard({
                 </p>
                 <a
                   href="/app/branch"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-gold hover:text-brand-bronze transition-colors"
+                  className="inline-flex items-center gap-1.5 text-sm font-normal text-brand-gold hover:text-brand-bronze transition-colors"
                 >
                   分岐ビルダーを使う
                   <span aria-hidden="true">→</span>

@@ -58,7 +58,7 @@ export function ProfileCompleteness({ profile, onOpenCard }: ProfileCompleteness
       )}
     >
       {isComplete ? (
-        <div className="flex items-center justify-center gap-2 text-sm font-medium text-brand-gold">
+        <div className="flex items-center justify-center gap-2 text-sm font-normal text-brand-gold">
           <Check className="h-4 w-4" />
           入力完了
         </div>
@@ -66,7 +66,7 @@ export function ProfileCompleteness({ profile, onOpenCard }: ProfileCompleteness
         <>
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">プロファイル完成度</span>
-            <span className="font-medium tabular-nums">{percentage}%</span>
+            <span className="font-normal tabular-nums">{percentage}%</span>
           </div>
           <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
             <div

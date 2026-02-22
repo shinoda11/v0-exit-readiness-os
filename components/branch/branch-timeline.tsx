@@ -126,7 +126,7 @@ export function BranchTimeline({ profile, selectedBranches }: BranchTimelineProp
     // Only "current" marker, no events
     return (
       <div className="mt-4 w-full">
-        <p className="text-xs font-medium text-brand-stone mb-2">タイムライン</p>
+        <p className="text-xs font-normal text-brand-stone mb-2">タイムライン</p>
         <p className="text-xs text-brand-bronze py-4 text-center">
           イベントを選択するとタイムラインに表示されます
         </p>
@@ -165,7 +165,7 @@ export function BranchTimeline({ profile, selectedBranches }: BranchTimelineProp
 
   return (
     <div className="mt-4 w-full">
-      <p className="text-xs font-medium text-brand-stone mb-2">タイムライン</p>
+      <p className="text-xs font-normal text-brand-stone mb-2">タイムライン</p>
       <div className="overflow-x-auto -mx-4 px-4" style={{ WebkitOverflowScrolling: 'touch' }}>
         <svg
           width={totalW}

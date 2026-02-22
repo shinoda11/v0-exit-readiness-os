@@ -63,7 +63,7 @@ export default function PricingPage() {
               <CardContent className="p-6 space-y-5">
                 <div className="flex items-center gap-2">
                   <Shield className="h-5 w-5 text-brand-gold" />
-                  <h2 className="text-sm font-semibold text-brand-stone">利益相反ゼロ</h2>
+                  <h2 className="text-sm font-bold text-brand-stone">利益相反ゼロ</h2>
                 </div>
 
                 <div className="space-y-4">
@@ -127,7 +127,7 @@ export default function PricingPage() {
 
           {/* FAQ */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-center">
+            <h2 className="text-xl font-bold text-center">
               よくある質問
             </h2>
             <Accordion type="single" collapsible className="w-full">

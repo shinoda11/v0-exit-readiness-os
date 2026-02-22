@@ -41,7 +41,7 @@ export function BranchNode({ branch, selected, onToggle, disabled, onEdit, onDel
       />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
-          <span className="text-sm font-medium text-foreground">{branch.label}</span>
+          <span className="text-sm font-normal text-foreground">{branch.label}</span>
           {onEdit && (
             <button
               type="button"

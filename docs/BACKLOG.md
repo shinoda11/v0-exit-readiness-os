@@ -156,7 +156,7 @@ estimate: S
 完了後: pnpm build && pnpm test && git add -A && git commit -m "ui: P0-7 skeleton UI" && git push
 
 ## P0-8: スペーシング体系化（8ptグリッド）
-status: todo
+status: done
 priority: P0
 estimate: M
 

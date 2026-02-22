@@ -34,35 +34,35 @@ export default function CommercialPage() {
           <table className="w-full text-sm">
             <tbody className="divide-y">
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium w-[40%]">販売事業者</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal w-[40%]">販売事業者</td>
                 <td className="px-4 py-3">
                   <PendingField />
                 </td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">運営統括責任者</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">運営統括責任者</td>
                 <td className="px-4 py-3">
                   <PendingField />
                 </td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">所在地</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">所在地</td>
                 <td className="px-4 py-3">
                   <PendingField />
                 </td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">電話番号</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">電話番号</td>
                 <td className="px-4 py-3">
                   <PendingField />
                 </td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">メールアドレス</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">メールアドレス</td>
                 <td className="px-4 py-3 text-muted-foreground">support@yohack.app</td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">販売価格</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">販売価格</td>
                 <td className="px-4 py-3 text-muted-foreground">
                   <div className="space-y-1">
                     <div>Pro プラン 月額: 2,980円（税込）</div>
@@ -71,19 +71,19 @@ export default function CommercialPage() {
                 </td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">支払方法</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">支払方法</td>
                 <td className="px-4 py-3 text-muted-foreground">クレジットカード</td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">支払時期</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">支払時期</td>
                 <td className="px-4 py-3 text-muted-foreground">お申込み時に即時決済</td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">商品の引渡し時期</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">商品の引渡し時期</td>
                 <td className="px-4 py-3 text-muted-foreground">決済完了後、即時ご利用いただけます</td>
               </tr>
               <tr>
-                <td className="bg-muted/50 px-4 py-3 font-medium">返品・キャンセル</td>
+                <td className="bg-muted/50 px-4 py-3 font-normal">返品・キャンセル</td>
                 <td className="px-4 py-3 text-muted-foreground">
                   デジタルサービスのため返品はお受けできません。
                   解約はいつでも可能で、解約後は次回更新日までサービスをご利用いただけます。

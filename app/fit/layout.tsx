@@ -15,7 +15,7 @@ export default function FitLayout({ children }: { children: React.ReactNode }) {
             <line x1="90" y1="94" x2="90" y2="156" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
             <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
           </svg>
-          <span className="text-lg font-semibold text-brand-night">YOHACK</span>
+          <span className="text-lg font-bold text-brand-night">YOHACK</span>
           <Link href="/" className="text-xs ml-auto text-brand-bronze">
             ← トップに戻る
           </Link>

@@ -108,7 +108,7 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-4 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                'flex items-center gap-4 rounded-lg px-3 py-2.5 text-sm font-normal transition-colors',
                 isActive
                   ? 'bg-sidebar-accent text-sidebar-primary'
                   : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground'
@@ -117,7 +117,7 @@ export function Sidebar() {
               {item.icon}
               {item.label}
               {item.badge && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-gold/20 text-brand-gold font-medium">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-gold/20 text-brand-gold font-normal">
                   {item.badge}
                 </span>
               )}
@@ -131,7 +131,7 @@ export function Sidebar() {
         <Link
           href="/app/settings"
           className={cn(
-            'flex items-center gap-4 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+            'flex items-center gap-4 rounded-lg px-3 py-2.5 text-sm font-normal transition-colors',
             pathname === '/app/settings'
               ? 'bg-sidebar-accent text-sidebar-primary'
               : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground'

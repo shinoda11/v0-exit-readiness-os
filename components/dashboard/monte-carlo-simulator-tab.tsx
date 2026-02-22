@@ -84,7 +84,7 @@ function CustomTooltip({ active, payload, label }: any) {
 
   return (
     <div className="rounded border border-brand-linen bg-white px-3 py-2 shadow-sm dark:border-brand-bronze dark:bg-brand-night">
-      <p className="text-xs font-medium text-brand-night dark:text-brand-linen">{label}歳</p>
+      <p className="text-xs font-normal text-brand-night dark:text-brand-linen">{label}歳</p>
       <div className="mt-1 space-y-0.5 text-xs">
         <div className="flex justify-between gap-4">
           <span className="text-brand-bronze">楽観</span>
@@ -94,7 +94,7 @@ function CustomTooltip({ active, payload, label }: any) {
         </div>
         <div className="flex justify-between gap-4">
           <span className="text-brand-bronze">中央</span>
-          <span className="tabular-nums font-medium text-brand-night dark:text-brand-linen">
+          <span className="tabular-nums font-normal text-brand-night dark:text-brand-linen">
             {formatValue(medianEntry?.value)}
           </span>
         </div>
@@ -483,7 +483,7 @@ export function MonteCarloSimulatorTab({
           <CardContent className="flex items-start gap-4 pt-6">
             <AlertTriangle className="h-5 w-5 shrink-0 text-brand-bronze" />
             <div>
-              <p className="font-medium text-brand-stone dark:text-brand-gold/40">
+              <p className="font-normal text-brand-stone dark:text-brand-gold/40">
                 シナリオ間の差が大きい
               </p>
               <p className="mt-1 text-sm text-brand-bronze dark:text-brand-bronze/60">

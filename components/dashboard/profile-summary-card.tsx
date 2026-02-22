@@ -56,7 +56,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
             <div className="flex h-8 w-8 items-center justify-center text-muted-foreground">
               <User className="h-5 w-5" />
             </div>
-            <CardTitle className="text-base font-semibold">プロフィール</CardTitle>
+            <CardTitle className="text-base font-bold">プロフィール</CardTitle>
           </div>
           <Link
             href="/app/profile"
@@ -70,19 +70,19 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
         <dl className="space-y-1 text-sm">
           <div className="flex items-baseline justify-between">
             <dt className="text-muted-foreground">年齢 / 世帯</dt>
-            <dd className="font-medium">{profile.currentAge}歳 / {modeLabel}</dd>
+            <dd className="font-normal">{profile.currentAge}歳 / {modeLabel}</dd>
           </div>
 
           {profile.mode === 'couple' && profile.partnerGrossIncome > 0 && (
             <div className="flex items-baseline justify-between">
               <dt className="text-muted-foreground">パートナー年収</dt>
-              <dd className="font-medium">{formatCurrency(profile.partnerGrossIncome)}</dd>
+              <dd className="font-normal">{formatCurrency(profile.partnerGrossIncome)}</dd>
             </div>
           )}
 
           <div className="flex items-baseline justify-between">
             <dt className="text-muted-foreground">家賃</dt>
-            <dd className="font-medium">
+            <dd className="font-normal">
               {editingRent ? (
                 <span className="inline-flex items-center gap-1">
                   <span className="text-muted-foreground">月</span>
@@ -97,7 +97,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
                       if (e.key === 'Enter') commitRent();
                       if (e.key === 'Escape') setEditingRent(false);
                     }}
-                    className="w-16 rounded border border-brand-gold bg-transparent px-1.5 py-0.5 text-right text-sm font-medium focus:outline-none focus:ring-1 focus:ring-brand-gold"
+                    className="w-16 rounded border border-brand-gold bg-transparent px-1.5 py-0.5 text-right text-sm font-normal focus:outline-none focus:ring-1 focus:ring-brand-gold"
                     min={0}
                     max={100}
                   />
@@ -118,7 +118,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
 
           <div className="flex items-baseline justify-between">
             <dt className="text-muted-foreground">金融資産</dt>
-            <dd className="font-medium">{formatCurrency(totalAssets)}</dd>
+            <dd className="font-normal">{formatCurrency(totalAssets)}</dd>
           </div>
           {assetParts.length > 1 && (
             <div className="text-right">
@@ -131,7 +131,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
           {profile.rsuAnnual > 0 && (
             <div className="flex items-baseline justify-between">
               <dt className="text-muted-foreground">RSU</dt>
-              <dd className="font-medium">{formatCurrency(profile.rsuAnnual)}/年</dd>
+              <dd className="font-normal">{formatCurrency(profile.rsuAnnual)}/年</dd>
             </div>
           )}
         </dl>

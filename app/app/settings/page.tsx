@@ -204,11 +204,11 @@ export default function SettingsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-lg bg-muted/50 p-4">
                   <div className="text-sm text-muted-foreground">シミュレーション回数</div>
-                  <div className="text-lg font-semibold">1,000回</div>
+                  <div className="text-lg font-bold">1,000回</div>
                 </div>
                 <div className="rounded-lg bg-muted/50 p-4">
                   <div className="text-sm text-muted-foreground">最大年齢</div>
-                  <div className="text-lg font-semibold">100歳</div>
+                  <div className="text-lg font-bold">100歳</div>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -229,15 +229,15 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">バージョン</span>
-                  <span className="text-sm font-medium">v{APP_VERSION}</span>
+                  <span className="text-sm font-normal">v{APP_VERSION}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">アプリ名</span>
-                  <span className="text-sm font-medium">YOHACK</span>
+                  <span className="text-sm font-normal">YOHACK</span>
                 </div>
               </div>
               <div className="rounded-lg bg-muted/50 p-4 text-center">
-                <p className="text-sm font-medium">YOHACK - 人生に、余白を。</p>
+                <p className="text-sm font-normal">YOHACK - 人生に、余白を。</p>
                 <p className="text-xs text-muted-foreground mt-1">
                   お金・時間・体力の余白で人生の選択を比較するシミュレーター
                 </p>

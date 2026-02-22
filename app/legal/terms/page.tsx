@@ -26,7 +26,7 @@ export default function TermsPage() {
 
         {/* 1. 本サービスについて */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">1. 本サービスについて</h2>
+          <h2 className="text-lg font-bold">1. 本サービスについて</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             YOHACK（以下「本サービス」）は、人生設計のシミュレーションツールです。
             お金・時間・体力の「余白」を可視化し、住宅購入・キャリア・家族計画などの意思決定を支援することを目的としています。
@@ -40,7 +40,7 @@ export default function TermsPage() {
 
         {/* 2. アカウント */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">2. アカウント</h2>
+          <h2 className="text-lg font-bold">2. アカウント</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             現在、本サービスはアカウント登録なしでご利用いただけます。
             データはお使いのブラウザのローカルストレージに保存されます。
@@ -54,7 +54,7 @@ export default function TermsPage() {
 
         {/* 3. 料金と支払い */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">3. 料金と支払い</h2>
+          <h2 className="text-lg font-bold">3. 料金と支払い</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             本サービスには無料プラン（Free）と有料プラン（Pro）があります。
           </p>
@@ -68,7 +68,7 @@ export default function TermsPage() {
 
         {/* 4. 免責事項 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">4. 免責事項</h2>
+          <h2 className="text-lg font-bold">4. 免責事項</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             本サービスのシミュレーション結果は、入力されたパラメータに基づく統計的な推計値であり、
             将来の収益、資産額、その他の結果を保証するものではありません。
@@ -87,7 +87,7 @@ export default function TermsPage() {
 
         {/* 5. 知的財産権 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">5. 知的財産権</h2>
+          <h2 className="text-lg font-bold">5. 知的財産権</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             本サービスに含まれるすべてのコンテンツ（テキスト、デザイン、ロゴ、ソフトウェア、アルゴリズム等）の
             著作権およびその他の知的財産権は、運営者に帰属します。
@@ -100,7 +100,7 @@ export default function TermsPage() {
 
         {/* 6. 禁止事項 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">6. 禁止事項</h2>
+          <h2 className="text-lg font-bold">6. 禁止事項</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             ユーザーは、以下の行為を行ってはなりません。
           </p>
@@ -116,7 +116,7 @@ export default function TermsPage() {
 
         {/* 7. サービスの変更・終了 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">7. サービスの変更・終了</h2>
+          <h2 className="text-lg font-bold">7. サービスの変更・終了</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             運営者は、事前に通知のうえ、本サービスの内容を変更、
             または本サービスの提供を終了する場合があります。
@@ -130,7 +130,7 @@ export default function TermsPage() {
 
         {/* 8. 準拠法と管轄 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">8. 準拠法と管轄</h2>
+          <h2 className="text-lg font-bold">8. 準拠法と管轄</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             本規約の解釈および適用は、日本法に準拠します。
           </p>

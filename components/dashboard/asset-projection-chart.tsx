@@ -82,7 +82,7 @@ function CustomTooltip({
 
   return (
     <div className="rounded-lg border bg-background p-4 shadow-sm min-w-0 w-[200px] max-w-[90vw]">
-      <p className="mb-2 font-semibold text-base">{label}歳</p>
+      <p className="mb-2 font-bold text-base">{label}歳</p>
       <div className="space-y-2 text-sm">
         {showOptimistic && (
           <div className="flex items-center justify-between gap-4">
@@ -90,15 +90,15 @@ function CustomTooltip({
               <div className="h-2 w-2 rounded-full bg-brand-bronze/60" />
               楽観 (90%)
             </span>
-            <span className="font-medium">{formatValue(upper)}</span>
+            <span className="font-normal">{formatValue(upper)}</span>
           </div>
         )}
         <div className="flex items-center justify-between gap-4 text-xs">
           <span className="text-brand-bronze">75%</span>
-          <span className="font-medium">{formatValue(p75)}</span>
+          <span className="font-normal">{formatValue(p75)}</span>
         </div>
         <div className="flex items-center justify-between gap-4 py-1 border-y">
-          <span className="text-brand-stone flex items-center gap-1 font-medium">
+          <span className="text-brand-stone flex items-center gap-1 font-normal">
             <div className="h-2 w-2 rounded-full bg-brand-stone" />
             中央値
           </span>
@@ -106,7 +106,7 @@ function CustomTooltip({
         </div>
         <div className="flex items-center justify-between gap-4 text-xs">
           <span className="text-brand-bronze">25%</span>
-          <span className="font-medium">{formatValue(p25)}</span>
+          <span className="font-normal">{formatValue(p25)}</span>
         </div>
         <div className="flex items-center justify-between gap-4">
           <span className="text-brand-bronze flex items-center gap-1">
@@ -114,7 +114,7 @@ function CustomTooltip({
             悲観 (10%)
           </span>
           <span className={cn(
-            "font-medium",
+            "font-normal",
             lower < 0 && "text-brand-stone"
           )}>{formatValue(lower)}</span>
         </div>

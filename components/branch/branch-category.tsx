@@ -57,7 +57,7 @@ export function BranchCategory({
         <span className="text-sm" aria-hidden="true">
           {meta.symbol}
         </span>
-        <h3 className="text-sm font-semibold text-foreground">{meta.label}</h3>
+        <h3 className="text-sm font-bold text-foreground">{meta.label}</h3>
         <span className="text-xs text-muted-foreground">— {meta.description}</span>
       </div>
 

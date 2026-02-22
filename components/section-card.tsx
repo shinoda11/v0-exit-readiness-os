@@ -36,7 +36,7 @@ export function SectionCard({
               {icon}
             </div>
             <div>
-              <CardTitle className="text-base font-semibold">{title}</CardTitle>
+              <CardTitle className="text-base font-bold">{title}</CardTitle>
               {description && (
                 <CardDescription className="mt-0.5 text-xs text-muted-foreground">{description}</CardDescription>
               )}

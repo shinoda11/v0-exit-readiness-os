@@ -69,11 +69,11 @@ export function RetirementCard({ profile, onUpdate, open, onOpenChange, complete
     const summary = (
       <>
         {'リタイア '}
-        <span className="font-medium text-foreground">{profile.targetRetireAge}歳</span>
+        <span className="font-normal text-foreground">{profile.targetRetireAge}歳</span>
         {postRetireIncome > 0 && (
           <>
             {' / 退職後収入 '}
-            <span className="font-medium text-foreground">{formatCurrency(postRetireIncome)}</span>
+            <span className="font-normal text-foreground">{formatCurrency(postRetireIncome)}</span>
             {'（〜' + postRetireIncomeEndAge + '歳）'}
           </>
         )}

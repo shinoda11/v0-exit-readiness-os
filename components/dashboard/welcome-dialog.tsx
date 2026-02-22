@@ -154,7 +154,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
                       {s.icon}
                     </div>
                     <div className="sm:space-y-1">
-                      <p className="text-sm font-medium">
+                      <p className="text-sm font-normal">
                         <span className="text-muted-foreground mr-1">{i + 1}.</span>
                         {s.label}
                       </p>
@@ -193,7 +193,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
           {/* Step 1: Basic info */}
           {step === 1 && (
             <>
-              <h2 className="text-lg font-semibold text-center">基本情報</h2>
+              <h2 className="text-lg font-bold text-center">基本情報</h2>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="onb-age">現在の年齢</Label>
@@ -217,7 +217,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
                         type="button"
                         className={`flex-1 rounded-md border px-4 py-2.5 text-sm min-h-[44px] transition-colors ${
                           formData.mode === m
-                            ? 'border-brand-gold bg-brand-gold/15 text-foreground font-medium'
+                            ? 'border-brand-gold bg-brand-gold/15 text-foreground font-normal'
                             : 'border-border text-muted-foreground hover:border-foreground/30'
                         }`}
                         onClick={() => update('mode', m)}
@@ -256,7 +256,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
           {/* Step 2: Income & Housing */}
           {step === 2 && (
             <>
-              <h2 className="text-lg font-semibold text-center">収入・住居</h2>
+              <h2 className="text-lg font-bold text-center">収入・住居</h2>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="onb-income">年収（税込）</Label>
@@ -321,7 +321,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
           {/* Step 3: Assets */}
           {step === 3 && (
             <>
-              <h2 className="text-lg font-semibold text-center">資産</h2>
+              <h2 className="text-lg font-bold text-center">資産</h2>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="onb-assets">総資産（現金 + 投資）</Label>

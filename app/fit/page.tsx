@@ -236,7 +236,7 @@ function FitGateForm() {
             >
               <Mail className="w-6 h-6 text-brand-gold" />
             </div>
-            <h2 className="text-xl font-semibold mb-1 text-brand-night">
+            <h2 className="text-xl font-bold mb-1 text-brand-night">
               診断結果をメールでもお届けします
             </h2>
             <p className="text-sm text-brand-bronze">
@@ -302,7 +302,7 @@ function FitGateForm() {
       </div>
 
       <Card className="p-6 sm:p-8 border-0 shadow-sm" style={{ backgroundColor: '#FFFFFF' }}>
-        <h1 className="text-xl font-semibold mb-6 text-brand-night">
+        <h1 className="text-xl font-bold mb-6 text-brand-night">
           適合チェック（12問）
         </h1>
 
@@ -310,7 +310,7 @@ function FitGateForm() {
           {/* Q1–Q10 radio questions */}
           {questions.map((q, qi) => (
             <div key={q.key} className="space-y-3">
-              <Label className="text-base font-semibold text-brand-stone">
+              <Label className="text-base font-bold text-brand-stone">
                 {q.label}
               </Label>
               <RadioGroup
@@ -336,7 +336,7 @@ function FitGateForm() {
 
           {/* Q11: Privacy consent */}
           <div className="space-y-3">
-            <Label className="text-base font-semibold text-brand-stone">
+            <Label className="text-base font-bold text-brand-stone">
               11. 情報の取り扱い（確認）
             </Label>
             <div className="flex items-start space-x-2">
@@ -359,7 +359,7 @@ function FitGateForm() {
 
           {/* Q12: Budget */}
           <div className="space-y-3">
-            <Label className="text-base font-semibold text-brand-stone">
+            <Label className="text-base font-bold text-brand-stone">
               12. 予算感
             </Label>
             <RadioGroup

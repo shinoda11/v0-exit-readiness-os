@@ -25,7 +25,7 @@ export function BasicInfoCard({ profile, onUpdate, getFieldError, open, onOpenCh
     <div className="space-y-6">
       {/* Household mode */}
       <div className="space-y-4">
-        <Label className="text-sm font-medium">世帯構成</Label>
+        <Label className="text-sm font-normal">世帯構成</Label>
         <RadioGroup
           value={profile.mode}
           onValueChange={(value: HouseholdMode) => onUpdate({ mode: value })}
@@ -81,9 +81,9 @@ export function BasicInfoCard({ profile, onUpdate, getFieldError, open, onOpenCh
     const modeLabel = profile.mode === 'couple' ? '夫婦' : '個人';
     const summary = (
       <>
-        <span className="font-medium text-foreground">{profile.currentAge}歳</span>
+        <span className="font-normal text-foreground">{profile.currentAge}歳</span>
         {' / 目標 '}
-        <span className="font-medium text-foreground">{profile.targetRetireAge}歳</span>
+        <span className="font-normal text-foreground">{profile.targetRetireAge}歳</span>
         {' / '}
         {modeLabel}
       </>

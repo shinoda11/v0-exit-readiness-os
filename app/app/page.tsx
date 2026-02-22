@@ -389,7 +389,7 @@ export default function DashboardPage() {
           {showFirstVisitBanner && (
             <div className="mb-6 flex items-start gap-4 rounded-lg border-l-4 border-l-brand-gold bg-brand-gold/10 p-4 dark:bg-brand-gold/5">
               <div className="flex-1 text-sm text-brand-bronze">
-                <p className="font-medium">現在はサンプルデータで表示しています</p>
+                <p className="font-normal">現在はサンプルデータで表示しています</p>
                 <p className="mt-1 text-brand-bronze/80">あなたの条件に変更すると、結果が即時に反映されます</p>
               </div>
               <button
@@ -432,7 +432,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => setMobileTab('input')}
                 className={cn(
-                  'flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors',
+                  'flex-1 min-h-[44px] py-3 text-sm font-normal text-center transition-colors',
                   mobileTab === 'input'
                     ? 'text-brand-night border-b-2 border-brand-gold'
                     : 'text-brand-bronze'
@@ -443,7 +443,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => setMobileTab('result')}
                 className={cn(
-                  'flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors',
+                  'flex-1 min-h-[44px] py-3 text-sm font-normal text-center transition-colors',
                   mobileTab === 'result'
                     ? 'text-brand-night border-b-2 border-brand-gold'
                     : 'text-brand-bronze'

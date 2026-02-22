@@ -88,7 +88,7 @@ export function CurrencyInput({
 
   return (
     <div className={cn('flex items-center justify-between gap-2', className)}>
-      <Label className="min-w-0 shrink text-sm font-medium text-foreground">
+      <Label className="min-w-0 shrink text-sm font-normal text-foreground">
         {label}
         {description && (
           <span className="ml-1 text-xs text-muted-foreground">

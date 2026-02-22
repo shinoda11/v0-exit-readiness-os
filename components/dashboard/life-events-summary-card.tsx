@@ -121,7 +121,7 @@ export function LifeEventsSummaryCard({ profile, open, onOpenChange }: LifeEvent
         <div className="space-y-4">
           {groups.map(g => (
             <div key={g.certainty}>
-              <p className="text-xs font-medium text-brand-stone mb-1">
+              <p className="text-xs font-normal text-brand-stone mb-1">
                 {g.marker} {g.label}: {g.branches.length}件
               </p>
               <div className="space-y-1 pl-4">

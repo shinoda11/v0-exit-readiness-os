@@ -89,7 +89,7 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
             <Wallet className="h-5 w-5" />
             お金の余白
           </CardTitle>
-          <span className={`text-sm font-medium ${hasValidData ? getHealthColor(health) : 'text-brand-bronze'}`}>
+          <span className={`text-sm font-normal ${hasValidData ? getHealthColor(health) : 'text-brand-bronze'}`}>
             {hasValidData ? getHealthLabel(health) : '未計算'}
           </span>
         </div>

@@ -32,7 +32,7 @@ export function LPClient() {
       {faqs.map((faq, i) => (
         <AccordionItem key={i} value={`faq-${i}`} className="border-brand-sand">
           <AccordionTrigger
-            className="text-left text-sm sm:text-base font-medium hover:no-underline text-brand-night"
+            className="text-left text-sm sm:text-base font-normal hover:no-underline text-brand-night"
           >
             {faq.q}
           </AccordionTrigger>

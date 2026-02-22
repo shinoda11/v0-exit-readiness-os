@@ -30,7 +30,7 @@ export default function PrepPage() {
 
       <div className="space-y-6">
         <div>
-          <h3 className="font-semibold mb-3 text-brand-stone">メールレターの内容</h3>
+          <h3 className="font-bold mb-3 text-brand-stone">メールレターの内容</h3>
           <ul className="space-y-2 text-sm text-brand-bronze">
             <li>・年収・資産・支出の整理方法</li>
             <li>・数字入力のコツと扱い方</li>
@@ -61,7 +61,7 @@ export default function PrepPage() {
               href="https://www.instagram.com/yohack.jp"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline font-medium text-brand-gold"
+              className="underline font-normal text-brand-gold"
             >
               @yohack.jp
             </a>

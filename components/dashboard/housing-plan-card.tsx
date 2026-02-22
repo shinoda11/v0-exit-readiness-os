@@ -323,7 +323,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
               className="h-3 w-3 rounded-full"
               style={{ backgroundColor: RENT_COLOR }}
             />
-            <Label className="text-sm font-medium">賃貸継続</Label>
+            <Label className="text-sm font-normal">賃貸継続</Label>
           </div>
           <SliderInput
             label="年間家賃"
@@ -341,7 +341,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
 
         {/* 購入プラン入力 */}
         <div className="space-y-4">
-          <Label className="text-sm font-medium">購入プラン</Label>
+          <Label className="text-sm font-normal">購入プラン</Label>
           {plans.map((plan, index) => (
             <div
               key={plan.id}
@@ -356,7 +356,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
                 <Input
                   value={plan.name}
                   onChange={e => updatePlan(plan.id, { name: e.target.value })}
-                  className="h-7 text-sm font-medium bg-transparent border-none px-1 focus-visible:ring-1 max-w-[120px]"
+                  className="h-7 text-sm font-normal bg-transparent border-none px-1 focus-visible:ring-1 max-w-[120px]"
                   maxLength={20}
                 />
                 {index > 0 && (
@@ -414,7 +414,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
               {/* 月々返済表示 */}
               <div className="flex items-center justify-between text-xs text-muted-foreground rounded bg-background/50 px-2 py-1.5">
                 <span>月々返済</span>
-                <span className="font-medium text-foreground">
+                <span className="font-normal text-foreground">
                   {computeMonthlyPaymentManYen(
                     plan.price - plan.downPayment,
                     plan.rate,
@@ -466,7 +466,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
                   if (!active || !payload?.length) return null;
                   return (
                     <div className="rounded-lg border bg-background p-4 shadow-lg text-xs">
-                      <p className="font-medium mb-1.5">{label}歳時点</p>
+                      <p className="font-normal mb-1.5">{label}歳時点</p>
                       <div className="space-y-1">
                         {payload.map((entry: any) => (
                           <div
@@ -480,7 +480,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
                               />
                               <span>{entry.name}</span>
                             </div>
-                            <span className="tabular-nums font-medium">
+                            <span className="tabular-nums font-normal">
                               {formatCurrency(Math.round(entry.value as number))}
                             </span>
                           </div>
@@ -529,7 +529,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
 
         {/* 結論テキスト */}
         <p className={cn(
-          "text-sm font-medium text-center",
+          "text-sm font-normal text-center",
           bestPlanId === 'rent' ? 'text-safe' : 'text-[#4A6FA5]'
         )}>{conclusionText}</p>
 
@@ -556,7 +556,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
                     s.id === bestPlanId && bestPlanId !== 'rent' && 'bg-[#4A6FA5]/10',
                   )}
                 >
-                  <TableCell className="font-medium">{s.name}</TableCell>
+                  <TableCell className="font-normal">{s.name}</TableCell>
                   <TableCell className="text-right tabular-nums">
                     {formatCurrency(Math.round(s.assetsAt40))}
                   </TableCell>

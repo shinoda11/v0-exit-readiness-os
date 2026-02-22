@@ -141,11 +141,11 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-brand-linen dark:border-brand-stone">
-                <th className="text-left py-2 pr-2 font-medium text-brand-bronze text-xs">世界線</th>
-                <th className="text-right py-2 px-2 font-medium text-brand-bronze text-xs">安心ライン</th>
-                <th className="text-right py-2 px-2 font-medium text-brand-bronze text-xs">成功確率</th>
-                <th className="text-right py-2 px-2 font-medium text-brand-bronze text-xs">100歳資産</th>
-                <th className="text-right py-2 pl-2 font-medium text-brand-bronze text-xs">余白開始</th>
+                <th className="text-left py-2 pr-2 font-normal text-brand-bronze text-xs">世界線</th>
+                <th className="text-right py-2 px-2 font-normal text-brand-bronze text-xs">安心ライン</th>
+                <th className="text-right py-2 px-2 font-normal text-brand-bronze text-xs">成功確率</th>
+                <th className="text-right py-2 px-2 font-normal text-brand-bronze text-xs">100歳資産</th>
+                <th className="text-right py-2 pl-2 font-normal text-brand-bronze text-xs">余白開始</th>
               </tr>
             </thead>
             <tbody>
@@ -161,7 +161,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                     <div className="flex items-center gap-1">
                       <span className={cn(
                         "text-sm",
-                        item.isCurrent ? "font-medium text-brand-night dark:text-brand-linen" : "text-brand-stone dark:text-brand-linen"
+                        item.isCurrent ? "font-normal text-brand-night dark:text-brand-linen" : "text-brand-stone dark:text-brand-linen"
                       )}>
                         {item.name}
                       </span>

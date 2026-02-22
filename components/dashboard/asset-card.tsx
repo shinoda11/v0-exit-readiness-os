@@ -126,9 +126,9 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
               {(() => {
                 if (totalAssets === 0) return (
                   <>
-                    <div className="text-center"><div className="font-medium">0%</div><div className="text-muted-foreground">現預金</div></div>
-                    <div className="text-center"><div className="font-medium">0%</div><div className="text-muted-foreground">投資</div></div>
-                    <div className="text-center"><div className="font-medium">0%</div><div className="text-muted-foreground">DC年金</div></div>
+                    <div className="text-center"><div className="font-normal">0%</div><div className="text-muted-foreground">現預金</div></div>
+                    <div className="text-center"><div className="font-normal">0%</div><div className="text-muted-foreground">投資</div></div>
+                    <div className="text-center"><div className="font-normal">0%</div><div className="text-muted-foreground">DC年金</div></div>
                   </>
                 );
                 const rawCash = (profile.assetCash / totalAssets) * 100;
@@ -145,9 +145,9 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
                 }
                 return (
                   <>
-                    <div className="text-center"><div className="font-medium">{floored[0]}%</div><div className="text-muted-foreground">現預金</div></div>
-                    <div className="text-center"><div className="font-medium">{floored[1]}%</div><div className="text-muted-foreground">投資</div></div>
-                    <div className="text-center"><div className="font-medium">{floored[2]}%</div><div className="text-muted-foreground">DC年金</div></div>
+                    <div className="text-center"><div className="font-normal">{floored[0]}%</div><div className="text-muted-foreground">現預金</div></div>
+                    <div className="text-center"><div className="font-normal">{floored[1]}%</div><div className="text-muted-foreground">投資</div></div>
+                    <div className="text-center"><div className="font-normal">{floored[2]}%</div><div className="text-muted-foreground">DC年金</div></div>
                   </>
                 );
               })()}
@@ -166,7 +166,7 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
     const summary = (
       <>
         {'総資産 '}
-        <span className="font-medium text-foreground">{formatCurrency(totalAssets)}</span>
+        <span className="font-normal text-foreground">{formatCurrency(totalAssets)}</span>
         {parts.length > 0 && `（${parts.join(' / ')}）`}
       </>
     );

@@ -26,16 +26,16 @@ export default function PrivacyPage() {
 
         {/* 1. 収集する情報 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">1. 収集する情報</h2>
+          <h2 className="text-lg font-bold">1. 収集する情報</h2>
 
-          <h3 className="text-sm font-medium">現在の状況</h3>
+          <h3 className="text-sm font-normal">現在の状況</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
             本サービスは、現在、ユーザーの個人情報をサーバーに送信・保存していません。
             すべてのプロファイルデータおよびシミュレーション結果は、
             お使いのブラウザのローカルストレージにのみ保存されます。
           </p>
 
-          <h3 className="text-sm font-medium mt-4">将来的に収集する可能性のある情報</h3>
+          <h3 className="text-sm font-normal mt-4">将来的に収集する可能性のある情報</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
             アカウント機能の導入に伴い、以下の情報を収集する場合があります。
           </p>
@@ -49,7 +49,7 @@ export default function PrivacyPage() {
 
         {/* 2. 利用目的 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">2. 利用目的</h2>
+          <h2 className="text-lg font-bold">2. 利用目的</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             収集した情報は、以下の目的で利用します。
           </p>
@@ -64,15 +64,15 @@ export default function PrivacyPage() {
 
         {/* 3. 第三者提供 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">3. 第三者提供</h2>
+          <h2 className="text-lg font-bold">3. 第三者提供</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             ユーザーの個人情報を、本人の同意なく第三者に提供することは原則として行いません。
             ただし、以下のサービス提供者に業務委託する場合があります。
           </p>
           <ul className="list-disc list-inside text-sm text-muted-foreground leading-relaxed space-y-1.5 ml-2">
-            <li><span className="font-medium text-foreground">Stripe</span> — 決済処理（クレジットカード情報の安全な処理）</li>
-            <li><span className="font-medium text-foreground">Vercel</span> — ホスティングおよびアクセス解析</li>
-            <li><span className="font-medium text-foreground">Supabase</span> — 将来のデータベースおよび認証基盤</li>
+            <li><span className="font-normal text-foreground">Stripe</span> — 決済処理（クレジットカード情報の安全な処理）</li>
+            <li><span className="font-normal text-foreground">Vercel</span> — ホスティングおよびアクセス解析</li>
+            <li><span className="font-normal text-foreground">Supabase</span> — 将来のデータベースおよび認証基盤</li>
           </ul>
           <p className="text-sm text-muted-foreground leading-relaxed">
             また、法令に基づく開示請求があった場合は、必要な範囲で情報を提供する場合があります。
@@ -81,7 +81,7 @@ export default function PrivacyPage() {
 
         {/* 4. Cookie */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">4. Cookie およびアクセス解析</h2>
+          <h2 className="text-lg font-bold">4. Cookie およびアクセス解析</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             本サービスでは、Vercel Analytics によるアクセス解析を行っています。
             これにより、匿名化されたアクセスデータ（ページビュー、訪問者数等）を収集しています。
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
 
         {/* 5. データの保存期間 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">5. データの保存期間</h2>
+          <h2 className="text-lg font-bold">5. データの保存期間</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             ローカルストレージに保存されたデータは、ユーザーがブラウザのデータを削除するか、
             本サービスの設定画面からリセットするまで保持されます。
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
 
         {/* 6. ユーザーの権利 */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">6. ユーザーの権利</h2>
+          <h2 className="text-lg font-bold">6. ユーザーの権利</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             ユーザーは、以下の権利を有します。
           </p>
@@ -125,11 +125,11 @@ export default function PrivacyPage() {
 
         {/* 7. お問い合わせ */}
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">7. お問い合わせ</h2>
+          <h2 className="text-lg font-bold">7. お問い合わせ</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             プライバシーに関するお問い合わせは、以下のメールアドレスまでご連絡ください。
           </p>
-          <p className="text-sm font-medium">
+          <p className="text-sm font-normal">
             support@yohack.app
           </p>
         </section>

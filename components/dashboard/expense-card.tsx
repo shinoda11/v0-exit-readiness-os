@@ -61,7 +61,7 @@ export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChan
       <div className="rounded-lg bg-muted/50 p-4">
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">年間支出合計</span>
-          <span className="text-lg font-semibold">
+          <span className="text-lg font-bold">
             {formatCurrency(totalExpense)}
           </span>
         </div>
@@ -76,14 +76,14 @@ export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChan
     const summary = hideHousing ? (
       <>
         {'生活費 '}
-        <span className="font-medium text-foreground">{profile.livingCostAnnual}万</span>
+        <span className="font-normal text-foreground">{profile.livingCostAnnual}万</span>
       </>
     ) : (
       <>
         {'生活費 '}
-        <span className="font-medium text-foreground">{profile.livingCostAnnual}万</span>
+        <span className="font-normal text-foreground">{profile.livingCostAnnual}万</span>
         {' / 住居 '}
-        <span className="font-medium text-foreground">{profile.housingCostAnnual}万</span>
+        <span className="font-normal text-foreground">{profile.housingCostAnnual}万</span>
       </>
     );
     return (

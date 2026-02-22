@@ -169,13 +169,13 @@ function ImpactBadge({ value, label, unit, isPositive }: {
   
   return (
     <div className={cn(
-      'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium',
+      'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-normal',
       isGood
         ? 'bg-brand-canvas text-brand-stone dark:bg-brand-night dark:text-brand-linen'
         : 'bg-brand-canvas text-brand-bronze dark:bg-brand-night dark:text-brand-bronze'
     )}>
       <span>{label}:</span>
-      <span className={isGood ? 'font-semibold' : ''}>{formatted}{unit}</span>
+      <span className={isGood ? 'font-bold' : ''}>{formatted}{unit}</span>
     </div>
   );
 }
@@ -280,7 +280,7 @@ export function NextBestActionsCard({
                       {action.icon}
                     </div>
                     <div>
-                      <h4 className="font-medium text-foreground">{action.title}</h4>
+                      <h4 className="font-normal text-foreground">{action.title}</h4>
                       <p className="mt-0.5 text-sm text-muted-foreground">
                         {action.description}
                       </p>

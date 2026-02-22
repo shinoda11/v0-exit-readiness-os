@@ -29,7 +29,7 @@ export function WorldlinePreview({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-foreground">世界線候補</h2>
+        <h2 className="text-base font-bold text-foreground">世界線候補</h2>
         <span className="text-xs text-muted-foreground">{candidates.length}本生成</span>
       </div>
 
@@ -64,11 +64,11 @@ export function WorldlinePreview({
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-foreground">{c.label}</span>
+                  <span className="text-sm font-normal text-foreground">{c.label}</span>
                   {diffLabel && (
                     <span
                       className={cn(
-                        'text-xs font-medium px-1.5 py-0.5 rounded',
+                        'text-xs font-normal px-1.5 py-0.5 rounded',
                         diff! >= 0
                           ? 'bg-safe/10 text-safe'
                           : 'bg-red-50 text-red-700'
@@ -98,7 +98,7 @@ export function WorldlinePreview({
         <div className="flex items-start gap-4 rounded-lg border border-brand-gold/30 bg-brand-gold/5 p-4">
           <Lightbulb className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-foreground">発見</p>
+            <p className="text-sm font-normal text-foreground">発見</p>
             <p className="text-xs text-muted-foreground">
               「{impact.branch.label}」がスコアに最も影響（{impact.scoreDiff > 0 ? '-' : '+'}{Math.abs(impact.scoreDiff)}点）
             </p>

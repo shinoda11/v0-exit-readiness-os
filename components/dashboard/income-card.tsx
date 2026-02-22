@@ -51,7 +51,7 @@ export function IncomeCard({ profile, onUpdate, getFieldError, open, onOpenChang
   if (open !== undefined && onOpenChange) {
     const summary = (
       <>
-        <span className="font-medium text-foreground">年収 {formatCurrency(profile.grossIncome)}</span>
+        <span className="font-normal text-foreground">年収 {formatCurrency(profile.grossIncome)}</span>
         {profile.sideIncomeNet > 0 && ` / 副業 ${formatCurrency(profile.sideIncomeNet)}`}
       </>
     );

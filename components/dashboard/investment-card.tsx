@@ -48,7 +48,7 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
     <div className="space-y-6">
       {/* Expected return presets */}
       <div className="space-y-4">
-        <div className="text-sm font-medium">
+        <div className="text-sm font-normal">
           <TermTooltip term="期待リターン" description={glossary['期待リターン']} />
         </div>
         <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
@@ -69,7 +69,7 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
                     : 'border-border hover:border-foreground/30 hover:bg-muted/50'
                 }`}
               >
-                <div className={`text-sm font-semibold ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                <div className={`text-sm font-bold ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
                   {preset.label}
                 </div>
                 <div className={`text-lg font-bold ${isActive ? 'text-foreground' : ''}`}>
@@ -94,7 +94,7 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
       <div className="rounded-lg bg-muted/50 p-4 space-y-1">
         <div className="flex items-center justify-between text-sm">
           <TermTooltip term="推定実効税率" description="年収から自動計算された所得税・住民税・社会保険料の合算割合" />
-          <span className="font-semibold">{displayRate.toFixed(1)}%</span>
+          <span className="font-bold">{displayRate.toFixed(1)}%</span>
         </div>
         {profile.useAutoTaxRate && profile.mode === 'couple' && (
           <div className="text-xs text-muted-foreground space-y-0.5 pt-1">
@@ -159,7 +159,7 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
           <div className="rounded-lg bg-muted/50 p-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">実質リターン</span>
-              <span className="font-semibold">{realReturn.toFixed(1)}%</span>
+              <span className="font-bold">{realReturn.toFixed(1)}%</span>
             </div>
           </div>
 
@@ -229,10 +229,10 @@ export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenC
     const summary = (
       <>
         {'リターン'}
-        <span className="font-medium text-foreground">{profile.expectedReturn}%</span>
+        <span className="font-normal text-foreground">{profile.expectedReturn}%</span>
         {presetLabel && <span className="text-muted-foreground">({presetLabel})</span>}
         {' / 税率'}
-        <span className="font-medium text-foreground">{displayRate.toFixed(1)}%</span>
+        <span className="font-normal text-foreground">{displayRate.toFixed(1)}%</span>
       </>
     );
     return (

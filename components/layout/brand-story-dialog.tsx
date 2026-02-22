@@ -161,7 +161,7 @@ export function BrandStoryDialog({ open, onOpenChange }: BrandStoryDialogProps) 
               すべての未来を見渡した上で、<br />
               自分だけの道を選ぶ。
             </p>
-            <p className="font-medium text-brand-gold">
+            <p className="font-normal text-brand-gold">
               それが、YOHACKの思想です。
             </p>
           </div>

@@ -119,9 +119,9 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-gold/10">
                       {step.icon}
                     </div>
-                    <span className="text-xs font-medium text-brand-gold">ステップ{i + 1}</span>
+                    <span className="text-xs font-normal text-brand-gold">ステップ{i + 1}</span>
                   </div>
-                  <h4 className="text-sm font-medium">{step.title}</h4>
+                  <h4 className="text-sm font-normal">{step.title}</h4>
                   <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                     {step.description}
                   </p>
@@ -227,21 +227,21 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-3 px-2 font-medium text-muted-foreground w-40">指標</th>
-                <th className="text-center py-3 px-2 font-medium min-w-32">
+                <th className="text-left py-3 px-2 font-normal text-muted-foreground w-40">指標</th>
+                <th className="text-center py-3 px-2 font-normal min-w-32">
                   <div className="flex flex-col items-center gap-1">
                     <Badge variant="default" className="bg-primary">現在</Badge>
                     <span className="text-xs text-muted-foreground">ベースライン</span>
                   </div>
                 </th>
                 {scenarios.slice(0, 3).map((scenario) => (
-                  <th key={scenario.id} className="text-center py-3 px-2 font-medium min-w-32">
+                  <th key={scenario.id} className="text-center py-3 px-2 font-normal min-w-32">
                     <div className="flex flex-col items-center gap-1">
                       <button
                         type="button"
                         onClick={() => toggleComparisonId(scenario.id)}
                         className={cn(
-                          "px-3 py-2 min-h-[44px] rounded text-xs font-medium transition-colors",
+                          "px-3 py-2 min-h-[44px] rounded text-xs font-normal transition-colors",
                           selectedComparisonIds.includes(scenario.id)
                             ? "bg-accent text-accent-foreground"
                             : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
@@ -260,8 +260,8 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
             <tbody>
               {/* 安心ライン到達年齢 */}
               <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('fireAge') && "bg-brand-gold/[0.08]")}>
-                <td className="py-3 px-2 font-medium">安心ライン到達年齢</td>
-                <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                <td className="py-3 px-2 font-normal">安心ライン到達年齢</td>
+                <td className="text-center py-3 px-2 tabular-nums font-bold">
                   {(() => {
                     if (!simResult) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
                     const age = simResult.metrics.fireAge;
@@ -275,7 +275,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                     ? sRaw.fireAge - currentRaw.fireAge : null;
                   return (
                     <td key={scenario.id} className={cn(
-                      "text-center py-3 px-2 tabular-nums font-semibold",
+                      "text-center py-3 px-2 tabular-nums font-bold",
                       selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
                     )}>
                       {(() => {
@@ -296,8 +296,8 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
 
               {/* 60歳時点の資産 */}
               <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('assets60') && "bg-brand-gold/[0.08]")}>
-                <td className="py-3 px-2 font-medium">60歳時点資産</td>
-                <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                <td className="py-3 px-2 font-normal">60歳時点資産</td>
+                <td className="text-center py-3 px-2 tabular-nums font-bold">
                   {(() => {
                     if (!simResult?.paths.yearlyData) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
                     if (profile.currentAge > 60) return <span className="text-muted-foreground text-xs">なし</span>;
@@ -346,7 +346,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                   }
                   return (
                     <td key={scenario.id} className={cn(
-                      "text-center py-3 px-2 tabular-nums font-semibold",
+                      "text-center py-3 px-2 tabular-nums font-bold",
                       selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
                     )}>
                       {`${(assets / 10000).toFixed(1)}億`}
@@ -362,8 +362,8 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
 
               {/* 40-50代平均月次CFマージン - SoTのcashFlow.netCashFlowを参照 */}
               <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('monthlyCF') && "bg-brand-gold/[0.08]")}>
-                <td className="py-3 px-2 font-medium">現在の月次CF</td>
-                <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                <td className="py-3 px-2 font-normal">現在の月次CF</td>
+                <td className="text-center py-3 px-2 tabular-nums font-bold">
                   {(() => {
                     const netCF = simResult?.cashFlow?.netCashFlow;
                     if (netCF == null || Number.isNaN(netCF)) {
@@ -390,7 +390,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                   const monthlyCF = netCF / 12;
                   return (
                     <td key={scenario.id} className={cn(
-                      "text-center py-3 px-2 tabular-nums font-semibold",
+                      "text-center py-3 px-2 tabular-nums font-bold",
                       selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
                     )}>
                       {`${monthlyCF.toFixed(0)}万/月`}
@@ -406,8 +406,8 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
 
               {/* 取り崩し開始年齢 */}
               <tr className={cn("hover:bg-muted/30", rowHasDiff('drawdownAge') && "bg-brand-gold/[0.08]")}>
-                <td className="py-3 px-2 font-medium">取り崩し開始</td>
-                <td className="text-center py-3 px-2 tabular-nums font-semibold">
+                <td className="py-3 px-2 font-normal">取り崩し開始</td>
+                <td className="text-center py-3 px-2 tabular-nums font-bold">
                   {(() => {
                     if (!simResult?.paths.yearlyData) return <span className="text-muted-foreground text-xs">—（未計算）</span>;
                     const ddIdx = simResult.paths.yearlyData.findIndex((y, i) =>
@@ -436,7 +436,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                   return (
                     <td key={scenario.id} className={cn(
                       "text-center py-3 px-2",
-                      ddIdx > 0 ? "tabular-nums font-semibold" : "text-muted-foreground text-xs",
+                      ddIdx > 0 ? "tabular-nums font-bold" : "text-muted-foreground text-xs",
                       selectedComparisonIds.includes(scenario.id) && "bg-accent/10"
                     )}>
                       {ddIdx > 0 ? `${scenario.profile.currentAge + ddIdx}歳` : 'なし'}
@@ -510,23 +510,23 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
               </div>
               <div className="space-y-4">
                 <div>
-                  <p className="font-medium text-sm">現在の条件とシナリオが同一です</p>
+                  <p className="font-normal text-sm">現在の条件とシナリオが同一です</p>
                   <p className="text-xs text-muted-foreground mt-1">
                     条件を変更するか、別パターンのシナリオを追加すると差分が表示されます
                   </p>
                 </div>
                 <div className="space-y-2 text-xs text-muted-foreground">
                   <div className="flex gap-2">
-                    <span className="flex-shrink-0 font-medium text-foreground">①</span>
+                    <span className="flex-shrink-0 font-normal text-foreground">①</span>
                     <div>
-                      <span className="font-medium text-foreground">条件を変更する</span>
+                      <span className="font-normal text-foreground">条件を変更する</span>
                       <p className="mt-0.5">収入・支出・イベントを変えると差分が表示されます</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <span className="flex-shrink-0 font-medium text-foreground">②</span>
+                    <span className="flex-shrink-0 font-normal text-foreground">②</span>
                     <div>
-                      <span className="font-medium text-foreground">別パターンを追加する</span>
+                      <span className="font-normal text-foreground">別パターンを追加する</span>
                       <p className="mt-0.5">異なる条件のシナリオを保存して並べて比較</p>
                     </div>
                   </div>
@@ -589,7 +589,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Badge variant="outline" className="text-xs">ステップ2</Badge>
-                <h4 className="font-medium text-sm">余白を確認する</h4>
+                <h4 className="font-normal text-sm">余白を確認する</h4>
               </div>
               <p className="text-xs text-muted-foreground">
                 差分を確認したら、余白を比較
@@ -612,7 +612,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
       <div className="rounded-lg border-2 border-dashed border-brand-gold/40 hover:border-brand-gold p-6 transition-colors">
         <div className="flex flex-col items-center text-center gap-4">
           <Plus className="h-6 w-6 text-brand-bronze" />
-          <p className="text-sm font-medium text-brand-bronze">世界線を追加</p>
+          <p className="text-sm font-normal text-brand-bronze">世界線を追加</p>
           {unusedTemplates.length > 0 && onApplyTemplate && (
             <div className="flex flex-wrap justify-center gap-1.5">
               {unusedTemplates.slice(0, 3).map((t) => {

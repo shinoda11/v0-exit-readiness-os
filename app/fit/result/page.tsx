@@ -42,20 +42,20 @@ function DevPreview() {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <p className="text-sm font-semibold text-brand-bronze">
+        <p className="text-sm font-bold text-brand-bronze">
           開発プレビュー — 全判定パターン
         </p>
       </div>
       <div>
-        <p className="text-xs font-semibold mb-2 text-safe">Ready</p>
+        <p className="text-xs font-bold mb-2 text-safe">Ready</p>
         <ReadyResult />
       </div>
       <div>
-        <p className="text-xs font-semibold mb-2 text-brand-gold">Prep (near)</p>
+        <p className="text-xs font-bold mb-2 text-brand-gold">Prep (near)</p>
         <PrepResult prepBucket="near" />
       </div>
       <div>
-        <p className="text-xs font-semibold mb-2 text-brand-bronze">Prep (notyet)</p>
+        <p className="text-xs font-bold mb-2 text-brand-bronze">Prep (notyet)</p>
         <PrepResult prepBucket="notyet" />
       </div>
     </div>
@@ -103,7 +103,7 @@ function ReadyResult() {
 
       <div className="space-y-6">
         <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(200, 184, 154, 0.1)' }}>
-          <h3 className="font-semibold mb-2 text-brand-stone">シミュレーションでできること</h3>
+          <h3 className="font-bold mb-2 text-brand-stone">シミュレーションでできること</h3>
           <ul className="space-y-2 text-sm text-brand-stone">
             <li className="flex items-start gap-2">
               <Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-brand-gold" />
@@ -170,7 +170,7 @@ function PrepResult({ prepBucket }: { prepBucket: 'near' | 'notyet' | null }) {
 
       <div className="space-y-6">
         <div>
-          <h3 className="font-semibold mb-3 text-brand-stone">Prep Mode とは</h3>
+          <h3 className="font-bold mb-3 text-brand-stone">Prep Mode とは</h3>
           <p className="text-sm leading-relaxed text-brand-bronze">
             YOHACK を使いこなすための準備ガイドです。年収・資産・支出の整理方法、数字の扱い方、よくある質問への回答などを、メールレターでお届けします。無料です。
           </p>
@@ -179,7 +179,7 @@ function PrepResult({ prepBucket }: { prepBucket: 'near' | 'notyet' | null }) {
         {!isNotYet && (
           <div className="pt-4 border-t space-y-4">
             <div>
-              <h3 className="font-semibold mb-3 text-sm text-brand-stone">準備チェックリスト</h3>
+              <h3 className="font-bold mb-3 text-sm text-brand-stone">準備チェックリスト</h3>
               <ul className="space-y-2 text-xs text-brand-bronze">
                 <li className="flex items-start gap-2">
                   <span className="text-brand-gold">□</span>
@@ -227,7 +227,7 @@ function PrepResult({ prepBucket }: { prepBucket: 'near' | 'notyet' | null }) {
               href="https://www.instagram.com/yohack.jp"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline font-medium text-brand-gold"
+              className="underline font-normal text-brand-gold"
             >
               @yohack.jp
             </a>

@@ -110,7 +110,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
                     </Badge>
                   )}
                 </div>
-                <p className="text-lg font-medium">
+                <p className="text-lg font-normal">
                   {overallAssessment.keyMessage}
                 </p>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -151,7 +151,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/50 text-sm">
               <GitBranch className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">表示中:</span>
-              <span className="font-medium">{displayName}</span>
+              <span className="font-normal">{displayName}</span>
               {displayDate && <span className="text-muted-foreground text-xs">({displayDate})</span>}
             </div>
           );
@@ -188,13 +188,13 @@ export function V2ResultSection(props: V2ResultSectionProps) {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left py-2 pr-4 font-medium text-muted-foreground">指標</th>
-                      <th className="text-right py-2 px-4 font-medium">現在</th>
+                      <th className="text-left py-2 pr-4 font-normal text-muted-foreground">指標</th>
+                      <th className="text-right py-2 px-4 font-normal">現在</th>
                       {comparisonScenarios.map(s => (
-                        <th key={s.id} className="text-right py-2 px-4 font-medium">{s.name}</th>
+                        <th key={s.id} className="text-right py-2 px-4 font-normal">{s.name}</th>
                       ))}
                       {comparisonScenarios.length === 1 && (
-                        <th className="text-right py-2 pl-4 font-medium text-muted-foreground">差分</th>
+                        <th className="text-right py-2 pl-4 font-normal text-muted-foreground">差分</th>
                       )}
                     </tr>
                   </thead>
@@ -302,7 +302,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
 
           {/* Required Actions */}
           <div>
-            <h4 className="font-medium mb-4">必要なアクション</h4>
+            <h4 className="font-normal mb-4">必要なアクション</h4>
             <div className="space-y-2">
               {primaryStrategy.requiredActions.map((action: string, index: number) => (
                 <div key={index} className="flex items-center gap-4 rounded-lg bg-muted/50 p-4">
@@ -315,7 +315,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
 
           {/* Assumptions */}
           <div>
-            <h4 className="font-medium mb-4 flex items-center gap-2">
+            <h4 className="font-normal mb-4 flex items-center gap-2">
               <Info className="h-4 w-4" />
               前提条件
             </h4>
@@ -361,7 +361,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
                     関連度 {insight.relevance}%
                   </span>
                 </div>
-                <h4 className="font-medium">{insight.title}</h4>
+                <h4 className="font-normal">{insight.title}</h4>
                 <p className="text-sm text-muted-foreground mt-1">
                   {insight.description}
                 </p>

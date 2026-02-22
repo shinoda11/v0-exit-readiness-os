@@ -199,7 +199,7 @@ export function RSUContent() {
       {/* Header actions */}
       <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg sm:text-xl font-semibold tracking-tight">RSU・株式報酬</h2>
+          <h2 className="text-lg sm:text-xl font-bold tracking-tight">RSU・株式報酬</h2>
           <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
             RSU (制限付き株式ユニット) のベスティングスケジュールと価値を管理
           </p>
@@ -245,7 +245,7 @@ export function RSUContent() {
               <Check className="h-4 w-4 text-brand-gold" />
             </div>
             <div>
-              <p className="font-medium text-brand-bronze">
+              <p className="font-normal text-brand-bronze">
                 RSU収入をプロファイルに反映しました
               </p>
               <p className="text-sm text-brand-bronze/80">
@@ -282,7 +282,7 @@ export function RSUContent() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">総価値</CardTitle>
+              <CardTitle className="text-sm font-normal">総価値</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">
@@ -296,7 +296,7 @@ export function RSUContent() {
 
           <Card className={!isSynced ? 'border-amber-300 dark:border-amber-700' : ''}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center justify-between">
+              <CardTitle className="text-sm font-normal flex items-center justify-between">
                 <span>{currentYear}年のRSU収入</span>
                 {!isSynced && (
                   <Badge variant="outline" className="text-xs text-amber-700 border-amber-300 bg-amber-50 dark:text-amber-300 dark:border-amber-700 dark:bg-amber-950/30">
@@ -310,7 +310,7 @@ export function RSUContent() {
               <div className="text-sm text-muted-foreground mt-1">
                 <span>現在のプロファイル: {profile.rsuAnnual}万円</span>
                 {!isSynced && (
-                  <span className={`ml-2 font-medium ${calculatedRSUValue > profile.rsuAnnual ? 'text-brand-bronze' : 'text-muted-foreground'}`}>
+                  <span className={`ml-2 font-normal ${calculatedRSUValue > profile.rsuAnnual ? 'text-brand-bronze' : 'text-muted-foreground'}`}>
                     ({calculatedRSUValue > profile.rsuAnnual ? '+' : ''}{calculatedRSUValue - profile.rsuAnnual}万円)
                   </span>
                 )}
@@ -435,7 +435,7 @@ export function RSUContent() {
                         ${currentValue.toLocaleString()}
                       </TableCell>
                       <TableCell
-                        className={`text-right font-medium ${
+                        className={`text-right font-normal ${
                           gain >= 0 ? 'text-brand-stone' : 'text-brand-bronze'
                         }`}
                       >
@@ -479,14 +479,14 @@ export function RSUContent() {
                         <Calendar className={`h-5 w-5 ${isPast ? 'text-brand-gold' : 'text-brand-stone'}`} />
                       </div>
                       <div>
-                        <p className="font-medium">{event.date}</p>
+                        <p className="font-normal">{event.date}</p>
                         <p className="text-sm text-muted-foreground">
                           {event.shares.toLocaleString()}株
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">
+                      <p className="font-normal">
                         ${event.value.toLocaleString()}
                       </p>
                       <p className="text-sm text-muted-foreground">

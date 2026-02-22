@@ -53,7 +53,7 @@ function SubScore({ label, value, icon, description, warningThreshold = 50 }: Su
         <div className="flex items-start gap-4">
           <div className="text-primary">{icon}</div>
           <div>
-            <h4 className="font-semibold">{label}</h4>
+            <h4 className="font-bold">{label}</h4>
             <p className="text-sm text-muted-foreground">{description}</p>
           </div>
         </div>
@@ -128,7 +128,7 @@ function ScoreBreakdown({ score }: { score: ExitScoreDetail }) {
                   <span className="text-xs text-muted-foreground/60">({axis.weight}%)</span>
                 </div>
                 <div className="flex items-center gap-2 tabular-nums">
-                  <span className="font-semibold">{value}</span>
+                  <span className="font-bold">{value}</span>
                   <span className="text-xs text-muted-foreground">
                     (+{weighted}pt)
                   </span>
@@ -274,7 +274,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
               </svg>
               <div
                 className={cn(
-                  "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold border transition-colors duration-[600ms]",
+                  "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-bold border transition-colors duration-[600ms]",
                   score.overall >= 80 && "bg-safe text-white border-safe",
                   score.overall >= 50 && score.overall < 80 && "bg-brand-gold text-brand-night border-brand-gold",
                   score.overall < 50 && "bg-danger text-white border-danger",
@@ -288,7 +288,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
 
         {/* Level description */}
         <p className={cn(
-          "mt-6 text-sm font-medium transition-colors duration-[600ms]",
+          "mt-6 text-sm font-normal transition-colors duration-[600ms]",
           score.overall >= 80 && "text-safe",
           score.overall >= 50 && score.overall < 80 && "text-brand-bronze",
           score.overall < 50 && "text-danger",
@@ -377,7 +377,7 @@ function BenchmarkSection({ userScore }: { userScore: number }) {
                 <span className="text-muted-foreground">
                   {c.id} {c.label}
                 </span>
-                <span className="font-semibold tabular-nums" style={{ color }}>
+                <span className="font-bold tabular-nums" style={{ color }}>
                   {c.score}点
                   {diff !== 0 && (
                     <span className="text-xs ml-1">({diff > 0 ? '+' : ''}{diff})</span>

@@ -59,7 +59,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
             {formatPercent(percentage)}
           </span>
         )}
-        <span className="font-semibold tabular-nums text-brand-stone">
+        <span className="font-bold tabular-nums text-brand-stone">
           {isIncome ? '+' : '-'}
           {formatCurrency(Math.abs(amount))}
         </span>
@@ -187,7 +187,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
       <div className={cn("space-y-4", isLoading && "opacity-60")}>
         {/* Income section */}
         <div>
-          <p className="mb-2 text-sm font-medium">収入</p>
+          <p className="mb-2 text-sm font-normal">収入</p>
           <div className="divide-y">
             {cashFlow.income > 0 && (
               <FlowItem
@@ -215,7 +215,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
             )}
           </div>
           <div className="mt-2 flex items-center justify-between border-t pt-2">
-            <span className="text-sm font-medium">収入合計</span>
+            <span className="text-sm font-normal">収入合計</span>
             <span className="font-bold text-brand-stone tabular-nums">
               +{formatCurrency(totalIncome)}
             </span>
@@ -224,7 +224,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
 
         {/* Expense section */}
         <div>
-          <p className="mb-2 text-sm font-medium">支出</p>
+          <p className="mb-2 text-sm font-normal">支出</p>
           <FlowItem
             label="年間支出"
             amount={cashFlow.expenses}
@@ -240,7 +240,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
           )}
         >
           <div className="flex items-center justify-between">
-            <span className="font-medium">年間収支</span>
+            <span className="font-normal">年間収支</span>
             <div className="flex items-center gap-2">
               {netCashFlowPositive ? (
                 <ArrowUp className="h-4 w-4 text-brand-bronze" />
@@ -287,7 +287,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
           <div className="space-y-4 border-t pt-4">
             <div className="flex items-center gap-2">
               <TrendingDown className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">資産の取り崩しシミュレーション</p>
+              <p className="text-sm font-normal">資産の取り崩しシミュレーション</p>
             </div>
 
             {/* Withdrawal summary */}
@@ -347,7 +347,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
                         const median = payload.find(p => p.dataKey === 'median')?.value as number ?? 0;
                         return (
                           <div className="rounded-lg border bg-background p-2 shadow-lg text-xs">
-                            <p className="font-medium mb-1">{label}歳</p>
+                            <p className="font-normal mb-1">{label}歳</p>
                             <p className="tabular-nums">資産: {formatValue(Math.round(median))}</p>
                           </div>
                         );
