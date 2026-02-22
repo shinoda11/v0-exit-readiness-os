@@ -1,11 +1,56 @@
 import Link from 'next/link'
 import { LPClient } from './lp-client'
 
+const cases = [
+  {
+    label: '30歳・ソロ・年収 900万',
+    situation: '堅実会社員。3,500万の1LDKを検討中。',
+    conclusion: '購入しても安心ラインを維持。ただしFIRE年齢は12年後退。',
+    scoreDiff: -1,
+    scoreLabel: '賃貸 78 → 購入 77',
+  },
+  {
+    label: '28歳・DINK・年収 3,200万',
+    situation: '外資IT×コンサル。1.4億のタワマンを検討。',
+    conclusion: '購入で生存率-8%。高額物件はリターンの前提に大きく依存。',
+    scoreDiff: -3,
+    scoreLabel: '賃貸 73 → 購入 70',
+  },
+  {
+    label: '32歳・DINK・年収 2,400万',
+    situation: '家賃月40万のハイパフォーマー。8,250万を検討。',
+    conclusion: '高家賃からの購入で生存率+18%。100歳資産差は4.9億。',
+    scoreDiff: +12,
+    scoreLabel: '賃貸 67 → 購入 79',
+  },
+  {
+    label: '38歳・子ども2人・年収 1,200万',
+    situation: '共働き中堅。郊外 4,500万の戸建てを検討。',
+    conclusion: '堅実な物件価格で安心ラインを確保。購入後も余白あり。',
+    scoreDiff: -1,
+    scoreLabel: '賃貸 83 → 購入 82',
+  },
+  {
+    label: '35歳・フリーランス＋会社員・年収 2,000万',
+    situation: '収入変動が大きい。7,250万のマンションを検討。',
+    conclusion: '購入でスコア+3。固定費圧縮が収入変動リスクを吸収。',
+    scoreDiff: +3,
+    scoreLabel: '賃貸 80 → 購入 83',
+  },
+  {
+    label: '42歳・購入済み・年収 2,100万',
+    situation: '残債6,000万。売却して賃貸に戻すか迷っている。',
+    conclusion: '売却→賃貸で60歳資産+5,000万。ただしスコア差はわずか+1。',
+    scoreDiff: +1,
+    scoreLabel: '持ち家 82 → 売却 83',
+  },
+];
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-brand-canvas">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm" style={{ borderColor: 'var(--brand-sand)' }}>
+      <header className="border-b border-brand-sand bg-white/80 backdrop-blur-sm">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-2">
           <svg width="24" height="24" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
             <line x1="90" y1="94" x2="42" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
@@ -62,66 +107,84 @@ export default function LandingPage() {
               href="/fit"
               className="inline-block px-8 py-4 rounded-lg text-base font-bold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
-              あなたのケースで確認する
+              自分のケースで試す
             </Link>
           </div>
 
+          {/* Product preview SVG */}
+          <div className="mt-12 max-w-2xl mx-auto">
+            <div className="bg-white rounded-xl border border-brand-sand shadow-sm p-6 sm:p-8">
+              <svg viewBox="0 0 480 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+                {/* Grid lines */}
+                <line x1="40" y1="20" x2="40" y2="160" stroke="var(--brand-sand)" strokeWidth="1" />
+                <line x1="40" y1="160" x2="460" y2="160" stroke="var(--brand-sand)" strokeWidth="1" />
+                <line x1="40" y1="90" x2="460" y2="90" stroke="var(--brand-sand)" strokeWidth="0.5" strokeDasharray="4 4" />
+                <line x1="40" y1="50" x2="460" y2="50" stroke="var(--brand-sand)" strokeWidth="0.5" strokeDasharray="4 4" />
+                <line x1="40" y1="130" x2="460" y2="130" stroke="var(--brand-sand)" strokeWidth="0.5" strokeDasharray="4 4" />
+
+                {/* Safety line */}
+                <line x1="40" y1="110" x2="460" y2="110" stroke="var(--danger)" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.6" />
+                <text x="462" y="114" fill="var(--danger)" fontSize="9" opacity="0.6">安心ライン</text>
+
+                {/* World line A (purchase) — solid */}
+                <path d="M40,140 C100,130 140,100 200,85 S300,50 380,40 L460,35" stroke="var(--safe)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+
+                {/* World line B (rent) — dashed */}
+                <path d="M40,140 C100,135 140,120 200,115 S300,105 380,100 L460,95" stroke="var(--brand-gold)" strokeWidth="2" fill="none" strokeDasharray="8 4" strokeLinecap="round" />
+
+                {/* Labels */}
+                <text x="410" y="30" fill="var(--safe)" fontSize="10" fontWeight="bold">世界線A</text>
+                <text x="410" y="92" fill="var(--brand-gold)" fontSize="10" fontWeight="bold">世界線B</text>
+
+                {/* Y-axis labels */}
+                <text x="8" y="54" fill="var(--brand-bronze)" fontSize="8">3億</text>
+                <text x="8" y="94" fill="var(--brand-bronze)" fontSize="8">2億</text>
+                <text x="8" y="134" fill="var(--brand-bronze)" fontSize="8">1億</text>
+                <text x="22" y="164" fill="var(--brand-bronze)" fontSize="8">0</text>
+
+                {/* X-axis labels */}
+                <text x="38" y="175" fill="var(--brand-bronze)" fontSize="8">35歳</text>
+                <text x="148" y="175" fill="var(--brand-bronze)" fontSize="8">50歳</text>
+                <text x="258" y="175" fill="var(--brand-bronze)" fontSize="8">65歳</text>
+                <text x="368" y="175" fill="var(--brand-bronze)" fontSize="8">80歳</text>
+              </svg>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* S2: Cases */}
+      {/* S2: Cases — left aligned */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <h2
-            className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
+            className="text-xl sm:text-2xl font-bold text-left mb-12 text-brand-night"
           >
             何が見えるようになるか
           </h2>
 
-          <div className="grid gap-8 sm:grid-cols-2">
-            {/* Case 1 */}
-            <div
-              className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
-            >
-              <h3 className="text-base font-bold mb-2 text-brand-night">
-                世帯年収 2,400万・家賃 32万の夫婦
-              </h3>
-              <p className="text-sm mb-4 leading-relaxed text-brand-bronze">
-                外資 IT ＋メガバンク。都心 8,500万の 2LDK を検討中。海外転職も視野。
-              </p>
-              <p className="text-sm font-normal leading-relaxed text-brand-stone">
-                「家を買う / 買わない」より「駐在を取るかどうか」の方が、全体の余白に効いていた。
-              </p>
-              <p className="mt-4 text-xs text-brand-bronze">
-                → 詳細は YOHACK 本体で確認できます
-              </p>
-            </div>
-
-            {/* Case 2 */}
-            <div
-              className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
-            >
-              <h3 className="text-base font-bold mb-2 text-brand-night">
-                世帯年収 2,400万・コンサル × 事業会社
-              </h3>
-              <p className="text-sm mb-4 leading-relaxed text-brand-bronze">
-                ペースダウンしたい気持ちはあるが、今のうちに買うべきか迷っている。
-              </p>
-              <p className="text-sm font-normal leading-relaxed text-brand-stone">
-                年収 1,800万 → 1,200万のペースダウンを織り込んでも、8,000万ラインなら安心ラインを割らなかった。
-              </p>
-              <p className="mt-4 text-xs text-brand-bronze">
-                → 詳細は YOHACK 本体で確認できます
-              </p>
-            </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {cases.map((c, i) => (
+              <div
+                key={i}
+                className="rounded-xl p-6 bg-white border border-brand-sand"
+              >
+                <p className="text-xs text-brand-bronze mb-2">{c.label}</p>
+                <p className="text-sm text-brand-stone mb-4 leading-relaxed">{c.situation}</p>
+                <p className="text-2xl font-bold text-brand-gold tabular-nums mb-2">
+                  {c.scoreDiff > 0 ? '+' : ''}{c.scoreDiff}
+                </p>
+                <p className="text-xs text-brand-bronze mb-4">{c.scoreLabel}</p>
+                <p className="text-sm font-normal leading-relaxed text-brand-stone">
+                  {c.conclusion}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* S3: Three pillars */}
-      <section className="py-20 px-4">
+      {/* S3: Three pillars — bg-brand-canvas */}
+      <section className="py-20 px-4 bg-brand-canvas">
         <div className="max-w-3xl mx-auto">
           <h2
             className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
@@ -131,10 +194,7 @@ export default function LandingPage() {
 
           <div className="grid gap-6 sm:grid-cols-3">
             {/* Worldline */}
-            <div
-              className="rounded-xl p-6 text-center"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
-            >
+            <div className="rounded-xl p-6 text-center bg-white border border-brand-sand">
               <div className="flex justify-center mb-4">
                 <svg width="32" height="32" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <line x1="90" y1="94" x2="42" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
@@ -152,10 +212,7 @@ export default function LandingPage() {
             </div>
 
             {/* Safety line */}
-            <div
-              className="rounded-xl p-6 text-center"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
-            >
+            <div className="rounded-xl p-6 text-center bg-white border border-brand-sand">
               <div className="flex justify-center mb-4">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M4 24 L16 8 L28 24" stroke="var(--brand-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
@@ -171,10 +228,7 @@ export default function LandingPage() {
             </div>
 
             {/* Margin */}
-            <div
-              className="rounded-xl p-6 text-center"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
-            >
+            <div className="rounded-xl p-6 text-center bg-white border border-brand-sand">
               <div className="flex justify-center mb-4">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="4" y="4" width="24" height="24" rx="4" stroke="var(--brand-gold)" strokeWidth="2" fill="none" />
@@ -192,20 +246,20 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* S4: Flat stance */}
-      <section className="py-20 px-4" style={{ backgroundColor: '#F5F3EF' }}>
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-base sm:text-lg leading-loose text-brand-stone">
+      {/* S4: Flat stance — dark background */}
+      <section className="py-24 px-4 bg-brand-night">
+        <div className="max-w-2xl mx-auto text-center space-y-3">
+          <p className="text-base sm:text-lg leading-loose text-white/70">
             YOHACK は、物件も保険も
             <br className="sm:hidden" />
             投資商品も売りません。
           </p>
-          <p className="text-base sm:text-lg leading-loose mt-2 text-brand-stone">
+          <p className="text-base sm:text-lg leading-loose text-white/70">
             どの世界線を選んでも、
             <br className="sm:hidden" />
             この OS の利益は変わりません。
           </p>
-          <p className="text-base sm:text-lg leading-loose mt-2 text-brand-stone">
+          <p className="text-base sm:text-lg leading-loose text-white/70">
             返すのは結論ではなく、
             <br className="sm:hidden" />
             比較と判断の土台です。
@@ -213,23 +267,20 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* S5: Who it's for */}
+      {/* S5: Who it's for — left aligned */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <h2
-            className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
+            className="text-xl sm:text-2xl font-bold text-left mb-12 text-brand-night"
           >
             向いている人 / 向いていない人
           </h2>
 
           <div className="grid gap-8 sm:grid-cols-2">
             {/* For */}
-            <div
-              className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
-            >
+            <div className="rounded-xl p-8 bg-white border border-brand-sand">
               <h3 className="text-base font-bold mb-4 text-brand-night">
-                ✓ 向いている人
+                向いている人
               </h3>
               <ul className="space-y-3 text-sm text-brand-stone">
                 <li className="flex items-start gap-2">
@@ -252,12 +303,9 @@ export default function LandingPage() {
             </div>
 
             {/* Not for */}
-            <div
-              className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
-            >
+            <div className="rounded-xl p-8 bg-white border border-brand-sand">
               <h3 className="text-base font-bold mb-4 text-brand-night">
-                ✗ 向いていない人
+                向いていない人
               </h3>
               <ul className="space-y-3 text-sm text-brand-stone">
                 <li className="flex items-start gap-2">
@@ -282,13 +330,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* S6: FAQ */}
-      <section className="py-20 px-4" style={{ backgroundColor: '#F5F3EF' }}>
+      {/* S6: FAQ — bg-brand-canvas */}
+      <section className="py-20 px-4 bg-brand-canvas">
         <div className="max-w-3xl mx-auto">
           <h2
             className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
           >
-            よくある質問
+            気になること
           </h2>
           <LPClient />
         </div>
@@ -311,14 +359,14 @@ export default function LandingPage() {
               href="/fit"
               className="inline-block px-8 py-4 rounded-lg text-base font-bold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
-              適合チェックに進む
+              12問で確認する
             </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t" style={{ borderColor: 'var(--brand-sand)' }}>
+      <footer className="py-8 px-4 border-t border-brand-sand">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-xs leading-relaxed text-brand-bronze">
             ※ YOHACK はファイナンシャルアドバイスではありません。シミュレーション結果は参考値であり、将来の成果を保証するものではありません。

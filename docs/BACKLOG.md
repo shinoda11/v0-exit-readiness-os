@@ -443,7 +443,7 @@ estimate: L
 ```
 
 ## P2-2: LP改修（ヒーロービジュアル + リズム再設計）
-status: todo
+status: done
 priority: P2
 estimate: L
 
