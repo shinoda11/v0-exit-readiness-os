@@ -114,7 +114,8 @@ export default function FitGatePage() {
 function FitGateForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const hasTokenParam = searchParams.get('token') !== null
+  const tokenValue = searchParams.get('token')
+  const hasTokenParam = tokenValue !== null
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 12
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -390,6 +391,7 @@ function FitGateForm() {
                 id="token"
                 type="text"
                 placeholder="INV-XXXXXX"
+                defaultValue={tokenValue ?? ''}
                 {...register('invitationToken')}
               />
               <p className="text-xs text-brand-bronze">

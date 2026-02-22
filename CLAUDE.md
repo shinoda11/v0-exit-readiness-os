@@ -59,7 +59,7 @@ YOHACK — 住宅購入の意思決定を「世界線比較」で支援するシ
 ## ディレクトリ構造
 ```
 app/
-  page.tsx              ← LP（7セクション）
+  page.tsx              ← LP（マーケティングページ）
   lp-client.tsx         ← LP クライアントコンポーネント
   layout.tsx            ← ルートレイアウト
   not-found.tsx         ← 404ページ
@@ -72,71 +72,51 @@ app/
     profile/page.tsx    ← プロファイル入力
     worldline/page.tsx  ← 世界線比較
     settings/page.tsx   ← 設定
-    v2/page.tsx         ← リダイレクトスタブ
-    plan/page.tsx       ← リダイレクトスタブ
     layout.tsx          ← プロダクト共通レイアウト（Sidebar + MobileHeader + BottomNav）
   pricing/page.tsx      ← 料金
   legal/                ← 利用規約・プライバシー・特商法
-  rsu/page.tsx          ← リダイレクトスタブ
-  timeline/page.tsx     ← リダイレクトスタブ
 
 components/
   dashboard/            ← 20ファイル（入力カード・結果カード・オンボーディング）
-                           profile-summary-card, conclusion-summary-card, welcome-dialog,
-                           onboarding-steps, income-card, retirement-card, expense-card,
-                           investment-card, housing-plan-card, exit-readiness-card,
-                           key-metrics-card, asset-projection-chart, monte-carlo-simulator-tab,
-                           cash-flow-card, scenario-comparison-card, next-best-actions-card,
-                           life-events-summary-card, basic-info-card, asset-card, profile-completeness
-  branch/               ← 7ファイル（branch-tree-viz, branch-timeline, branch-category,
-                           branch-node, worldline-preview, event-picker-dialog, event-customize-dialog）
+  branch/               ← 8ファイル（branch-tree-viz, branch-timeline, branch-category,
+                           branch-node, worldline-preview, event-picker-dialog,
+                           event-customize-dialog, event-icon）
   v2/                   ← 3ファイル（V2ResultSection, V2ComparisonView, MoneyMarginCard）
   layout/               ← 5ファイル（sidebar, bottom-nav, mobile-header, brand-story-dialog, yohack-symbol）
-  plan/                 ← 1ファイル（rsu-content）
   ui/                   ← 26ファイル（shadcn/ui）
-  currency-input.tsx    ← 共通カンマ付き数値入力
-  slider-input.tsx      ← 共通スライダー入力
-  section-card.tsx      ← 共通セクションカード
-  theme-provider.tsx    ← テーマプロバイダー
 
 lib/
-  calc-core.ts          ← engine/housing-sim 共通計算ロジック（376行、10関数）
-  engine.ts             ← モンテカルロシミュレーション（506行）
-  housing-sim.ts        ← 住宅シミュレーション（708行）
-  store.ts              ← Zustand SoT（383行）
-  branch.ts             ← 分岐ビルダーロジック（691行）
-  event-catalog.ts      ← ライフイベントプリセット23種 + バンドル3種（571行）
-  types.ts              ← 型定義（235行）
-  fitgate.ts            ← FitGate判定 + Profile変換 + メアド収集（149行）
-  worldline-templates.ts← 世界線テンプレート5種（119行）
-  benchmarks.ts         ← ケース台帳C01-C24ハードコード結果（59行）
-  plan.ts               ← ライフプラン計算（16行）
-  glossary.ts           ← 用語集（14行）
-  utils.ts              ← ユーティリティ（6行）
+  calc-core.ts          ← engine/housing-sim 共通計算ロジック
+  engine.ts             ← モンテカルロシミュレーション
+  housing-sim.ts        ← 住宅シミュレーション
+  store.ts              ← Zustand SoT
+  branch.ts             ← 分岐ビルダーロジック
+  event-catalog.ts      ← ライフイベントプリセット23種 + バンドル3種
+  types.ts              ← 型定義
+  fitgate.ts            ← FitGate判定 + Profile変換 + メアド収集
+  utils.ts              ← ユーティリティ + CHART_COLORS
   v2/                   ← 5ファイル（adapter, margin, store, worldline, readinessConfig）
   __tests__/            ← 6テストファイル（252テスト）
-    calc-parity.test.ts   ← calc-core パリティテスト（61件）
-    engine.test.ts        ← エンジン単体テスト（46件）
-    housing-sim.test.ts   ← 住宅シミュレーションテスト（54件）
-    adapter.test.ts       ← v2アダプターテスト（16件）
-    e2e-personas.test.ts  ← ペルソナE2Eテスト（35件）
-    e02-regression.test.ts← ケース台帳リグレッションテスト（40件）
 
-hooks/                  ← 8ファイル（useMargin, useStrategy, useSimulation, useHousingScenarios,
-                           useProfileCompleteness, useValidation, usePlan, use-toast）
-scripts/                ← case-catalog-sim.ts, sensitivity-analysis.ts, check-store-sot.js,
-                           onboarding-walkthrough.ts
+hooks/                  ← 8ファイル
 
 docs/
-  BACKLOG.md               ← プロダクトバックログ
-  CHANGELOG.md             ← 変更ログ
-  lp-design.md             ← LP設計書 v1.0
-  migration-from-lp.md     ← 旧LPリポからの移植ガイド
-  fitgate-reference/       ← 旧リポから抽出した移植対象コード（参照用）
-  case-catalog-results.md  ← 24ケースの賃貸vs購入比較結果
-  sensitivity-analysis.md  ← 感度分析結果
-  phase-*.md               ← フェーズ別設計書
-  quality-audit.md         ← 品質監査結果
+  product-backlog.md      ← バックログ唯一のSoT（machine-readable形式）
+  CHANGELOG.md            ← 変更ログ
+  lp-design.md            ← LP設計書
+  YOHACK_DESIGN_PHILOSOPHY.md ← デザイン哲学
+  case-catalog-results.md ← 24ケースの賃貸vs購入比較結果
+  sensitivity-analysis.md ← 感度分析結果
+  quality-audit.md        ← 品質監査結果
+  fitgate-reference/      ← 旧リポから抽出した移植対象コード（参照用）
+  snapshot/               ← 自動生成コード状態スナップショット
+  archive/                ← 完了済みフェーズ設計書
+
+scripts/
+  run-backlog.sh          ← バックログ自動消化ランナー（Telegram通知付き）
+  case-catalog-sim.ts     ← ケース台帳シミュレーション
+  sensitivity-analysis.ts ← 感度分析
+  check-store-sot.js      ← SoTガードレールチェック
 ```
 
 ## ナビゲーション

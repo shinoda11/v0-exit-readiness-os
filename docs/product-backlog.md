@@ -18,13 +18,15 @@
 
 ---
 
-### P0-FG-1: FitGate 招待トークン欄を条件付き表示に変更
+### [P0-FG-1] FitGate 招待トークン欄を条件付き表示に変更
+**status:** [x]
 
-**対象:** `app/fit/page.tsx`（フォーム末尾）
+**意図:** URLパラメータ `?token=XXX` がある場合のみトークン欄を表示する。「一見さんお断り」戦略と矛盾しないようにする。
 
-**現状の問題:** 招待トークン欄が全ユーザーに常時表示。「一見さんお断り」戦略と矛盾。
+**対象ファイル（目安）:** `app/fit/page.tsx`（フォーム末尾）
+※ファイル構造が変わっている場合は `grep -r "招待トークン\|invitationToken\|token" app/fit/` で探すこと
 
-**変更内容:**
+**参考コード:**
 ```tsx
 // URLパラメータがある場合のみ表示
 const searchParams = useSearchParams();
@@ -39,16 +41,22 @@ const hasToken = searchParams.get('token');
 ```
 
 **完了条件:**
-- `/fit` → トークン欄が表示されない
-- `/fit?token=ALPHA-2025` → トークン欄が表示され値がプリセットされている
+- `/fit` アクセス時 → トークン欄が表示されない
+- `/fit?token=ALPHA-2025` アクセス時 → トークン欄が表示され値がプリセットされている
+
+**実装はコードを読んで現状に合わせること**
 
 ---
 
-### P0-FG-2: FitGateヘッダーに「← 戻る」リンク追加
+### [P0-FG-2] FitGateヘッダーに「← 戻る」リンク追加
+**status:** [ ]
 
-**対象:** `app/fit/layout.tsx`
+**意図:** FitGateからLPに戻る導線がないため、ヘッダー左上に戻るリンクを追加する。
 
-**変更内容:**
+**対象ファイル（目安）:** `app/fit/layout.tsx`
+※ファイル構造が変わっている場合は `grep -r "FitGate\|fitgate" app/fit/` で探すこと
+
+**参考コード:**
 ```tsx
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -56,7 +64,7 @@ import Link from 'next/link';
 // ヘッダー左側に追加
 <Link
   href="/"
-  className="text-xs text-[#8A7A62] flex items-center gap-1 hover:text-[#5A5550] transition-colors"
+  className="text-xs text-brand-bronze flex items-center gap-1 hover:text-brand-stone transition-colors"
 >
   <ChevronLeft className="w-3 h-3" />
   戻る
@@ -65,13 +73,19 @@ import Link from 'next/link';
 
 **完了条件:** FitGate画面ヘッダー左上に「← 戻る」が表示され、クリックでLPへ遷移する。
 
+**実装はコードを読んで現状に合わせること**
+
 ---
 
-### P0-FG-3: Ready判定画面の「無料で〜」テキスト削除 + 文言修正
+### [P0-FG-3] Ready判定画面の「無料で〜」テキスト削除 + 文言修正
+**status:** [ ]
 
-**対象:** `app/fit/result/page.tsx`（Ready表示部分）
+**意図:** Ready画面に「無料」という文言が残っており¥29,800モデルと矛盾するため、文言を修正する。
 
-**変更内容:**
+**対象ファイル（目安）:** `app/fit/result/page.tsx`（Ready表示部分）
+※ファイル構造が変わっている場合は `grep -r "無料" app/fit/` で探すこと
+
+**参考コード:**
 ```tsx
 // Before
 <p>無料でシミュレーションをお試しください</p>
@@ -81,22 +95,23 @@ import Link from 'next/link';
 {/* TODO Phase2: ここにStripe Checkout ボタンが入る */}
 {/* <Button onClick={handleStripeCheckout}>Passを購入する（¥29,800）</Button> */}
 <Button asChild>
-  <Link href="/?from=fitgate">シミュレーションを開始する →</Link>
+  <Link href="/app?from=fitgate">シミュレーションを開始する →</Link>
 </Button>
 ```
 
 **完了条件:** Ready画面に「無料」という文言が一切含まれていない。
 
+**実装はコードを読んで現状に合わせること**
+
 ---
 
-### P0-FG-4: FitGate回答 → ダッシュボードプロファイル自動プリセット 動作確認・修正
+### [P0-FG-4] FitGate回答 → ダッシュボードプロファイル自動プリセット 動作確認・修正
+**status:** [ ]
 
-**対象:** `lib/fitgate.ts`（`fitGateToProfile()`）/ `app/page.tsx`（プリセット読み込み）
+**意図:** FitGate回答後にダッシュボードへ遷移したとき、プロファイルが正しくプリセットされるか確認・修正する。
 
-**確認手順:**
-1. `/fit?token=ALPHA-2025` にアクセスし12問を回答
-2. Ready判定 →「シミュレーションを開始する」でダッシュボードへ遷移
-3. IncomeCard・AssetCard の値を確認
+**対象ファイル（目安）:** `lib/fitgate.ts`（`fitGateToProfile()`）/ `app/app/profile/page.tsx`（プリセット読み込み）
+※ファイル構造が変わっている場合は `grep -rn "fitGateToProfile\|loadFitGateAnswers" lib/ app/` で探すこと
 
 **期待する挙動（変換テーブル）:**
 
@@ -104,27 +119,26 @@ import Link from 'next/link';
 |---|---|---|
 | 世帯年収 2,000〜2,499万 | grossIncome | 2200 |
 | 年齢 35〜39歳 | currentAge | 37 |
-| 家賃 20〜25万 | housingCostAnnual | 264（月22万×12） |
-| 検討物件 7,000〜9,999万 | housingPlans[0].price | 8500 |
-| 金融資産 2,000〜4,999万 | assetCash + assetInvest | 1050 + 2450（3:7按分） |
+| 現在の家賃 | housingCostAnnual | 月額中央値 × 12 |
+| 検討物件価格帯 | housingPlans[0].price | レンジ中央値 |
+| 貯蓄＋投資合計 | assetCash + assetInvest | 合計を 3:7 で按分 |
 | 家族構成「夫婦」 | mode | couple |
 
-**動作しない場合の確認:**
-```bash
-# fitGateToProfile() に渡るデータをログ確認
-# saveFitGateAnswers() と loadFitGateAnswers() のlocalStorageキー名が一致しているか確認
-grep -n "fitgate\|fitGate\|FITGATE" lib/fitgate.ts | head -20
-```
+**完了条件:** fitGateToProfile() のコードを読み、変換テーブルに沿った変換が実装されていることをコードレベルで確認する。不足があれば修正する。
 
-**完了条件:** FitGate回答後にダッシュボードへ遷移すると、年収・家賃・資産の3項目が正しい値でプリセットされている。
+**実装はコードを読んで現状に合わせること**
 
 ---
 
-### P0-FG-5: Prep判定後のメール登録を最低限機能させる
+### [P0-FG-5] Prep判定後のメール登録を最低限機能させる
+**status:** [ ]
 
-**対象:** `app/api/prep-register/route.ts`（新規）/ `app/fit/result/page.tsx`
+**意図:** Prep判定後のメール登録フォームが送信してもどこにも届かないため、最低限のAPIルートを作成してログ出力する。
 
-**APIルート（新規）:**
+**対象ファイル（目安）:** `app/api/prep-register/route.ts`（新規）/ `app/fit/result/page.tsx`
+※ファイル構造が変わっている場合は `grep -r "prep\|Prep" app/fit/` で探すこと
+
+**参考コード（APIルート新規）:**
 ```tsx
 // app/api/prep-register/route.ts
 export async function POST(req: Request) {
@@ -136,43 +150,23 @@ export async function POST(req: Request) {
 }
 ```
 
-**Prep画面のフォーム:**
-```tsx
-const [email, setEmail] = useState('');
-const [submitted, setSubmitted] = useState(false);
-
-const handleSubmit = async () => {
-  await fetch('/api/prep-register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, fitgateAnswers: loadFitGateAnswers() }),
-  });
-  setSubmitted(true);
-};
-
-{submitted
-  ? <p className="text-sm text-[#8A7A62]">登録しました。条件が整いましたらご連絡します。</p>
-  : (
-    <div className="flex gap-2">
-      <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" />
-      <Button onClick={handleSubmit}>登録する</Button>
-    </div>
-  )
-}
-```
-
 **完了条件:**
-- Prep判定後にメールアドレスを入力して送信できる
+- Prep判定画面にメールアドレス入力フォームがある
 - 送信後に完了メッセージが表示される
-- `pnpm dev` のログに `[Prep登録]` が出力される
+- API ルートが存在し、リクエストをログ出力する
+
+**実装はコードを読んで現状に合わせること**
 
 ---
 
-### P0-1: LP Y字アニメーション高速化
+### [P0-1] LP Y字アニメーション高速化
+**status:** [ ]
 
-**対象:** `app/page.tsx`（S0セクション内 CSS animation 定義）
+**意図:** LPのY字SVGにドロー・アニメーションを追加し、ページ読み込み時に枝が描かれる演出を入れる。
 
-**変更後:**
+**対象ファイル（目安）:** `app/page.tsx`（S1: Heroセクション内のY字SVG）
+
+**参考CSS:**
 ```css
 .y-svg .stem  { animation: draw 0.5s ease forwards 0.1s; }
 .y-svg .left  { animation: draw 0.4s ease forwards 0.4s; }
@@ -182,96 +176,104 @@ const handleSubmit = async () => {
 .y-svg .dot-r { animation: appear 0.2s ease forwards 0.8s; }
 ```
 
-**完了条件:** ページリロード後、Y字の枝が0.4s以内に見え始める。
+**完了条件:** ページリロード後、Y字の枝がアニメーションで描画される（0.4s以内に見え始める）。
+
+**実装はコードを読んで現状に合わせること**
 
 ---
 
-### P0-2: LP → FitGate 導線接続（UTMパラメータ付き）
+### [P0-2] LP → FitGate 導線接続（UTMパラメータ付き）
+**status:** [ ]
 
-**対象:** `app/page.tsx`（LPのCTAボタン2箇所）
+**意図:** LPのCTAリンクにUTMパラメータを付与して、流入元を追跡可能にする。
 
-```tsx
-// S0 ヒーローCTA
-<a href="/fit?utm_source=lp&utm_medium=hero_cta" className="cta-btn ...">
-  12問で確認する
-</a>
+**対象ファイル（目安）:** `app/page.tsx`（LPのCTAボタン2箇所）
 
-// S5 ボトムCTA
-<a href="/fit?utm_source=lp&utm_medium=bottom_cta" className="cta-btn ...">
-  12問で確認する
-</a>
-```
+**変更内容:**
+- S1 ヒーローCTA: `/fit` → `/fit?utm_source=lp&utm_medium=hero_cta`
+- S7 ボトムCTA: `/fit` → `/fit?utm_source=lp&utm_medium=bottom_cta`
 
-**完了条件:** クリックで `/fit?utm_source=lp&utm_medium=...` に遷移する。
+**完了条件:** CTAクリックで `/fit?utm_source=lp&utm_medium=...` に遷移する。
+
+**実装はコードを読んで現状に合わせること**
 
 ---
 
 ## 🟡 P1 — 今週中
 
-### P1-1: LP グラフプレビューをシナリオ連動に修正
+### [P1-1] LP グラフプレビューをシナリオ連動に修正
+**status:** [ ]
 
-**対象:** `app/page.tsx`（S2内のSVGグラフ）
+**意図:** LP S1のSVGグラフを6,000万 vs 8,000万シナリオに連動させ、世界線Aが安心ライン上、世界線Bが下落する軌跡にする。
 
-世界線A（6,000万）パス:
-```tsx
-d="M0,140 C80,120 160,90 240,70 S360,45 480,35 S560,30 600,28"
-```
+**対象ファイル（目安）:** `app/page.tsx`（S1内のSVGグラフ）
 
-世界線B（8,000万）パス:
-```tsx
-d="M0,140 C80,130 160,122 240,118 S320,115 380,118 S480,125 600,138"
-stroke="#CC3333" strokeWidth="2" fill="none" strokeDasharray="8 5"
-```
+**完了条件:** SVGグラフの2本のパスが6,000万（上昇）vs 8,000万（横ばい→下落）を表現している。
 
-安心ラインラベル:
-```tsx
-<text x="8" y="97" fontSize="9" fill="#8A7A62" fontFamily="DM Mono">安心ライン</text>
-```
+**実装はコードを読んで現状に合わせること**
 
-スコア:
-```tsx
-// A: <div className="score-value safe">78</div> / 転職後も安心ライン上
-// B: <div style={{ color: '#CC3333' }}>54</div> / 42歳の転職断念で下落
-```
+---
 
-### P1-2: モバイルLP 375px確認・修正
+### [P1-2] モバイルLP 375px確認・修正
+**status:** [ ]
+
+**意図:** LP全体を375px幅で確認し、崩れている箇所を修正する。
+
+**対象ファイル（目安）:** `app/page.tsx`
+
+**確認箇所と修正方針:**
 
 | 確認箇所 | 崩れていた場合の修正 |
 |---|---|
-| S0 Y字 中央寄せ | `flex justify-center` を親に追加 |
+| S1 Y字 中央寄せ | `flex justify-center` を親に追加 |
 | S2 2列比較 | `grid-cols-1 sm:grid-cols-2` に変更 |
 | 文字サイズ | `text-[10px]` → `text-xs`（12px）に引き上げ |
-| スクロールアニメ | `threshold: 0.1` → `threshold: 0.05` に下げる |
+
+**完了条件:** 375px幅で全セクションが崩れずに表示される。
+
+**実装はコードを読んで現状に合わせること**
 
 ---
 
 ## 🟢 P2 — 来週以降
 
-### P2-1: LP Next.js本実装
+### [P2-1] LP Next.js本実装
+**status:** [ ]
+
 - `app/(marketing)/lp/page.tsx` に切り出し
 - Framer Motion で CSS animation を置換
 - `app/page.tsx` をダッシュボードのみに戻す
 
-### P2-2: チラ見せ動画（15秒）撮影・埋め込み
+### [P2-2] チラ見せ動画（15秒）撮影・埋め込み
+**status:** [ ]
+
 - 年収スライダー → グラフ変化のキャプチャ
 - 数字はダミーデータ
 - LP S0に埋め込み、`autoPlay loop muted playsInline`
 
-### P2-3: ケース台帳LP展開（6ケース）
+### [P2-3] ケース台帳LP展開（6ケース）
+**status:** [ ]
+
 - C01〜C18 + C19（6,000万 vs 8,000万）から6件選定
 - LP S3 を `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` に拡張
 
-### P2-4: 1on1裏メニュー表示ロジック
+### [P2-4] 1on1裏メニュー表示ロジック
+**status:** [ ]
+
 - トリガー: 世界線3本以上 OR Pass購入から60日経過
 - 表示場所: `/worldline` ページ末尾
 - 一度閉じたら再表示しない（localStorage）
 
-### P2-5: Stripe Checkout接続（Phase 2）
+### [P2-5] Stripe Checkout接続（Phase 2）
+**status:** [ ]
+
 - Ready判定 → Stripe Checkout → ¥29,800 Pass購入 → アクセス権付与
 - `passSubscriptions` テーブル（Supabase）
 - Webhook: `checkout.session.completed` → Pass有効化
 
-### P2-6: Supabase導入（Phase 2）
+### [P2-6] Supabase導入（Phase 2）
+**status:** [ ]
+
 - 認証: Supabase Auth
 - テーブル: fitGateResponses / passSubscriptions / prepModeSubscribers
 - localStorage → Supabase DB への移行
