@@ -183,7 +183,7 @@ export async function POST(req: Request) {
 ---
 
 ### [P0-2] LP → FitGate 導線接続（UTMパラメータ付き）
-**status:** [ ]
+**status:** [x]
 
 **意図:** LPのCTAリンクにUTMパラメータを付与して、流入元を追跡可能にする。
 
