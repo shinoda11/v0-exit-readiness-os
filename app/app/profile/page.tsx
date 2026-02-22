@@ -68,8 +68,8 @@ export default function ProfilePage() {
 
   // --- Collapsible card state ---
   const [openCards, setOpenCards] = useState<Record<CardKey, boolean>>({
-    basicInfo: true,
-    income: true,
+    basicInfo: false,
+    income: false,
     retirement: false,
     expense: false,
     asset: false,
