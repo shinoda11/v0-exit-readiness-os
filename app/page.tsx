@@ -61,7 +61,7 @@ export default function LandingPage() {
 
           <div className="mt-10">
             <Link
-              href="/fit"
+              href="/fit?utm_source=lp&utm_medium=hero_cta"
               className="inline-block px-8 py-4 rounded-lg text-base font-bold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
               自分のケースで試す
@@ -384,7 +384,7 @@ export default function LandingPage() {
 
           <div className="mt-10">
             <Link
-              href="/fit"
+              href="/fit?utm_source=lp&utm_medium=bottom_cta"
               className="inline-block px-8 py-4 rounded-lg text-base font-bold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
               12問で確認する
