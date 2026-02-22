@@ -35,10 +35,16 @@ telegram_send() {
     return 0
   fi
 
+  # JSON ボディで送信（Windows 環境で -d だと日本語が UTF-8 にならない）
+  local escaped_msg
+  escaped_msg=$(printf '%s' "$msg" | awk -v bs='\\' 'NR>1{printf "%s", bs "n"}{printf "%s",$0}')
+  local tmp_json
+  tmp_json=$(mktemp)
+  printf '{"chat_id":"%s","text":"%s","parse_mode":"Markdown"}' "$chat_id" "$escaped_msg" > "$tmp_json"
   curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
-    -d chat_id="$chat_id" \
-    -d text="$msg" \
-    -d parse_mode="Markdown" > /dev/null
+    -H "Content-Type: application/json" \
+    -d @"$tmp_json" > /dev/null
+  rm -f "$tmp_json"
 }
 
 # ── タスクID抽出 ──────────────────────────────────────────────
