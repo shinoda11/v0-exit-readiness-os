@@ -164,9 +164,27 @@ export function incrementFitGateAttempts(): void {
   }
 }
 
-// --- Email send stub ---
+// --- Email / Prep registration ---
 
-export function sendFitGateEmail(email: string, result: FitGateResult): void {
-  // TODO: Replace with SendGrid integration
-  console.log(`メール送信: ${email}, 判定: ${result.judgment}${result.prepBucket ? `, bucket: ${result.prepBucket}` : ''}`);
+export async function sendFitGateEmail(
+  email: string,
+  result: FitGateResult,
+  answers?: FitGateAnswers,
+): Promise<void> {
+  // TODO Phase2: SendGrid でReady/Prep別テンプレート送信
+  try {
+    await fetch('/api/prep-register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        judgment: result.judgment,
+        prepBucket: result.prepBucket ?? null,
+        fitgateAnswers: answers ?? null,
+      }),
+    });
+  } catch {
+    // ネットワークエラー時はサイレントに失敗（UXを止めない）
+    console.warn('[Prep登録] API呼び出し失敗');
+  }
 }

@@ -160,7 +160,7 @@ function FitGateForm() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const onEmailSubmit = () => {
+  const onEmailSubmit = async () => {
     const trimmed = email.trim()
     if (!trimmed) {
       setEmailError('メールアドレスを入力してください')
@@ -175,9 +175,10 @@ function FitGateForm() {
     setIsSubmitting(true)
 
     // Save answers with email
-    saveFitGateAnswers({ ...pendingData!, email: trimmed })
+    const answersWithEmail = { ...pendingData!, email: trimmed }
+    saveFitGateAnswers(answersWithEmail)
     incrementFitGateAttempts()
-    sendFitGateEmail(trimmed, pendingResult!)
+    await sendFitGateEmail(trimmed, pendingResult!, answersWithEmail)
 
     router.push(
       `/fit/result?judgment=${pendingResult!.judgment}&prepBucket=${pendingResult!.prepBucket || ''}`
