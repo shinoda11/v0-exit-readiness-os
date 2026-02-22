@@ -24,7 +24,7 @@ interface RetirementCardProps {
 
 export function RetirementCard({ profile, onUpdate, open, onOpenChange, completed }: RetirementCardProps) {
   const icon = <Clock className="h-5 w-5" />;
-  const title = 'リタイア設計';
+  const title = 'リタイアの考え方';
   const postRetireIncome = profile.postRetireIncome ?? 0;
   const postRetireIncomeEndAge = profile.postRetireIncomeEndAge ?? 75;
 

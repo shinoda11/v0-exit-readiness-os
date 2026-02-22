@@ -38,8 +38,9 @@ export function CollapsibleCard({
   const isCompact = !open && completed;
   return (
     <Card className={cn(
-      'overflow-hidden border-brand-linen',
-      isCompact && 'border-brand-linen/60',
+      'overflow-hidden border-brand-linen transition-all duration-300 ease-out',
+      isCompact && 'border-brand-linen/60 opacity-80',
+      open && !completed && 'border-brand-gold/30 shadow-sm',
       className,
     )}>
       <Collapsible open={open} onOpenChange={onOpenChange}>
@@ -62,7 +63,7 @@ export function CollapsibleCard({
               </div>
               <div className="min-w-0">
                 <CardTitle className={cn(
-                  "font-semibold",
+                  "font-bold",
                   isCompact ? "text-sm text-muted-foreground" : "text-base",
                 )}>{title}</CardTitle>
                 {!open && summary && (

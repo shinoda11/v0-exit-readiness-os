@@ -23,7 +23,7 @@ interface IncomeCardProps {
 
 export function IncomeCard({ profile, onUpdate, getFieldError, open, onOpenChange, completed }: IncomeCardProps) {
   const icon = <Briefcase className="h-5 w-5" />;
-  const title = '収入';
+  const title = 'あなたの収入';
 
   const content = (
     <div className="space-y-4">

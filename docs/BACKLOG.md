@@ -570,7 +570,7 @@ estimate: M
 ```
 
 ## P2-5: 入力フローの再設計
-status: todo
+status: done
 priority: 2
 estimate: L
 

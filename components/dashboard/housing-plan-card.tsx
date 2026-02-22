@@ -303,7 +303,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
   }, [summaries, bestPlanId]);
 
   const icon = <Home className="h-5 w-5" />;
-  const titleText = '住宅プラン';
+  const titleText = '住まいの選択肢';
 
   const summaryNode = (() => {
     const rentMonthly = Math.round(rentAnnual / 12);

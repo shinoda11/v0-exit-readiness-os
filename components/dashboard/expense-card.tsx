@@ -21,7 +21,7 @@ interface ExpenseCardProps {
 export function ExpenseCard({ profile, onUpdate, getFieldError, open, onOpenChange, hideHousing, completed }: ExpenseCardProps) {
   const totalExpense = hideHousing ? profile.livingCostAnnual : profile.livingCostAnnual + profile.housingCostAnnual;
   const icon = <Receipt className="h-5 w-5" />;
-  const title = hideHousing ? '生活費' : '支出';
+  const title = hideHousing ? '毎月の生活費' : '毎月の支出';
 
   const content = (
     <div className="space-y-6">

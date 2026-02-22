@@ -37,7 +37,7 @@ interface InvestmentCardProps {
 export function InvestmentCard({ profile, onUpdate, getFieldError, open, onOpenChange, completed }: InvestmentCardProps) {
   const realReturn = profile.expectedReturn - profile.inflationRate;
   const icon = <TrendingUp className="h-5 w-5" />;
-  const title = '投資設定';
+  const title = '投資の前提';
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Auto-calculated tax rates

@@ -19,7 +19,7 @@ interface BasicInfoCardProps {
 
 export function BasicInfoCard({ profile, onUpdate, getFieldError, open, onOpenChange }: BasicInfoCardProps) {
   const icon = <User className="h-5 w-5" />;
-  const title = '基本情報';
+  const title = 'あなたのプロフィール';
 
   const content = (
     <div className="space-y-6">

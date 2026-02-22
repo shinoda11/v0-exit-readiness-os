@@ -46,7 +46,7 @@ export function AssetCard({ profile, onUpdate, getFieldError, open, onOpenChange
   };
 
   const icon = <Wallet className="h-5 w-5" />;
-  const title = '資産';
+  const title = '現在の資産';
 
   const content = (
     <div className="space-y-6">
