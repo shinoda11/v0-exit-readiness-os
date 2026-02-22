@@ -5,8 +5,12 @@
 # 失敗時: Telegram通知＋スキップして次のタスクへ自動進行
 set -euo pipefail
 
-BACKLOG="docs/product-backlog.md"
-LOG="docs/snapshot/run-log.txt"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+BACKLOG="$PROJECT_ROOT/docs/product-backlog.md"
+LOG="$PROJECT_ROOT/docs/snapshot/run-log.txt"
+ENV_FILE="$PROJECT_ROOT/.env"
 
 log() { echo "[$(date '+%H:%M:%S')] $1" | tee -a "$LOG"; }
 
@@ -18,9 +22,9 @@ telegram_send() {
 
   # .env からロード（未設定時のフォールバック）
   if [ -z "$token" ] || [ -z "$chat_id" ]; then
-    if [ -f .env ]; then
+    if [ -f "$ENV_FILE" ]; then
       # shellcheck disable=SC1091
-      source .env
+      source "$ENV_FILE"
       token="${TELEGRAM_BOT_TOKEN:-$token}"
       chat_id="${TELEGRAM_CHAT_ID:-$chat_id}"
     fi
