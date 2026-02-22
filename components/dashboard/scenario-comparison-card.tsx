@@ -140,12 +140,12 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#F0ECE4] dark:border-[#5A5550]">
-                <th className="text-left py-2 pr-2 font-medium text-[#8A7A62] text-xs">世界線</th>
-                <th className="text-right py-2 px-2 font-medium text-[#8A7A62] text-xs">安心ライン</th>
-                <th className="text-right py-2 px-2 font-medium text-[#8A7A62] text-xs">成功確率</th>
-                <th className="text-right py-2 px-2 font-medium text-[#8A7A62] text-xs">100歳資産</th>
-                <th className="text-right py-2 pl-2 font-medium text-[#8A7A62] text-xs">余白開始</th>
+              <tr className="border-b border-brand-linen dark:border-brand-stone">
+                <th className="text-left py-2 pr-2 font-medium text-brand-bronze text-xs">世界線</th>
+                <th className="text-right py-2 px-2 font-medium text-brand-bronze text-xs">安心ライン</th>
+                <th className="text-right py-2 px-2 font-medium text-brand-bronze text-xs">成功確率</th>
+                <th className="text-right py-2 px-2 font-medium text-brand-bronze text-xs">100歳資産</th>
+                <th className="text-right py-2 pl-2 font-medium text-brand-bronze text-xs">余白開始</th>
               </tr>
             </thead>
             <tbody>
@@ -153,38 +153,38 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                 <tr 
                   key={item.id}
                   className={cn(
-                    "border-b border-[#FAF9F7] dark:border-[#5A5550]/50 last:border-b-0",
-                    item.isCurrent && "bg-[#FAF9F7]/50 dark:bg-[#1A1916]/50"
+                    "border-b border-brand-canvas dark:border-brand-stone/50 last:border-b-0",
+                    item.isCurrent && "bg-brand-canvas/50 dark:bg-brand-night/50"
                   )}
                 >
                   <td className="py-2 pr-2">
                     <div className="flex items-center gap-1">
                       <span className={cn(
                         "text-sm",
-                        item.isCurrent ? "font-medium text-[#1A1916] dark:text-[#F0ECE4]" : "text-[#5A5550] dark:text-[#F0ECE4]"
+                        item.isCurrent ? "font-medium text-brand-night dark:text-brand-linen" : "text-brand-stone dark:text-brand-linen"
                       )}>
                         {item.name}
                       </span>
                       {item.isCurrent && (
-                        <span className="text-[10px] px-1 py-0.5 rounded bg-[#F0ECE4] text-[#8A7A62] dark:bg-[#5A5550] dark:text-[#8A7A62]/60">
+                        <span className="text-[10px] px-1 py-0.5 rounded bg-brand-linen text-brand-bronze dark:bg-brand-stone dark:text-brand-bronze/60">
                           今
                         </span>
                       )}
                     </div>
                     {item.createdAt && (
-                      <span className="text-[10px] text-[#8A7A62]/60">{formatRelativeTime(item.createdAt)}</span>
+                      <span className="text-[10px] text-brand-bronze/60">{formatRelativeTime(item.createdAt)}</span>
                     )}
                   </td>
-                  <td className="text-right py-2 px-2 tabular-nums text-[#5A5550] dark:text-[#F0ECE4]">
+                  <td className="text-right py-2 px-2 tabular-nums text-brand-stone dark:text-brand-linen">
                     {formatMetric(item.result?.metrics.fireAge, 'age')}
                   </td>
-                  <td className="text-right py-2 px-2 tabular-nums text-[#5A5550] dark:text-[#F0ECE4]">
+                  <td className="text-right py-2 px-2 tabular-nums text-brand-stone dark:text-brand-linen">
                     {formatMetric(item.result?.metrics.survivalRate, 'percent')}
                   </td>
-                  <td className="text-right py-2 px-2 tabular-nums text-[#5A5550] dark:text-[#F0ECE4]">
+                  <td className="text-right py-2 px-2 tabular-nums text-brand-stone dark:text-brand-linen">
                     {formatMetric(item.result?.metrics.assetAt100, 'asset')}
                   </td>
-                  <td className="text-right py-2 pl-2 tabular-nums text-[#5A5550] dark:text-[#F0ECE4]">
+                  <td className="text-right py-2 pl-2 tabular-nums text-brand-stone dark:text-brand-linen">
                     {formatMetric(item.result?.metrics.fireAge, 'age')}
                   </td>
                 </tr>
@@ -195,8 +195,8 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
         
         {/* Saved scenarios list */}
         {scenarios.length > 0 && (
-          <div className="pt-3 border-t border-[#F0ECE4] dark:border-[#5A5550]">
-            <p className="text-xs text-[#8A7A62] mb-2">保存済み ({scenarios.length}件) - 比較に追加</p>
+          <div className="pt-3 border-t border-brand-linen dark:border-brand-stone">
+            <p className="text-xs text-brand-bronze mb-2">保存済み ({scenarios.length}件) - 比較に追加</p>
             <div className="space-y-1">
               {scenarios.map((scenario) => (
                 <div 
@@ -213,11 +213,11 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                     />
                     <label 
                       htmlFor={`compare-${scenario.id}`}
-                      className="text-sm text-[#5A5550] dark:text-[#F0ECE4] cursor-pointer"
+                      className="text-sm text-brand-stone dark:text-brand-linen cursor-pointer"
                     >
                       {scenario.name}
                     </label>
-                    <span className="text-[10px] text-[#8A7A62]/60">
+                    <span className="text-[10px] text-brand-bronze/60">
                       {formatRelativeTime(scenario.createdAt)}
                     </span>
                   </div>
@@ -225,7 +225,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-11 w-11 text-[#8A7A62]/60 hover:text-[#8A7A62]"
+                      className="h-11 w-11 text-brand-bronze/60 hover:text-brand-bronze"
                       onClick={() => loadScenario(scenario.id)}
                       title="読み込む"
                     >
@@ -234,7 +234,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-11 w-11 text-[#8A7A62]/60 hover:text-red-700"
+                      className="h-11 w-11 text-brand-bronze/60 hover:text-red-700"
                       onClick={() => deleteScenario(scenario.id)}
                       title="削除"
                     >
@@ -253,7 +253,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
             variant="ghost"
             size="sm"
             onClick={clearComparison}
-            className="min-h-[44px] text-xs text-[#8A7A62]/60 hover:text-[#8A7A62]"
+            className="min-h-[44px] text-xs text-brand-bronze/60 hover:text-brand-bronze"
           >
             比較をクリア
           </Button>
@@ -261,7 +261,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
         
         {/* Empty state */}
         {scenarios.length === 0 && (
-          <p className="text-xs text-[#8A7A62]/60 text-center py-2">
+          <p className="text-xs text-brand-bronze/60 text-center py-2">
             シナリオを保存して比較できます
           </p>
         )}

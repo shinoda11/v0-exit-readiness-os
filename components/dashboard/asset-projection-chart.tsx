@@ -17,7 +17,7 @@ import { SectionCard } from '@/components/section-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
+import { cn, CHART_COLORS } from '@/lib/utils';
 import type { SimulationPath, LifeEvent } from '@/lib/types';
 
 interface AssetProjectionChartProps {
@@ -86,36 +86,36 @@ function CustomTooltip({
       <div className="space-y-2 text-sm">
         {showOptimistic && (
           <div className="flex items-center justify-between gap-4">
-            <span className="text-[#8A7A62] flex items-center gap-1">
-              <div className="h-2 w-2 rounded-full bg-[#8A7A62]/60" />
+            <span className="text-brand-bronze flex items-center gap-1">
+              <div className="h-2 w-2 rounded-full bg-brand-bronze/60" />
               楽観 (90%)
             </span>
             <span className="font-medium">{formatValue(upper)}</span>
           </div>
         )}
         <div className="flex items-center justify-between gap-4 text-xs">
-          <span className="text-[#8A7A62]">75%</span>
+          <span className="text-brand-bronze">75%</span>
           <span className="font-medium">{formatValue(p75)}</span>
         </div>
         <div className="flex items-center justify-between gap-4 py-1 border-y">
-          <span className="text-[#5A5550] flex items-center gap-1 font-medium">
-            <div className="h-2 w-2 rounded-full bg-[#5A5550]" />
+          <span className="text-brand-stone flex items-center gap-1 font-medium">
+            <div className="h-2 w-2 rounded-full bg-brand-stone" />
             中央値
           </span>
           <span className="font-bold text-base">{formatValue(median)}</span>
         </div>
         <div className="flex items-center justify-between gap-4 text-xs">
-          <span className="text-[#8A7A62]">25%</span>
+          <span className="text-brand-bronze">25%</span>
           <span className="font-medium">{formatValue(p25)}</span>
         </div>
         <div className="flex items-center justify-between gap-4">
-          <span className="text-[#8A7A62] flex items-center gap-1">
-            <div className="h-2 w-2 rounded-full bg-[#8A7A62]" />
+          <span className="text-brand-bronze flex items-center gap-1">
+            <div className="h-2 w-2 rounded-full bg-brand-bronze" />
             悲観 (10%)
           </span>
           <span className={cn(
             "font-medium",
-            lower < 0 && "text-[#5A5550]"
+            lower < 0 && "text-brand-stone"
           )}>{formatValue(lower)}</span>
         </div>
         {lower < 0 && (
@@ -232,8 +232,8 @@ export function AssetProjectionChart({
           >
             <defs>
               <linearGradient id="colorMedian" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#374151" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#374151" stopOpacity={0.05} />
+                <stop offset="5%" stopColor={CHART_COLORS.median} stopOpacity={0.4} />
+                <stop offset="95%" stopColor={CHART_COLORS.median} stopOpacity={0.05} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -241,7 +241,7 @@ export function AssetProjectionChart({
               dataKey="age"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: '#8A7A62' }}
+              tick={{ fontSize: 11, fill: CHART_COLORS.bronze }}
               tickFormatter={(value: number) => `${value}歳`}
               ticks={(() => {
                 if (chartData.length === 0) return [];
@@ -258,7 +258,7 @@ export function AssetProjectionChart({
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: '#8A7A62' }}
+              tick={{ fontSize: 11, fill: CHART_COLORS.bronze }}
               tickFormatter={formatYAxis}
               domain={[yMin, yMax]}
               width={55}
@@ -286,7 +286,7 @@ export function AssetProjectionChart({
               <Area
                 type="monotone"
                 dataKey="upper"
-                stroke="#9ca3af"
+                stroke={CHART_COLORS.secondary}
                 strokeWidth={1.5}
                 strokeDasharray="4 4"
                 fill="none"
@@ -297,7 +297,7 @@ export function AssetProjectionChart({
             <Area
               type="monotone"
               dataKey="median"
-              stroke="#374151"
+              stroke={CHART_COLORS.median}
               strokeWidth={2.5}
               fill="url(#colorMedian)"
             />
@@ -310,7 +310,7 @@ export function AssetProjectionChart({
             <Area
               type="monotone"
               dataKey="lower"
-              stroke="#6b7280"
+              stroke={CHART_COLORS.tertiary}
               strokeWidth={2}
               strokeDasharray="4 4"
               fill="none"
@@ -350,7 +350,7 @@ export function AssetProjectionChart({
               <ReferenceLine
                 key={event.id}
                 x={event.age}
-                stroke="#C8B89A"
+                stroke={CHART_COLORS.gold}
                 strokeWidth={1}
                 strokeDasharray="3 3"
               />
@@ -435,11 +435,11 @@ export function AssetProjectionChart({
                 >
                   <div
                     className="absolute border-l border-dashed"
-                    style={{ top: 4, bottom: 4, borderColor: '#8A7A62' }}
+                    style={{ top: 4, bottom: 4, borderColor: CHART_COLORS.bronze }}
                   />
                   <span
                     className="absolute whitespace-nowrap"
-                    style={{ fontSize: 9, color: '#8A7A62', bottom: 0 }}
+                    style={{ fontSize: 9, color: CHART_COLORS.bronze, bottom: 0 }}
                   >
                     年金
                   </span>
@@ -471,7 +471,7 @@ export function AssetProjectionChart({
                       className="absolute whitespace-nowrap text-center"
                       style={{
                         fontSize: 9,
-                        color: '#8A7A62',
+                        color: CHART_COLORS.bronze,
                         lineHeight: '12px',
                         ...labelStyle,
                       }}
@@ -485,7 +485,7 @@ export function AssetProjectionChart({
                         width: 6,
                         height: 6,
                         top: 'calc(50% - 3px)',
-                        backgroundColor: '#C8B89A',
+                        backgroundColor: CHART_COLORS.gold,
                       }}
                     />
                   </div>
@@ -502,7 +502,7 @@ export function AssetProjectionChart({
           <p className="text-xs text-muted-foreground mb-1">
             {targetRetireAge}歳時点（中央値）
           </p>
-          <p className="text-lg font-bold text-[#5A5550]">
+          <p className="text-lg font-bold text-brand-stone">
             {retirementData ? formatValue(retirementData.median) : '-'}
           </p>
         </div>
@@ -512,7 +512,7 @@ export function AssetProjectionChart({
           </p>
           <p className={cn(
             "text-lg font-bold",
-            finalData && finalData.median > 0 ? "text-[#5A5550]" : "text-[#8A7A62]"
+            finalData && finalData.median > 0 ? "text-brand-stone" : "text-brand-bronze"
           )}>
             {finalData ? formatValue(finalData.median) : '-'}
           </p>
@@ -523,12 +523,12 @@ export function AssetProjectionChart({
           </p>
           <p className={cn(
             "text-lg font-bold",
-            finalData && finalData.lower > 0 ? "text-[#5A5550]" : "text-[#8A7A62]"
+            finalData && finalData.lower > 0 ? "text-brand-stone" : "text-brand-bronze"
           )}>
             {finalData ? formatValue(finalData.lower) : '-'}
           </p>
           {finalData && finalData.lower < 0 && (
-            <p className="text-xs text-[#8A7A62] flex items-center justify-center gap-1 mt-1">
+            <p className="text-xs text-brand-bronze flex items-center justify-center gap-1 mt-1">
               <AlertTriangle className="h-3 w-3" />
               枯渇リスクあり
             </p>
@@ -539,7 +539,7 @@ export function AssetProjectionChart({
       {/* Legend */}
       <div className="mt-4 flex flex-wrap justify-center gap-4 text-sm">
         <div className="flex items-center gap-2">
-          <div className="h-1 w-5 rounded bg-[#5A5550]" />
+          <div className="h-1 w-5 rounded bg-brand-stone" />
           <span className="text-muted-foreground">中央値</span>
         </div>
         <div className="flex items-center gap-2">
@@ -547,12 +547,12 @@ export function AssetProjectionChart({
           <span className="text-muted-foreground">25-75%</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-0.5 w-5 border-t-2 border-dashed border-[#8A7A62]" />
+          <div className="h-0.5 w-5 border-t-2 border-dashed border-brand-bronze" />
           <span className="text-muted-foreground">悲観 (10%)</span>
         </div>
         {showOptimistic && (
           <div className="flex items-center gap-2">
-            <div className="h-0.5 w-5 border-t-2 border-dashed border-[#8A7A62]/60" />
+            <div className="h-0.5 w-5 border-t-2 border-dashed border-brand-bronze/60" />
             <span className="text-muted-foreground">楽観 (90%)</span>
           </div>
         )}

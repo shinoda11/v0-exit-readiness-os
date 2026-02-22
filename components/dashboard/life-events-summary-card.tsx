@@ -121,7 +121,7 @@ export function LifeEventsSummaryCard({ profile, open, onOpenChange }: LifeEvent
         <div className="space-y-3">
           {groups.map(g => (
             <div key={g.certainty}>
-              <p className="text-xs font-medium text-[#5A5550] mb-1">
+              <p className="text-xs font-medium text-brand-stone mb-1">
                 {g.marker} {g.label}: {g.branches.length}件
               </p>
               <div className="space-y-1 pl-4">
@@ -145,7 +145,7 @@ export function LifeEventsSummaryCard({ profile, open, onOpenChange }: LifeEvent
           ))}
 
           <Link href="/app/branch" className="block">
-            <p className="text-sm text-[#C8B89A] hover:underline pt-1">
+            <p className="text-sm text-brand-gold hover:underline pt-1">
               分岐ビルダーで編集する
               <ArrowRight className="inline h-3.5 w-3.5 ml-0.5" />
             </p>

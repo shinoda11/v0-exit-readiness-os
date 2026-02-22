@@ -38,8 +38,8 @@ export function CollapsibleCard({
   const isCompact = !open && completed;
   return (
     <Card className={cn(
-      'overflow-hidden border-[#F0ECE4] dark:border-[#5A5550]',
-      isCompact && 'border-[#F0ECE4]/60 dark:border-[#5A5550]/40',
+      'overflow-hidden border-brand-linen',
+      isCompact && 'border-brand-linen/60',
       className,
     )}>
       <Collapsible open={open} onOpenChange={onOpenChange}>
@@ -55,8 +55,8 @@ export function CollapsibleCard({
               <div className={cn(
                 "shrink-0 items-center justify-center",
                 isCompact
-                  ? "flex h-6 w-6 text-[#4A7C59]/60 dark:text-[#6BA368]/60"
-                  : "flex h-8 w-8 text-[#8A7A62]/60 dark:text-[#8A7A62]",
+                  ? "flex h-6 w-6 text-safe/60"
+                  : "flex h-8 w-8 text-brand-bronze/60 dark:text-brand-bronze",
               )}>
                 {isCompact ? <Check className="h-4 w-4" /> : icon}
               </div>

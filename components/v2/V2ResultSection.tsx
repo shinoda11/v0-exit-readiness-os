@@ -179,7 +179,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-base">
-                <GitBranch className="h-5 w-5 text-[#8A7A62]" />
+                <GitBranch className="h-5 w-5 text-brand-bronze" />
                 世界線間の余白比較
               </CardTitle>
             </CardHeader>
@@ -264,7 +264,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-[#8A7A62]" />
+                <Sparkles className="h-5 w-5 text-brand-bronze" />
                 推奨戦略: {primaryStrategy.name}
               </CardTitle>
               <CardDescription className="mt-1">
@@ -280,19 +280,19 @@ export function V2ResultSection(props: V2ResultSectionProps) {
           {/* Expected Outcomes */}
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-lg border p-4 text-center">
-              <div className="text-2xl font-bold text-[#5A5550]">
+              <div className="text-2xl font-bold text-brand-stone">
                 +{primaryStrategy.expectedOutcome.scoreImprovement}
               </div>
               <div className="text-sm text-muted-foreground">スコア改善予測</div>
             </div>
             <div className="rounded-lg border p-4 text-center">
-              <div className="text-2xl font-bold text-[#5A5550]">
+              <div className="text-2xl font-bold text-brand-stone">
                 {primaryStrategy.expectedOutcome.timeToFire ?? '--'}年
               </div>
               <div className="text-sm text-muted-foreground">安心ラインまで</div>
             </div>
             <div className="rounded-lg border p-4 text-center">
-              <div className="text-2xl font-bold text-[#5A5550]">
+              <div className="text-2xl font-bold text-brand-stone">
                 {primaryStrategy.expectedOutcome.riskReduction > 0 ? '-' : '+'}
                 {Math.abs(primaryStrategy.expectedOutcome.riskReduction)}%
               </div>
@@ -340,16 +340,16 @@ export function V2ResultSection(props: V2ResultSectionProps) {
             {strategicInsights.map((insight) => (
               <div
                 key={insight.id}
-                className="rounded-lg border border-[#F0ECE4] bg-[#FAF9F7]/50 p-4"
+                className="rounded-lg border border-brand-linen bg-brand-canvas/50 p-4"
               >
                 <div className="flex items-center justify-between mb-2">
                   <Badge
                     variant="outline"
                     className={cn(
-                      insight.category === 'strength' && 'bg-[#E8F5E8] text-[#4A7C59] border-[#4A7C59]/30',
-                      insight.category === 'weakness' && 'bg-[#FDE8E8] text-[#CC3333] border-[#CC3333]/30',
+                      insight.category === 'strength' && 'bg-[#E8F5E8] text-safe border-safe/30',
+                      insight.category === 'weakness' && 'bg-[#FDE8E8] text-danger border-danger/30',
                       insight.category === 'opportunity' && 'bg-[#E8EFF5] text-[#4A6FA5] border-[#4A6FA5]/30',
-                      insight.category === 'threat' && 'border-[#8A7A62]/60 text-[#5A5550]',
+                      insight.category === 'threat' && 'border-brand-bronze/60 text-brand-stone',
                     )}
                   >
                     {insight.category === 'strength' && '強み'}

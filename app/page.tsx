@@ -3,17 +3,17 @@ import { LPClient } from './lp-client'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FAF9F7' }}>
+    <div className="min-h-screen bg-brand-canvas">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm" style={{ borderColor: '#E8E4DE' }}>
+      <header className="border-b bg-white/80 backdrop-blur-sm" style={{ borderColor: 'var(--brand-sand)' }}>
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-2">
           <svg width="24" height="24" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="90" y1="94" x2="42" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-            <line x1="90" y1="94" x2="138" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-            <line x1="90" y1="94" x2="90" y2="156" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-            <circle cx="90" cy="94" r="9" fill="#C8B89A" />
+            <line x1="90" y1="94" x2="42" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+            <line x1="90" y1="94" x2="138" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+            <line x1="90" y1="94" x2="90" y2="156" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+            <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
           </svg>
-          <span className="text-lg font-semibold" style={{ color: '#1A1916' }}>YOHACK</span>
+          <span className="text-lg font-semibold text-brand-night">YOHACK</span>
         </div>
       </header>
 
@@ -29,18 +29,18 @@ export default function LandingPage() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <line x1="90" y1="94" x2="42" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-              <line x1="90" y1="94" x2="138" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-              <line x1="90" y1="94" x2="90" y2="156" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-              <circle cx="90" cy="94" r="9" fill="#C8B89A" />
-              <circle cx="42" cy="34" r="6" fill="#C8B89A" />
-              <circle cx="138" cy="34" r="6" fill="#C8B89A" />
+              <line x1="90" y1="94" x2="42" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+              <line x1="90" y1="94" x2="138" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+              <line x1="90" y1="94" x2="90" y2="156" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+              <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
+              <circle cx="42" cy="34" r="6" fill="var(--brand-gold)" />
+              <circle cx="138" cy="34" r="6" fill="var(--brand-gold)" />
             </svg>
           </div>
 
           <h1
-            className="text-2xl sm:text-3xl md:text-4xl font-bold leading-relaxed tracking-tight"
-            style={{ color: '#1A1916', fontFamily: 'var(--font-noto-serif-jp), serif' }}
+            className="text-2xl sm:text-3xl md:text-4xl font-bold leading-relaxed tracking-tight text-brand-night"
+            style={{ fontFamily: 'var(--font-noto-serif-jp), serif' }}
           >
             この家を買ったあと、
             <br className="sm:hidden" />
@@ -49,19 +49,18 @@ export default function LandingPage() {
             まだ動けるか。
           </h1>
 
-          <p className="mt-6 text-base sm:text-lg" style={{ color: '#5A5550' }}>
+          <p className="mt-6 text-base sm:text-lg text-brand-stone">
             この問いに、数字で答えられますか。
           </p>
 
-          <p className="mt-8 text-sm sm:text-base leading-relaxed max-w-md mx-auto" style={{ color: '#8A7A62' }}>
+          <p className="mt-8 text-sm sm:text-base leading-relaxed max-w-md mx-auto text-brand-bronze">
             YOHACK は、人生の選択肢を「世界線」として並べ、安心ラインと余白を見える化する意思決定シミュレーターです。
           </p>
 
           <div className="mt-10">
             <Link
               href="/fit"
-              className="inline-block px-8 py-4 rounded-lg text-base font-semibold text-white transition-colors hover:opacity-90"
-              style={{ backgroundColor: '#C8B89A' }}
+              className="inline-block px-8 py-4 rounded-lg text-base font-semibold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
               あなたのケースで確認する
             </Link>
@@ -74,8 +73,7 @@ export default function LandingPage() {
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <h2
-            className="text-xl sm:text-2xl font-bold text-center mb-12"
-            style={{ color: '#1A1916' }}
+            className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
           >
             何が見えるようになるか
           </h2>
@@ -84,18 +82,18 @@ export default function LandingPage() {
             {/* Case 1 */}
             <div
               className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E4DE' }}
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-2" style={{ color: '#1A1916' }}>
+              <h3 className="text-base font-semibold mb-2 text-brand-night">
                 世帯年収 2,400万・家賃 32万の夫婦
               </h3>
-              <p className="text-sm mb-4 leading-relaxed" style={{ color: '#8A7A62' }}>
+              <p className="text-sm mb-4 leading-relaxed text-brand-bronze">
                 外資 IT ＋メガバンク。都心 8,500万の 2LDK を検討中。海外転職も視野。
               </p>
-              <p className="text-sm font-medium leading-relaxed" style={{ color: '#5A5550' }}>
+              <p className="text-sm font-medium leading-relaxed text-brand-stone">
                 「家を買う / 買わない」より「駐在を取るかどうか」の方が、全体の余白に効いていた。
               </p>
-              <p className="mt-4 text-xs" style={{ color: '#8A7A62' }}>
+              <p className="mt-4 text-xs text-brand-bronze">
                 → 詳細は YOHACK 本体で確認できます
               </p>
             </div>
@@ -103,18 +101,18 @@ export default function LandingPage() {
             {/* Case 2 */}
             <div
               className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E4DE' }}
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-2" style={{ color: '#1A1916' }}>
+              <h3 className="text-base font-semibold mb-2 text-brand-night">
                 世帯年収 2,400万・コンサル × 事業会社
               </h3>
-              <p className="text-sm mb-4 leading-relaxed" style={{ color: '#8A7A62' }}>
+              <p className="text-sm mb-4 leading-relaxed text-brand-bronze">
                 ペースダウンしたい気持ちはあるが、今のうちに買うべきか迷っている。
               </p>
-              <p className="text-sm font-medium leading-relaxed" style={{ color: '#5A5550' }}>
+              <p className="text-sm font-medium leading-relaxed text-brand-stone">
                 年収 1,800万 → 1,200万のペースダウンを織り込んでも、8,000万ラインなら安心ラインを割らなかった。
               </p>
-              <p className="mt-4 text-xs" style={{ color: '#8A7A62' }}>
+              <p className="mt-4 text-xs text-brand-bronze">
                 → 詳細は YOHACK 本体で確認できます
               </p>
             </div>
@@ -126,8 +124,7 @@ export default function LandingPage() {
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <h2
-            className="text-xl sm:text-2xl font-bold text-center mb-12"
-            style={{ color: '#1A1916' }}
+            className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
           >
             3つの軸
           </h2>
@@ -136,20 +133,20 @@ export default function LandingPage() {
             {/* Worldline */}
             <div
               className="rounded-xl p-6 text-center"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E4DE' }}
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
               <div className="flex justify-center mb-4">
                 <svg width="32" height="32" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="90" y1="94" x2="42" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-                  <line x1="90" y1="94" x2="138" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-                  <line x1="90" y1="94" x2="90" y2="156" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-                  <circle cx="90" cy="94" r="9" fill="#C8B89A" />
+                  <line x1="90" y1="94" x2="42" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+                  <line x1="90" y1="94" x2="138" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+                  <line x1="90" y1="94" x2="90" y2="156" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+                  <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold mb-2" style={{ color: '#1A1916' }}>
+              <h3 className="text-base font-semibold mb-2 text-brand-night">
                 世界線
               </h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#5A5550' }}>
+              <p className="text-sm leading-relaxed text-brand-stone">
                 同じ前提で、異なる選択肢を並べて比較する。「家を買う」と「買わない」を100歳まで並走させる。
               </p>
             </div>
@@ -157,18 +154,18 @@ export default function LandingPage() {
             {/* Safety line */}
             <div
               className="rounded-xl p-6 text-center"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E4DE' }}
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
               <div className="flex justify-center mb-4">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 24 L16 8 L28 24" stroke="#C8B89A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                  <line x1="4" y1="20" x2="28" y2="20" stroke="#8A7A62" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M4 24 L16 8 L28 24" stroke="var(--brand-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                  <line x1="4" y1="20" x2="28" y2="20" stroke="var(--brand-bronze)" strokeWidth="1.5" strokeDasharray="3 3" />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold mb-2" style={{ color: '#1A1916' }}>
+              <h3 className="text-base font-semibold mb-2 text-brand-night">
                 安心ライン
               </h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#5A5550' }}>
+              <p className="text-sm leading-relaxed text-brand-stone">
                 「ここを割ると厳しい」の下限を見える化する。生存率と資産推移から算出。
               </p>
             </div>
@@ -176,18 +173,18 @@ export default function LandingPage() {
             {/* Margin */}
             <div
               className="rounded-xl p-6 text-center"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E4DE' }}
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
               <div className="flex justify-center mb-4">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="4" y="4" width="24" height="24" rx="4" stroke="#C8B89A" strokeWidth="2" fill="none" />
-                  <rect x="9" y="9" width="14" height="14" rx="2" fill="#C8B89A" fillOpacity="0.2" />
+                  <rect x="4" y="4" width="24" height="24" rx="4" stroke="var(--brand-gold)" strokeWidth="2" fill="none" />
+                  <rect x="9" y="9" width="14" height="14" rx="2" fill="var(--brand-gold)" fillOpacity="0.2" />
                 </svg>
               </div>
-              <h3 className="text-base font-semibold mb-2" style={{ color: '#1A1916' }}>
+              <h3 className="text-base font-semibold mb-2 text-brand-night">
                 余白
               </h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#5A5550' }}>
+              <p className="text-sm leading-relaxed text-brand-stone">
                 「どの年代にどれだけ余裕が残るか」に翻訳する。お金・時間・リスクの3軸で定量化。
               </p>
             </div>
@@ -198,17 +195,17 @@ export default function LandingPage() {
       {/* S4: Flat stance */}
       <section className="py-20 px-4" style={{ backgroundColor: '#F5F3EF' }}>
         <div className="max-w-2xl mx-auto text-center">
-          <p className="text-base sm:text-lg leading-loose" style={{ color: '#5A5550' }}>
+          <p className="text-base sm:text-lg leading-loose text-brand-stone">
             YOHACK は、物件も保険も
             <br className="sm:hidden" />
             投資商品も売りません。
           </p>
-          <p className="text-base sm:text-lg leading-loose mt-2" style={{ color: '#5A5550' }}>
+          <p className="text-base sm:text-lg leading-loose mt-2 text-brand-stone">
             どの世界線を選んでも、
             <br className="sm:hidden" />
             この OS の利益は変わりません。
           </p>
-          <p className="text-base sm:text-lg leading-loose mt-2" style={{ color: '#5A5550' }}>
+          <p className="text-base sm:text-lg leading-loose mt-2 text-brand-stone">
             返すのは結論ではなく、
             <br className="sm:hidden" />
             比較と判断の土台です。
@@ -220,8 +217,7 @@ export default function LandingPage() {
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
           <h2
-            className="text-xl sm:text-2xl font-bold text-center mb-12"
-            style={{ color: '#1A1916' }}
+            className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
           >
             向いている人 / 向いていない人
           </h2>
@@ -230,26 +226,26 @@ export default function LandingPage() {
             {/* For */}
             <div
               className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E4DE' }}
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-4" style={{ color: '#1A1916' }}>
+              <h3 className="text-base font-semibold mb-4 text-brand-night">
                 ✓ 向いている人
               </h3>
-              <ul className="space-y-3 text-sm" style={{ color: '#5A5550' }}>
+              <ul className="space-y-3 text-sm text-brand-stone">
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#C8B89A' }}>—</span>
+                  <span className="text-brand-gold">—</span>
                   <span>世帯年収 1,000〜3,000万で、7,000〜10,000万クラスの物件を本気で検討している</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#C8B89A' }}>—</span>
+                  <span className="text-brand-gold">—</span>
                   <span>「買えるか」ではなく「買った後も動けるか」を気にしている</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#C8B89A' }}>—</span>
+                  <span className="text-brand-gold">—</span>
                   <span>夫婦で論点を整理するための客観データが欲しい</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#C8B89A' }}>—</span>
+                  <span className="text-brand-gold">—</span>
                   <span>自分で数字を動かして判断したい</span>
                 </li>
               </ul>
@@ -258,26 +254,26 @@ export default function LandingPage() {
             {/* Not for */}
             <div
               className="rounded-xl p-8"
-              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E4DE' }}
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--brand-sand)' }}
             >
-              <h3 className="text-base font-semibold mb-4" style={{ color: '#1A1916' }}>
+              <h3 className="text-base font-semibold mb-4 text-brand-night">
                 ✗ 向いていない人
               </h3>
-              <ul className="space-y-3 text-sm" style={{ color: '#5A5550' }}>
+              <ul className="space-y-3 text-sm text-brand-stone">
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#8A7A62' }}>—</span>
+                  <span className="text-brand-bronze">—</span>
                   <span>予算 5,000万以下 or 1.5億以上（レンジ外）</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#8A7A62' }}>—</span>
+                  <span className="text-brand-bronze">—</span>
                   <span>「買うか買わないか」をすでに決めている</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#8A7A62' }}>—</span>
+                  <span className="text-brand-bronze">—</span>
                   <span>数字よりもフィーリングで決めたい</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span style={{ color: '#8A7A62' }}>—</span>
+                  <span className="text-brand-bronze">—</span>
                   <span>ファイナンシャルプランナーに全部任せたい</span>
                 </li>
               </ul>
@@ -290,8 +286,7 @@ export default function LandingPage() {
       <section className="py-20 px-4" style={{ backgroundColor: '#F5F3EF' }}>
         <div className="max-w-3xl mx-auto">
           <h2
-            className="text-xl sm:text-2xl font-bold text-center mb-12"
-            style={{ color: '#1A1916' }}
+            className="text-xl sm:text-2xl font-bold text-center mb-12 text-brand-night"
           >
             よくある質問
           </h2>
@@ -302,20 +297,19 @@ export default function LandingPage() {
       {/* S7: CTA */}
       <section className="py-20 sm:py-28 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-base sm:text-lg leading-relaxed" style={{ color: '#5A5550' }}>
+          <p className="text-base sm:text-lg leading-relaxed text-brand-stone">
             あなたのケースで、
             <br className="sm:hidden" />
             世界線比較が意味を持つかどうか。
           </p>
-          <p className="text-base sm:text-lg leading-relaxed mt-1" style={{ color: '#5A5550' }}>
+          <p className="text-base sm:text-lg leading-relaxed mt-1 text-brand-stone">
             12問のチェックで確認できます。
           </p>
 
           <div className="mt-10">
             <Link
               href="/fit"
-              className="inline-block px-8 py-4 rounded-lg text-base font-semibold text-white transition-colors hover:opacity-90"
-              style={{ backgroundColor: '#C8B89A' }}
+              className="inline-block px-8 py-4 rounded-lg text-base font-semibold text-white transition-colors hover:opacity-90 bg-brand-gold"
             >
               適合チェックに進む
             </Link>
@@ -324,19 +318,19 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t" style={{ borderColor: '#E8E4DE' }}>
+      <footer className="py-8 px-4 border-t" style={{ borderColor: 'var(--brand-sand)' }}>
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs leading-relaxed" style={{ color: '#8A7A62' }}>
+          <p className="text-xs leading-relaxed text-brand-bronze">
             ※ YOHACK はファイナンシャルアドバイスではありません。シミュレーション結果は参考値であり、将来の成果を保証するものではありません。
           </p>
           <div className="flex items-center justify-center gap-4 flex-wrap mt-4">
-            <Link href="/legal/terms" className="text-xs transition-colors hover:underline" style={{ color: '#8A7A62' }}>
+            <Link href="/legal/terms" className="text-xs transition-colors hover:underline text-brand-bronze">
               利用規約
             </Link>
-            <Link href="/legal/privacy" className="text-xs transition-colors hover:underline" style={{ color: '#8A7A62' }}>
+            <Link href="/legal/privacy" className="text-xs transition-colors hover:underline text-brand-bronze">
               プライバシーポリシー
             </Link>
-            <Link href="/legal/commercial" className="text-xs transition-colors hover:underline" style={{ color: '#8A7A62' }}>
+            <Link href="/legal/commercial" className="text-xs transition-colors hover:underline text-brand-bronze">
               特定商取引法
             </Link>
           </div>

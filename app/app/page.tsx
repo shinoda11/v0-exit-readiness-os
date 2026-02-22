@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { X, Save, Check, Share2, Loader2, GitBranch } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn, CHART_COLORS } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
 // Dashboard input cards
@@ -278,7 +278,7 @@ export default function DashboardPage() {
     try {
       const { toCanvas } = await import('html-to-image');
       const sourceCanvas = await toCanvas(target, {
-        backgroundColor: '#FAF9F7',
+        backgroundColor: CHART_COLORS.canvas,
         pixelRatio: 2,
       });
 
@@ -290,7 +290,7 @@ export default function DashboardPage() {
       const ctx = finalCanvas.getContext('2d')!;
 
       // Background
-      ctx.fillStyle = '#FAF9F7';
+      ctx.fillStyle = CHART_COLORS.canvas;
       ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
 
       // Draw captured content
@@ -298,11 +298,11 @@ export default function DashboardPage() {
 
       // Footer
       const footerY = sourceCanvas.height + 20;
-      ctx.fillStyle = '#8A7A62';
+      ctx.fillStyle = CHART_COLORS.bronze;
       ctx.font = 'bold 28px sans-serif';
       ctx.fillText('YOHACK', 32, footerY + 10);
 
-      ctx.fillStyle = '#5A5550';
+      ctx.fillStyle = CHART_COLORS.stone;
       ctx.font = '20px sans-serif';
       const dateStr = new Date().toLocaleDateString('ja-JP');
       ctx.fillText(`${dateStr}  ※シミュレーション結果です。金融アドバイスではありません。`, 180, footerY + 10);
@@ -352,8 +352,8 @@ export default function DashboardPage() {
       <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur-sm">
           <div className="flex h-14 items-center px-4 sm:px-6">
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-[#1A1916]">ダッシュボード</h1>
-              <p className="text-sm text-[#8A7A62]">プロファイルとシミュレーション結果</p>
+              <h1 className="text-xl font-bold tracking-tight text-brand-night">ダッシュボード</h1>
+              <p className="text-sm text-brand-bronze">プロファイルとシミュレーション結果</p>
             </div>
           </div>
         </header>
@@ -368,16 +368,16 @@ export default function DashboardPage() {
 
           {/* Worldline guidance - shown when profile edited but no scenarios yet */}
           {!showFirstVisitBanner && !isProfileDefault && scenarios.length === 0 && (
-            <div className="mb-6 flex items-center gap-4 rounded-lg border border-[#C8B89A]/20 bg-[#C8B89A]/5 p-4">
-              <div className="flex-shrink-0 rounded-full bg-[#C8B89A]/10 p-2.5">
-                <GitBranch className="h-5 w-5 text-[#C8B89A]" />
+            <div className="mb-6 flex items-center gap-4 rounded-lg border border-brand-gold/20 bg-brand-gold/5 p-4">
+              <div className="flex-shrink-0 rounded-full bg-brand-gold/10 p-2.5">
+                <GitBranch className="h-5 w-5 text-brand-gold" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-[#5A5550]">
+                <p className="text-sm text-brand-stone">
                   まず、あなたの家の選択肢を世界線として並べてみましょう
                 </p>
               </div>
-              <Button asChild size="sm" className="flex-shrink-0 gap-1 bg-[#1A1916] text-[#F0ECE4] hover:bg-[#1A1916]/90">
+              <Button asChild size="sm" className="flex-shrink-0 gap-1 bg-brand-night text-brand-linen hover:bg-brand-night/90">
                 <Link href="/app/branch">
                   最初の世界線を作る →
                 </Link>
@@ -387,10 +387,10 @@ export default function DashboardPage() {
 
           {/* First-visit banner */}
           {showFirstVisitBanner && (
-            <div className="mb-6 flex items-start gap-3 rounded-lg border-l-4 border-l-[#C8B89A] bg-[#C8B89A]/10 p-4 dark:bg-[#C8B89A]/5">
-              <div className="flex-1 text-sm text-[#8A7A62] dark:text-[#C8B89A]">
+            <div className="mb-6 flex items-start gap-3 rounded-lg border-l-4 border-l-brand-gold bg-brand-gold/10 p-4 dark:bg-brand-gold/5">
+              <div className="flex-1 text-sm text-brand-bronze">
                 <p className="font-medium">現在はサンプルデータでシミュレーションしています。</p>
-                <p className="mt-1 text-[#8A7A62]/80 dark:text-[#C8B89A]/80">あなたの条件を入力すると、結果が自動で更新されます。</p>
+                <p className="mt-1 text-brand-bronze/80">あなたの条件を入力すると、結果が自動で更新されます。</p>
               </div>
               <button
                 onClick={() => {
@@ -399,7 +399,7 @@ export default function DashboardPage() {
                     localStorage.setItem('yohack-profile-edited', '1');
                   }
                 }}
-                className="flex-shrink-0 rounded p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-[#8A7A62]/60 hover:text-[#8A7A62] dark:text-[#C8B89A]/60 dark:hover:text-[#C8B89A] transition-colors"
+                className="flex-shrink-0 rounded p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-brand-bronze/60 hover:text-brand-bronze transition-colors"
                 aria-label="閉じる"
               >
                 <X className="h-4 w-4" />
@@ -427,15 +427,15 @@ export default function DashboardPage() {
           </div>
 
           {/* Mobile: 入力/結果 Tab Bar */}
-          <div className="md:hidden sticky top-14 z-20 -mx-4 bg-[#FAF9F7] border-b border-[#F0ECE4]">
+          <div className="md:hidden sticky top-14 z-20 -mx-4 bg-brand-canvas border-b border-brand-linen">
             <div className="flex">
               <button
                 onClick={() => setMobileTab('input')}
                 className={cn(
                   'flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors',
                   mobileTab === 'input'
-                    ? 'text-[#1A1916] border-b-2 border-[#C8B89A]'
-                    : 'text-[#8A7A62]'
+                    ? 'text-brand-night border-b-2 border-brand-gold'
+                    : 'text-brand-bronze'
                 )}
               >
                 入力
@@ -445,8 +445,8 @@ export default function DashboardPage() {
                 className={cn(
                   'flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors',
                   mobileTab === 'result'
-                    ? 'text-[#1A1916] border-b-2 border-[#C8B89A]'
-                    : 'text-[#8A7A62]'
+                    ? 'text-brand-night border-b-2 border-brand-gold'
+                    : 'text-brand-bronze'
                 )}
               >
                 結果

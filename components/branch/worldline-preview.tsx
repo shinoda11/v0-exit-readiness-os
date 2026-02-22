@@ -49,7 +49,7 @@ export function WorldlinePreview({
               key={c.id}
               className={cn(
                 'flex items-center gap-3 min-h-[44px] px-3 py-2 rounded-md border cursor-pointer transition-colors',
-                isSelected ? 'border-[#C8B89A] bg-accent/30' : 'border-border hover:bg-accent/50'
+                isSelected ? 'border-brand-gold bg-accent/30' : 'border-border hover:bg-accent/50'
               )}
             >
               <Checkbox
@@ -70,7 +70,7 @@ export function WorldlinePreview({
                       className={cn(
                         'text-xs font-medium px-1.5 py-0.5 rounded',
                         diff! >= 0
-                          ? 'bg-[#4A7C59]/10 text-[#4A7C59]'
+                          ? 'bg-safe/10 text-safe'
                           : 'bg-red-50 text-red-700'
                       )}
                     >
@@ -95,8 +95,8 @@ export function WorldlinePreview({
 
       {/* Discovery card */}
       {impact && (
-        <div className="flex items-start gap-3 rounded-lg border border-[#C8B89A]/30 bg-[#C8B89A]/5 p-3">
-          <Lightbulb className="h-5 w-5 text-[#C8B89A] shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 rounded-lg border border-brand-gold/30 bg-brand-gold/5 p-3">
+          <Lightbulb className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-foreground">発見</p>
             <p className="text-xs text-muted-foreground">
@@ -117,7 +117,7 @@ export function WorldlinePreview({
           size="sm"
           onClick={onCompare}
           disabled={selectedIds.size < 2}
-          className="flex-1 gap-1 bg-[#1A1916] text-[#F0ECE4] hover:bg-[#1A1916]/90"
+          className="flex-1 gap-1 bg-brand-night text-brand-linen hover:bg-brand-night/90"
         >
           選んだ世界線を比較する
           <ArrowRight className="h-4 w-4" />

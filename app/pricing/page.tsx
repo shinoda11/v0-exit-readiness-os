@@ -48,10 +48,10 @@ export default function PricingPage() {
           {/* ヘッダー */}
           <div className="text-center space-y-3">
             <h1 className="text-3xl font-bold tracking-tight">料金</h1>
-            <p className="text-[#5A5550]">
+            <p className="text-brand-stone">
               人生の大きな決断を、データで支える
             </p>
-            <p className="text-sm text-[#8A7A62]">
+            <p className="text-sm text-brand-bronze">
               YOHACK は、どの世界線を選んでも利益が変わりません。
             </p>
           </div>
@@ -62,25 +62,25 @@ export default function PricingPage() {
             <Card className="md:col-span-2 border-border">
               <CardContent className="p-6 space-y-5">
                 <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-[#C8B89A]" />
-                  <h2 className="text-sm font-semibold text-[#5A5550]">利益相反ゼロ</h2>
+                  <Shield className="h-5 w-5 text-brand-gold" />
+                  <h2 className="text-sm font-semibold text-brand-stone">利益相反ゼロ</h2>
                 </div>
 
                 <div className="space-y-4">
                   <div className="rounded-lg bg-muted/50 p-4 space-y-1">
                     <p className="text-xs text-muted-foreground">FP有料相談</p>
-                    <p className="text-lg font-bold text-[#5A5550]">¥30,000〜100,000</p>
+                    <p className="text-lg font-bold text-brand-stone">¥30,000〜100,000</p>
                     <p className="text-xs text-muted-foreground">/ 回</p>
                   </div>
 
-                  <div className="rounded-lg border-2 border-[#C8B89A]/30 bg-[#C8B89A]/5 p-4 space-y-1">
-                    <p className="text-xs text-[#8A7A62]">YOHACK</p>
-                    <p className="text-lg font-bold text-[#8A7A62]">¥29,800</p>
-                    <p className="text-xs text-[#8A7A62]">/ 90日間</p>
+                  <div className="rounded-lg border-2 border-brand-gold/30 bg-brand-gold/5 p-4 space-y-1">
+                    <p className="text-xs text-brand-bronze">YOHACK</p>
+                    <p className="text-lg font-bold text-brand-bronze">¥29,800</p>
+                    <p className="text-xs text-brand-bronze">/ 90日間</p>
                   </div>
                 </div>
 
-                <p className="text-xs text-[#5A5550] leading-relaxed">
+                <p className="text-xs text-brand-stone leading-relaxed">
                   物件も保険も投資商品も売りません。<br />
                   紹介料もアフィリエイトもゼロ。<br />
                   あなたの意思決定だけに集中できる設計です。
@@ -89,7 +89,7 @@ export default function PricingPage() {
             </Card>
 
             {/* Pass カード */}
-            <Card className="md:col-span-3 border-[#C8B89A] shadow-lg relative">
+            <Card className="md:col-span-3 border-brand-gold shadow-lg relative">
               <CardHeader className="pb-2 pt-6">
                 <h2 className="text-xl font-bold">90日 Pass</h2>
                 <p className="text-xs text-muted-foreground">
@@ -105,7 +105,7 @@ export default function PricingPage() {
                 <div className="space-y-2.5">
                   {PASS_FEATURES.map(f => (
                     <div key={f} className="flex items-center gap-2.5 text-sm">
-                      <Check className="h-4 w-4 text-[#C8B89A] flex-shrink-0" />
+                      <Check className="h-4 w-4 text-brand-gold flex-shrink-0" />
                       <span>{f}</span>
                     </div>
                   ))}
@@ -113,7 +113,7 @@ export default function PricingPage() {
 
                 <div>
                   <a href="/fit">
-                    <Button className="w-full bg-[#C8B89A] text-[#1A1916] hover:bg-[#8A7A62] hover:text-white">
+                    <Button className="w-full bg-brand-gold text-brand-night hover:bg-brand-bronze hover:text-white">
                       適合チェックに進む
                     </Button>
                   </a>

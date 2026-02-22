@@ -45,29 +45,29 @@ function YBranchSymbol() {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <line x1="90" y1="94" x2="42" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-      <line x1="90" y1="94" x2="138" y2="34" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-      <line x1="90" y1="94" x2="90" y2="156" stroke="#C8B89A" strokeWidth="7" strokeLinecap="round" />
-      <circle cx="90" cy="94" r="9" fill="#C8B89A" />
-      <circle cx="42" cy="34" r="6" fill="#C8B89A" opacity="0.5" />
-      <circle cx="138" cy="34" r="6" fill="#C8B89A" opacity="0.5" />
+      <line x1="90" y1="94" x2="42" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+      <line x1="90" y1="94" x2="138" y2="34" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+      <line x1="90" y1="94" x2="90" y2="156" stroke="var(--brand-gold)" strokeWidth="7" strokeLinecap="round" />
+      <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
+      <circle cx="42" cy="34" r="6" fill="var(--brand-gold)" opacity="0.5" />
+      <circle cx="138" cy="34" r="6" fill="var(--brand-gold)" opacity="0.5" />
     </svg>
   );
 }
 
 const steps = [
   {
-    icon: <CalendarDays className="h-5 w-5 text-[#C8B89A]" />,
+    icon: <CalendarDays className="h-5 w-5 text-brand-gold" />,
     title: '条件を変える',
     description: 'ライフプランでイベントを追加。転職・出産・住宅購入など。',
   },
   {
-    icon: <Save className="h-5 w-5 text-[#C8B89A]" />,
+    icon: <Save className="h-5 w-5 text-brand-gold" />,
     title: 'シナリオを保存',
     description: '現在の条件に名前をつけて保存。いつでも戻れる。',
   },
   {
-    icon: <Columns className="h-5 w-5 text-[#C8B89A]" />,
+    icon: <Columns className="h-5 w-5 text-brand-gold" />,
     title: '並べて比較',
     description: '最大3つのシナリオを現在の状態と並べて比較。',
   },
@@ -116,10 +116,10 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                   className="rounded-lg border p-4 text-left"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#C8B89A]/10">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-gold/10">
                       {step.icon}
                     </div>
-                    <span className="text-xs font-medium text-[#C8B89A]">ステップ{i + 1}</span>
+                    <span className="text-xs font-medium text-brand-gold">ステップ{i + 1}</span>
                   </div>
                   <h4 className="text-sm font-medium">{step.title}</h4>
                   <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
@@ -131,7 +131,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
 
             {/* CTA */}
             <Link href="/app/branch" className="mt-8">
-              <Button className="bg-[#C8B89A] hover:bg-[#8A7A62] text-white gap-2">
+              <Button className="bg-brand-gold hover:bg-brand-bronze text-white gap-2">
                 分岐ビルダーでシナリオを作成する
                 <ArrowRight className="h-4 w-4" />
               </Button>
@@ -259,7 +259,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
             </thead>
             <tbody>
               {/* 安心ライン到達年齢 */}
-              <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('fireAge') && "bg-[rgba(200,184,154,0.08)]")}>
+              <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('fireAge') && "bg-brand-gold/[0.08]")}>
                 <td className="py-3 px-2 font-medium">安心ライン到達年齢</td>
                 <td className="text-center py-3 px-2 tabular-nums font-semibold">
                   {(() => {
@@ -285,7 +285,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                         return `${age}歳`;
                       })()}
                       {delta != null && delta !== 0 && (
-                        <span className="block text-xs mt-0.5" style={{ color: delta < 0 ? '#4A7C59' : '#CC3333' }}>
+                        <span className={cn("block text-xs mt-0.5", delta < 0 ? "text-safe" : "text-danger")}>
                           {delta > 0 ? '+' : ''}{delta}歳
                         </span>
                       )}
@@ -295,7 +295,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
               </tr>
 
               {/* 60歳時点の資産 */}
-              <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('assets60') && "bg-[rgba(200,184,154,0.08)]")}>
+              <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('assets60') && "bg-brand-gold/[0.08]")}>
                 <td className="py-3 px-2 font-medium">60歳時点資産</td>
                 <td className="text-center py-3 px-2 tabular-nums font-semibold">
                   {(() => {
@@ -314,8 +314,8 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                   const deltaText = delta != null && delta !== 0
                     ? `${delta > 0 ? '+' : ''}${Math.round(delta).toLocaleString()}万`
                     : null;
-                  const deltaColor = delta != null && delta !== 0
-                    ? (delta > 0 ? '#4A7C59' : '#CC3333') : undefined;
+                  const deltaClass = delta != null && delta !== 0
+                    ? (delta > 0 ? 'text-safe' : 'text-danger') : undefined;
 
                   const data = scenario.result?.paths.yearlyData;
                   if (!data) {
@@ -351,7 +351,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                     )}>
                       {`${(assets / 10000).toFixed(1)}億`}
                       {deltaText && (
-                        <span className="block text-xs mt-0.5" style={{ color: deltaColor }}>
+                        <span className={cn("block text-xs mt-0.5", deltaClass)}>
                           {deltaText}
                         </span>
                       )}
@@ -361,7 +361,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
               </tr>
 
               {/* 40-50代平均月次CFマージン - SoTのcashFlow.netCashFlowを参照 */}
-              <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('monthlyCF') && "bg-[rgba(200,184,154,0.08)]")}>
+              <tr className={cn("border-b hover:bg-muted/30", rowHasDiff('monthlyCF') && "bg-brand-gold/[0.08]")}>
                 <td className="py-3 px-2 font-medium">現在の月次CF</td>
                 <td className="text-center py-3 px-2 tabular-nums font-semibold">
                   {(() => {
@@ -395,7 +395,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                     )}>
                       {`${monthlyCF.toFixed(0)}万/月`}
                       {delta != null && delta !== 0 && (
-                        <span className="block text-xs mt-0.5" style={{ color: delta > 0 ? '#4A7C59' : '#CC3333' }}>
+                        <span className={cn("block text-xs mt-0.5", delta > 0 ? "text-safe" : "text-danger")}>
                           {delta > 0 ? '+' : ''}{delta}万/月
                         </span>
                       )}
@@ -405,7 +405,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
               </tr>
 
               {/* 取り崩し開始年齢 */}
-              <tr className={cn("hover:bg-muted/30", rowHasDiff('drawdownAge') && "bg-[rgba(200,184,154,0.08)]")}>
+              <tr className={cn("hover:bg-muted/30", rowHasDiff('drawdownAge') && "bg-brand-gold/[0.08]")}>
                 <td className="py-3 px-2 font-medium">取り崩し開始</td>
                 <td className="text-center py-3 px-2 tabular-nums font-semibold">
                   {(() => {
@@ -441,7 +441,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                     )}>
                       {ddIdx > 0 ? `${scenario.profile.currentAge + ddIdx}歳` : 'なし'}
                       {delta != null && delta !== 0 && (
-                        <span className="block text-xs mt-0.5" style={{ color: delta > 0 ? '#4A7C59' : '#CC3333' }}>
+                        <span className={cn("block text-xs mt-0.5", delta > 0 ? "text-safe" : "text-danger")}>
                           {delta > 0 ? '+' : ''}{delta}歳
                         </span>
                       )}
@@ -504,9 +504,9 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
           if (!allSame) return null;
 
           return (
-            <div className="mt-4 flex gap-3 rounded-lg border-l-4 border-l-[#C8B89A] bg-[#C8B89A]/10 p-4 dark:bg-[#C8B89A]/5">
+            <div className="mt-4 flex gap-3 rounded-lg border-l-4 border-l-brand-gold bg-brand-gold/10 p-4 dark:bg-brand-gold/5">
               <div className="flex-shrink-0 mt-0.5">
-                <Info className="h-5 w-5 text-[#C8B89A]" />
+                <Info className="h-5 w-5 text-brand-gold" />
               </div>
               <div className="space-y-3">
                 <div>
@@ -610,10 +610,10 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
 
     {/* 世界線追加プレースホルダー（1-2本のとき表示） */}
     {scenarios.length >= 1 && scenarios.length < 3 && (
-      <div className="rounded-lg border-2 border-dashed border-[#C8B89A]/40 hover:border-[#C8B89A] p-6 transition-colors">
+      <div className="rounded-lg border-2 border-dashed border-brand-gold/40 hover:border-brand-gold p-6 transition-colors">
         <div className="flex flex-col items-center text-center gap-3">
-          <Plus className="h-6 w-6 text-[#8A7A62]" />
-          <p className="text-sm font-medium text-[#8A7A62]">世界線を追加</p>
+          <Plus className="h-6 w-6 text-brand-bronze" />
+          <p className="text-sm font-medium text-brand-bronze">世界線を追加</p>
           {unusedTemplates.length > 0 && onApplyTemplate && (
             <div className="flex flex-wrap justify-center gap-1.5">
               {unusedTemplates.slice(0, 3).map((t) => {
@@ -626,10 +626,10 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                     disabled={isDisabled}
                     className={cn(
                       'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs transition-colors',
-                      'border-[#C8B89A]/30 text-[#8A7A62] dark:text-[#C8B89A] dark:border-[#C8B89A]/20',
+                      'border-brand-gold/30 text-brand-bronze dark:border-brand-gold/20',
                       isDisabled
                         ? 'opacity-50 cursor-not-allowed'
-                        : 'hover:bg-[#C8B89A]/10 hover:border-[#C8B89A]/50',
+                        : 'hover:bg-brand-gold/10 hover:border-brand-gold/50',
                     )}
                   >
                     <span>{t.icon}</span>

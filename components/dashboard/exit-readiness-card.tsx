@@ -36,14 +36,14 @@ function SubScore({ label, value, icon, description, warningThreshold = 50 }: Su
       <HoverCardTrigger asChild>
         <div className={cn(
           "flex cursor-help flex-col items-center rounded-lg bg-muted/50 p-3 transition-all duration-[600ms] hover:bg-muted",
-          belowSafety && "border-2 border-[#CC3333]/40 bg-red-50/50 dark:bg-red-950/10",
+          belowSafety && "border-2 border-danger/40 bg-red-50/50 dark:bg-red-950/10",
         )}>
           <div className="mb-1 text-muted-foreground">{icon}</div>
           <div className="flex items-center gap-1">
-            {belowSafety && <AlertTriangle className="h-3.5 w-3.5 text-[#CC3333]" />}
+            {belowSafety && <AlertTriangle className="h-3.5 w-3.5 text-danger" />}
             <div className={cn(
               "text-xl font-bold tabular-nums transition-all duration-[600ms]",
-              belowSafety && "text-[#CC3333]",
+              belowSafety && "text-danger",
             )}>{value}</div>
           </div>
           <div className="text-xs text-muted-foreground">{label}</div>
@@ -102,9 +102,9 @@ const SCORE_AXES: ScoreAxis[] = [
 ];
 
 function getBarColor(value: number): string {
-  if (value >= 80) return 'bg-[#4A7C59]';
-  if (value >= 50) return 'bg-[#C8B89A]';
-  return 'bg-[#CC3333]';
+  if (value >= 80) return 'bg-safe';
+  if (value >= 50) return 'bg-brand-gold';
+  return 'bg-danger';
 }
 
 function ScoreBreakdown({ score }: { score: ExitScoreDetail }) {
@@ -165,6 +165,7 @@ function ScoreBreakdown({ score }: { score: ExitScoreDetail }) {
 
 export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) {
   const [showBreakdown, setShowBreakdown] = useState(false);
+  // Track score direction: up resets after 600ms, down (flash) after 300ms
   const scoreDirection = useScoreAnimation(score?.overall ?? null);
   const animatedScore = useAnimatedValue(score?.overall ?? 0, 600);
 
@@ -202,8 +203,8 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
       description="目標達成度の総合評価"
       className={cn(
         'transition-all duration-[600ms]',
-        scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(74,124,89,0.2)]',
-        scoreDirection === 'down' && 'border-[#CC3333] border-2',
+        scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(74,124,89,0.15)]',
+        scoreDirection === 'down' && 'border-danger border-2 !duration-150',
       )}
     >
       <div className="flex flex-col items-center">
@@ -251,9 +252,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
                   dominantBaseline="central"
                   className={cn(
                     "text-5xl font-bold tabular-nums transition-[fill] duration-[600ms]",
-                    animatedScore >= 80 && "fill-[#4A7C59] dark:fill-[#6BA368]",
-                    animatedScore >= 50 && animatedScore < 80 && "fill-[#8A7A62] dark:fill-[#C8B89A]",
-                    animatedScore < 50 && "fill-[#CC3333] dark:fill-[#E05555]",
+                    animatedScore >= 80 && "fill-safe",
+                    animatedScore >= 50 && animatedScore < 80 && "fill-brand-bronze",
+                    animatedScore < 50 && "fill-danger",
                   )}
                   fontSize="48"
                   fontWeight="bold"
@@ -274,9 +275,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
               <div
                 className={cn(
                   "absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-semibold border transition-colors duration-[600ms]",
-                  score.overall >= 80 && "bg-[#4A7C59] text-white border-[#4A7C59]",
-                  score.overall >= 50 && score.overall < 80 && "bg-[#C8B89A] text-[#1A1916] border-[#C8B89A]",
-                  score.overall < 50 && "bg-[#CC3333] text-white border-[#CC3333]",
+                  score.overall >= 80 && "bg-safe text-white border-safe",
+                  score.overall >= 50 && score.overall < 80 && "bg-brand-gold text-brand-night border-brand-gold",
+                  score.overall < 50 && "bg-danger text-white border-danger",
                 )}
               >
                 {levelText[score.level]}
@@ -288,9 +289,9 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
         {/* Level description */}
         <p className={cn(
           "mt-6 text-sm font-medium transition-colors duration-[600ms]",
-          score.overall >= 80 && "text-[#4A7C59] dark:text-[#6BA368]",
-          score.overall >= 50 && score.overall < 80 && "text-[#8A7A62] dark:text-[#C8B89A]",
-          score.overall < 50 && "text-[#CC3333] dark:text-[#E05555]",
+          score.overall >= 80 && "text-safe",
+          score.overall >= 50 && score.overall < 80 && "text-brand-bronze",
+          score.overall < 50 && "text-danger",
         )}>
           {score.level === 'GREEN' && '目標達成の可能性が非常に高いです'}
           {score.level === 'YELLOW' && '目標達成の見込みは良好です'}

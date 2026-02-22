@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
 import { formatCurrency, formatPercent } from '@/lib/types';
 import type { CashFlowBreakdown, SimulationPath, KeyMetrics } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { cn, CHART_COLORS } from '@/lib/utils';
 
 interface CashFlowCardProps {
   cashFlow: CashFlowBreakdown | null;
@@ -42,7 +42,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
         <div
           className={cn(
             'flex h-6 w-6 items-center justify-center rounded-full',
-            'bg-[#FAF9F7] text-[#8A7A62]'
+            'bg-brand-canvas text-brand-bronze'
           )}
         >
           {isIncome ? (
@@ -59,7 +59,7 @@ function FlowItem({ label, amount, type, percentage }: FlowItemProps) {
             {formatPercent(percentage)}
           </span>
         )}
-        <span className="font-semibold tabular-nums text-[#5A5550]">
+        <span className="font-semibold tabular-nums text-brand-stone">
           {isIncome ? '+' : '-'}
           {formatCurrency(Math.abs(amount))}
         </span>
@@ -182,7 +182,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
       icon={<ArrowDownUp className="h-5 w-5" />}
       title="退職後キャッシュフロー"
       description="Exit後の年間収支内訳"
-      action={isLoading && <span className="text-xs text-[#8A7A62]/60">更新中...</span>}
+      action={isLoading && <span className="text-xs text-brand-bronze/60">更新中...</span>}
     >
       <div className={cn("space-y-4", isLoading && "opacity-60")}>
         {/* Income section */}
@@ -216,7 +216,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
           </div>
           <div className="mt-2 flex items-center justify-between border-t pt-2">
             <span className="text-sm font-medium">収入合計</span>
-            <span className="font-bold text-[#5A5550] tabular-nums">
+            <span className="font-bold text-brand-stone tabular-nums">
               +{formatCurrency(totalIncome)}
             </span>
           </div>
@@ -236,25 +236,25 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
         <div
           className={cn(
             'rounded-lg p-4 border',
-            'bg-[#FAF9F7] border-[#F0ECE4]'
+            'bg-brand-canvas border-brand-linen'
           )}
         >
           <div className="flex items-center justify-between">
             <span className="font-medium">年間収支</span>
             <div className="flex items-center gap-2">
               {netCashFlowPositive ? (
-                <ArrowUp className="h-4 w-4 text-[#8A7A62]" />
+                <ArrowUp className="h-4 w-4 text-brand-bronze" />
               ) : (
-                <ArrowDown className="h-4 w-4 text-[#8A7A62]" />
+                <ArrowDown className="h-4 w-4 text-brand-bronze" />
               )}
-              <span className="text-xl font-bold text-[#5A5550] tabular-nums">
+              <span className="text-xl font-bold text-brand-stone tabular-nums">
                 {cashFlow.netCashFlow >= 0 ? '+' : ''}
                 {formatCurrency(cashFlow.netCashFlow)}
               </span>
             </div>
           </div>
           {!netCashFlowPositive && (
-            <p className="mt-2 text-sm text-[#8A7A62]">
+            <p className="mt-2 text-sm text-brand-bronze">
               年間{formatCurrency(Math.abs(cashFlow.netCashFlow))}の
               余白を使う必要があります
             </p>
@@ -374,7 +374,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
                     <Area
                       type="monotone"
                       dataKey="median"
-                      stroke="#374151"
+                      stroke={CHART_COLORS.median}
                       strokeWidth={2}
                       fill="none"
                     />
@@ -391,13 +391,13 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
                     {retireAge < 65 && (
                       <ReferenceLine
                         x={65}
-                        stroke="#9ca3af"
+                        stroke={CHART_COLORS.secondary}
                         strokeWidth={1}
                         strokeDasharray="3 3"
                         label={{
                           value: '年金開始',
                           position: 'insideTopRight',
-                          fill: '#9ca3af',
+                          fill: CHART_COLORS.secondary,
                           fontSize: 9,
                         }}
                       />

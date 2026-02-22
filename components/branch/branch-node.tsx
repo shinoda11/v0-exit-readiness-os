@@ -6,9 +6,9 @@ import type { Branch } from '@/lib/branch';
 import { cn } from '@/lib/utils';
 
 const CERTAINTY_BORDER: Record<string, string> = {
-  confirmed: 'border-l-[#1A1916]',
-  planned: 'border-l-[#4A7C59]',
-  uncertain: 'border-l-[#8A7A62]',
+  confirmed: 'border-l-brand-night',
+  planned: 'border-l-safe',
+  uncertain: 'border-l-brand-bronze',
 };
 
 interface BranchNodeProps {

@@ -206,7 +206,7 @@ export function RSUContent() {
         </div>
         <div className="flex items-center gap-3">
           {justSynced ? (
-            <Badge variant="outline" className="text-[#8A7A62] border-[#C8B89A]/40 bg-[#C8B89A]/10 dark:text-[#C8B89A] dark:border-[#C8B89A]/30 dark:bg-[#C8B89A]/5">
+            <Badge variant="outline" className="text-brand-bronze border-brand-gold/40 bg-brand-gold/10 dark:border-brand-gold/30 dark:bg-brand-gold/5">
               <Check className="h-3 w-3 mr-1" />
               反映完了
             </Badge>
@@ -239,16 +239,16 @@ export function RSUContent() {
 
       {/* 反映完了メッセージ */}
       {justSynced && (
-        <div className="mb-6 rounded-lg border-2 border-[#C8B89A]/40 bg-[#C8B89A]/10 p-4 dark:border-[#C8B89A]/30 dark:bg-[#C8B89A]/5">
+        <div className="mb-6 rounded-lg border-2 border-brand-gold/40 bg-brand-gold/10 p-4 dark:border-brand-gold/30 dark:bg-brand-gold/5">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#C8B89A]/20 dark:bg-[#C8B89A]/10">
-              <Check className="h-4 w-4 text-[#C8B89A]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-gold/20 dark:bg-brand-gold/10">
+              <Check className="h-4 w-4 text-brand-gold" />
             </div>
             <div>
-              <p className="font-medium text-[#8A7A62] dark:text-[#C8B89A]">
+              <p className="font-medium text-brand-bronze">
                 RSU収入をプロファイルに反映しました
               </p>
-              <p className="text-sm text-[#8A7A62]/80 dark:text-[#C8B89A]/80">
+              <p className="text-sm text-brand-bronze/80">
                 ダッシュボードのシミュレーション結果が更新されました
               </p>
             </div>
@@ -310,7 +310,7 @@ export function RSUContent() {
               <div className="text-sm text-muted-foreground mt-1">
                 <span>現在のプロファイル: {profile.rsuAnnual}万円</span>
                 {!isSynced && (
-                  <span className={`ml-2 font-medium ${calculatedRSUValue > profile.rsuAnnual ? 'text-[#8A7A62] dark:text-[#C8B89A]' : 'text-muted-foreground'}`}>
+                  <span className={`ml-2 font-medium ${calculatedRSUValue > profile.rsuAnnual ? 'text-brand-bronze' : 'text-muted-foreground'}`}>
                     ({calculatedRSUValue > profile.rsuAnnual ? '+' : ''}{calculatedRSUValue - profile.rsuAnnual}万円)
                   </span>
                 )}
@@ -345,7 +345,7 @@ export function RSUContent() {
                   <Bar
                     dataKey="valueJPY"
                     name="価値 (JPY)"
-                    fill="#C8B89A"
+                    fill="var(--brand-gold)"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
@@ -436,7 +436,7 @@ export function RSUContent() {
                       </TableCell>
                       <TableCell
                         className={`text-right font-medium ${
-                          gain >= 0 ? 'text-[#5A5550]' : 'text-[#8A7A62]'
+                          gain >= 0 ? 'text-brand-stone' : 'text-brand-bronze'
                         }`}
                       >
                         {gain >= 0 ? '+' : ''}
@@ -473,10 +473,10 @@ export function RSUContent() {
                     <div className="flex items-center gap-3">
                       <div
                         className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                          isPast ? 'bg-[#C8B89A]/10' : 'bg-[#5A5550]/10'
+                          isPast ? 'bg-brand-gold/10' : 'bg-brand-stone/10'
                         }`}
                       >
-                        <Calendar className={`h-5 w-5 ${isPast ? 'text-[#C8B89A]' : 'text-[#5A5550] dark:text-[#DDD0B8]'}`} />
+                        <Calendar className={`h-5 w-5 ${isPast ? 'text-brand-gold' : 'text-brand-stone'}`} />
                       </div>
                       <div>
                         <p className="font-medium">{event.date}</p>

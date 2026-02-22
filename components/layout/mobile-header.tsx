@@ -9,14 +9,14 @@ export function MobileHeader() {
 
   return (
     <>
-      <header className="md:hidden flex items-center gap-2 px-4 min-h-[44px] border-b border-[#F0ECE4]">
+      <header className="md:hidden flex items-center gap-2 px-4 min-h-[44px] border-b border-brand-linen">
         <button
           onClick={() => setShowBrand(true)}
           className="flex items-center gap-2 min-h-[44px]"
           aria-label="ブランドストーリーを表示"
         >
           <YohackSymbol size={20} />
-          <span className="text-sm font-semibold tracking-wider" style={{ color: '#C8B89A' }}>
+          <span className="text-sm font-semibold tracking-wider text-brand-gold">
             YOHACK
           </span>
         </button>

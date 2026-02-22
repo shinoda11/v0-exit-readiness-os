@@ -67,6 +67,34 @@
   --warning-foreground: #1A1916;
   --info: #2563EB;
   --info-foreground: #FFFFFF;
+
+  /* Brand semantic tokens */
+  --brand-gold: #C8B89A;
+  --brand-bronze: #8A7A62;
+  --brand-stone: #5A5550;
+  --brand-canvas: #FAF9F7;
+  --brand-sand: #E8E4DE;
+  --brand-night: #1A1916;
+  --brand-linen: #F0ECE4;
+
+  /* Score status tokens */
+  --safe: #4A7C59;
+  --safe-foreground: #FFFFFF;
+  --danger: #CC3333;
+  --danger-foreground: #FFFFFF;
+
+  /* Chart (Recharts/Canvas) */
+  --chart-median: #374151;
+  --chart-secondary: #9ca3af;
+  --chart-tertiary: #6b7280;
+
+  /* Shadow */
+  --shadow-gold: 0 4px 12px rgba(200,184,154,0.3);
+
+  /* Transition durations */
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
 }
 
 .dark {
@@ -112,6 +140,18 @@
   --warning-foreground: #060606;
   --info: #2563EB;
   --info-foreground: #F0ECE4;
+
+  /* Brand semantic tokens (dark) */
+  --brand-bronze: #8A7A62;
+  --brand-stone: #DDD0B8;
+  --brand-canvas: #0e0d0b;
+  --brand-sand: #2A2824;
+
+  /* Score status tokens (dark) */
+  --safe: #6BA368;
+  --safe-foreground: #060606;
+  --danger: #E05555;
+  --danger-foreground: #060606;
 }
 
 @theme inline {
@@ -160,6 +200,26 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+
+  /* Brand tokens */
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-bronze: var(--brand-bronze);
+  --color-brand-stone: var(--brand-stone);
+  --color-brand-canvas: var(--brand-canvas);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-night: var(--brand-night);
+  --color-brand-linen: var(--brand-linen);
+
+  /* Score status tokens */
+  --color-safe: var(--safe);
+  --color-safe-foreground: var(--safe-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+
+  /* Chart tokens */
+  --color-chart-median: var(--chart-median);
+  --color-chart-secondary: var(--chart-secondary);
+  --color-chart-tertiary: var(--chart-tertiary);
 }
 
 @layer base {

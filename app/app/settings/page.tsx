@@ -135,7 +135,7 @@ export default function SettingsPage() {
           {/* Header */}
           <div>
             <h1 className="text-xl font-bold tracking-tight text-foreground">設定</h1>
-            <p className="text-sm text-[#8A7A62] mt-1">
+            <p className="text-sm text-brand-bronze mt-1">
               データ管理とアプリケーション情報
             </p>
           </div>

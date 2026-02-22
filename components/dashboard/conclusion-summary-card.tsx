@@ -40,26 +40,26 @@ function getStatusConfig(status: Status) {
   switch (status) {
     case 'GREEN':
       return {
-        bgColor: 'bg-[#C8B89A]/10 dark:bg-[#C8B89A]/5',
-        borderColor: 'border-[#C8B89A]/30 dark:border-[#C8B89A]/20',
-        iconColor: 'text-[#C8B89A]',
-        textColor: 'text-[#8A7A62] dark:text-[#C8B89A]',
+        bgColor: 'bg-brand-gold/10 dark:bg-brand-gold/5',
+        borderColor: 'border-brand-gold/30 dark:border-brand-gold/20',
+        iconColor: 'text-brand-gold',
+        textColor: 'text-brand-bronze',
         icon: CheckCircle2,
       };
     case 'YELLOW':
       return {
-        bgColor: 'bg-[#5A5550]/10 dark:bg-[#5A5550]/10',
-        borderColor: 'border-[#5A5550]/30 dark:border-[#5A5550]/20',
-        iconColor: 'text-[#5A5550] dark:text-[#DDD0B8]',
-        textColor: 'text-[#5A5550] dark:text-[#DDD0B8]',
+        bgColor: 'bg-brand-stone/10 dark:bg-brand-stone/10',
+        borderColor: 'border-brand-stone/30 dark:border-brand-stone/20',
+        iconColor: 'text-brand-stone',
+        textColor: 'text-brand-stone',
         icon: AlertTriangle,
       };
     case 'RED':
       return {
-        bgColor: 'bg-red-50/80 dark:bg-red-950/20',
-        borderColor: 'border-red-300/60 dark:border-red-800/40',
-        iconColor: 'text-red-700 dark:text-red-400',
-        textColor: 'text-red-700 dark:text-red-300',
+        bgColor: 'bg-danger/10',
+        borderColor: 'border-danger/40',
+        iconColor: 'text-danger',
+        textColor: 'text-danger',
         icon: XCircle,
       };
     case 'CALCULATING':
@@ -244,8 +244,8 @@ function ChangeBadge({ value, unit, invertColor = false }: {
       className={cn(
         'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-medium transition-opacity duration-500',
         isImprovement
-          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
-          : 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+          ? 'bg-safe/10 text-safe'
+          : 'bg-danger/10 text-danger',
         fadingOut && 'opacity-0'
       )}
     >
@@ -276,7 +276,7 @@ export function ConclusionSummaryCard({
 
   const config = getStatusConfig(displayStatus);
 
-  // Track score direction for card elevation/flash
+  // Track score direction: up resets after 600ms, down (flash) after 300ms
   const scoreDirection = useScoreAnimation(score?.overall ?? null);
   // Smooth counter animation for the score number
   const animatedScore = useAnimatedValue(score?.overall ?? 0, 600);
@@ -316,8 +316,8 @@ export function ConclusionSummaryCard({
       'border relative transition-all duration-[600ms] ease-out',
       config.bgColor,
       config.borderColor,
-      scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(200,184,154,0.3)]',
-      scoreDirection === 'down' && 'border-[#CC3333]',
+      scoreDirection === 'up' && 'shadow-[var(--shadow-gold)]',
+      scoreDirection === 'down' && 'border-danger !duration-150',
     )}>
       {/* 計算中オーバーレイ（初回ロード時） */}
       {isLoading && !score && (
@@ -333,14 +333,14 @@ export function ConclusionSummaryCard({
       )}
       {/* 計算中インジケータ（再計算時） */}
       {isLoading && score && (
-        <div className="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-[#8A7A62]/60">
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-brand-bronze/60">
           <Loader2 className="h-3 w-3 animate-spin" />
           <span>更新中</span>
         </div>
       )}
       <CardContent className="p-5">
         {/* Goal Lens前提（1行） */}
-        <p className="text-xs text-[#8A7A62]/60 mb-3">
+        <p className="text-xs text-brand-bronze/60 mb-3">
           前提: {workStyle} / {legacyGoal} / {targetRetireAge}歳目標
         </p>
 
@@ -363,9 +363,9 @@ export function ConclusionSummaryCard({
             {score && (
               <span className={cn(
                 "text-xl font-bold tabular-nums px-2.5 py-0.5 rounded-lg shrink-0 self-start sm:self-auto transition-all duration-[600ms] ease-out",
-                score.overall >= 70 ? "bg-[#C8B89A]/20 text-[#8A7A62] dark:bg-[#C8B89A]/10 dark:text-[#C8B89A]" :
-                score.overall >= 40 ? "bg-[#5A5550]/15 text-[#5A5550] dark:bg-[#5A5550]/15 dark:text-[#DDD0B8]" :
-                "bg-red-50/80 text-red-700 dark:bg-red-900/20 dark:text-red-300",
+                score.overall >= 70 ? "bg-brand-gold/20 text-brand-bronze dark:bg-brand-gold/10" :
+                score.overall >= 40 ? "bg-brand-stone/15 text-brand-stone dark:bg-brand-stone/15" :
+                "bg-danger/10 text-danger",
                 isLoading && "opacity-50",
                 scoreDirection === 'up' && "scale-110",
                 scoreDirection === 'down' && "scale-95",
@@ -418,7 +418,7 @@ export function ConclusionSummaryCard({
             <div className="mt-4 pt-4 border-t border-border space-y-2.5">
               {/* 世界線比較リンク（1本以上あるとき） */}
               {scenarioCount >= 1 && (
-                <Link href="/app/v2" className="flex items-center gap-2 text-sm text-[#8A7A62] hover:text-[#C8B89A] dark:text-[#C8B89A] dark:hover:text-[#C8B89A]/80 transition-colors">
+                <Link href="/app/v2" className="flex items-center gap-2 text-sm text-brand-bronze hover:text-brand-gold dark:text-brand-gold dark:hover:text-brand-gold/80 transition-colors">
                   <GitBranch className="h-4 w-4" />
                   世界線比較を見る
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -449,10 +449,10 @@ export function ConclusionSummaryCard({
                           disabled={isDisabled}
                           className={cn(
                             'flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-colors',
-                            'bg-transparent border-[#C8B89A]/30 text-[#8A7A62] dark:text-[#C8B89A] dark:border-[#C8B89A]/20',
+                            'bg-transparent border-brand-gold/30 text-brand-bronze dark:text-brand-gold dark:border-brand-gold/20',
                             isDisabled
                               ? 'opacity-50 cursor-not-allowed'
-                              : 'hover:bg-[#C8B89A]/10 hover:border-[#C8B89A]/50',
+                              : 'hover:bg-brand-gold/10 hover:border-brand-gold/50',
                           )}
                         >
                           <span className="text-base leading-none">{t.icon}</span>
@@ -475,7 +475,7 @@ export function ConclusionSummaryCard({
                 </p>
                 <a
                   href="/app/branch"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-[#C8B89A] hover:text-[#8A7A62] transition-colors"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-gold hover:text-brand-bronze transition-colors"
                 >
                   分岐ビルダーを使う
                   <span aria-hidden="true">→</span>

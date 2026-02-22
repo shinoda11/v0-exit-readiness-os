@@ -153,9 +153,9 @@ function generatePotentialActions(
 
 // 統一カラーパレット - グレー系で落ち着いたトーン
 const priorityColors = {
-  high: 'border-l-[#8A7A62] bg-[#FAF9F7]/50 dark:bg-[#1A1916]/20',
-  medium: 'border-l-[#8A7A62]/60 bg-[#FAF9F7]/30 dark:bg-[#1A1916]/10',
-  low: 'border-l-[#F0ECE4] bg-[#FAF9F7]/20 dark:bg-[#1A1916]/5',
+  high: 'border-l-brand-bronze bg-brand-canvas/50 dark:bg-brand-night/20',
+  medium: 'border-l-brand-bronze/60 bg-brand-canvas/30 dark:bg-brand-night/10',
+  low: 'border-l-brand-linen bg-brand-canvas/20 dark:bg-brand-night/5',
 };
 
 function ImpactBadge({ value, label, unit, isPositive }: { 
@@ -171,8 +171,8 @@ function ImpactBadge({ value, label, unit, isPositive }: {
     <div className={cn(
       'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium',
       isGood
-        ? 'bg-[#FAF9F7] text-[#5A5550] dark:bg-[#1A1916] dark:text-[#F0ECE4]'
-        : 'bg-[#FAF9F7] text-[#8A7A62] dark:bg-[#1A1916] dark:text-[#8A7A62]'
+        ? 'bg-brand-canvas text-brand-stone dark:bg-brand-night dark:text-brand-linen'
+        : 'bg-brand-canvas text-brand-bronze dark:bg-brand-night dark:text-brand-bronze'
     )}>
       <span>{label}:</span>
       <span className={isGood ? 'font-semibold' : ''}>{formatted}{unit}</span>
@@ -269,7 +269,7 @@ export function NextBestActionsCard({
               key={action.id}
               className={cn(
                 'rounded-lg border-l-4 p-4 transition-all',
-                isFirst ? 'border-l-[#C8B89A] bg-[#FAF9F7]/50 dark:bg-[#1A1916]/20' : priorityColors[action.priority]
+                isFirst ? 'border-l-brand-gold bg-brand-canvas/50 dark:bg-brand-night/20' : priorityColors[action.priority]
               )}
             >
               <div className="flex flex-col gap-3">
@@ -342,7 +342,7 @@ export function NextBestActionsCard({
                   ) : (
                     <Button
                       size="sm"
-                      className="min-h-[44px] gap-1.5 text-xs px-4 py-2 bg-[#C8B89A] text-[#1A1916] hover:bg-[#C8B89A]/90"
+                      className="min-h-[44px] gap-1.5 text-xs px-4 py-2 bg-brand-gold text-brand-night hover:bg-brand-gold/90"
                       onClick={() => handleApplyAction(action)}
                     >
                       <ArrowRight className="h-3 w-3" />

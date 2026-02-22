@@ -455,7 +455,7 @@ export default function BranchPage() {
               <Button
                 onClick={handleGenerate}
                 disabled={nonAutoSelectedCount === 0 || isGenerating}
-                className="w-full gap-2 bg-[#1A1916] text-[#F0ECE4] hover:bg-[#1A1916]/90"
+                className="w-full gap-2 bg-brand-night text-brand-linen hover:bg-brand-night/90"
               >
                 {isGenerating ? (
                   <>

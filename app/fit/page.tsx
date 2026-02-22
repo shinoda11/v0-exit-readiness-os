@@ -191,15 +191,15 @@ function FitGateForm() {
           className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 mx-auto"
           style={{ backgroundColor: 'rgba(138, 122, 98, 0.15)' }}
         >
-          <Mail className="w-8 h-8" style={{ color: '#8A7A62' }} />
+          <Mail className="w-8 h-8 text-brand-bronze" />
         </div>
-        <h2 className="text-xl font-bold mb-2" style={{ color: '#1A1916' }}>
+        <h2 className="text-xl font-bold mb-2 text-brand-night">
           診断回数の上限に達しました
         </h2>
-        <p className="text-sm mb-4" style={{ color: '#5A5550' }}>
+        <p className="text-sm mb-4 text-brand-stone">
           診断は{MAX_ATTEMPTS}回まで利用できます。
         </p>
-        <p className="text-xs" style={{ color: '#8A7A62' }}>
+        <p className="text-xs text-brand-bronze">
           ご質問は{' '}
           <a href="mailto:hello@yohack.jp" className="underline">
             hello@yohack.jp
@@ -216,14 +216,14 @@ function FitGateForm() {
       <>
         {/* Progress — 100% */}
         <div className="mb-6">
-          <div className="flex items-center justify-between text-sm" style={{ color: '#8A7A62' }}>
+          <div className="flex items-center justify-between text-sm text-brand-bronze">
             <span>あと1ステップ</span>
             <span>12問 完了</span>
           </div>
           <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#E8E4DE' }}>
             <div
-              className="h-full rounded-full"
-              style={{ width: '100%', backgroundColor: '#C8B89A' }}
+              className="h-full rounded-full bg-brand-gold"
+              style={{ width: '100%' }}
             />
           </div>
         </div>
@@ -234,19 +234,19 @@ function FitGateForm() {
               className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-3 mx-auto"
               style={{ backgroundColor: 'rgba(200, 184, 154, 0.2)' }}
             >
-              <Mail className="w-6 h-6" style={{ color: '#C8B89A' }} />
+              <Mail className="w-6 h-6 text-brand-gold" />
             </div>
-            <h2 className="text-xl font-semibold mb-1" style={{ color: '#1A1916' }}>
+            <h2 className="text-xl font-semibold mb-1 text-brand-night">
               診断結果をメールでもお届けします
             </h2>
-            <p className="text-sm" style={{ color: '#8A7A62' }}>
+            <p className="text-sm text-brand-bronze">
               結果と次のステップをメールでお送りします
             </p>
           </div>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" style={{ color: '#5A5550' }}>
+              <Label htmlFor="email" className="text-brand-stone">
                 メールアドレス
               </Label>
               <Input
@@ -270,8 +270,7 @@ function FitGateForm() {
 
             <Button
               size="lg"
-              className="w-full text-white"
-              style={{ backgroundColor: '#C8B89A' }}
+              className="w-full text-white bg-brand-gold"
               onClick={onEmailSubmit}
               disabled={isSubmitting}
             >
@@ -288,23 +287,22 @@ function FitGateForm() {
     <>
       {/* Progress */}
       <div className="mb-6">
-        <div className="flex items-center justify-between text-sm" style={{ color: '#8A7A62' }}>
+        <div className="flex items-center justify-between text-sm text-brand-bronze">
           <span>所要時間: 約3分</span>
           <span>12問中 {currentStep}/{totalSteps}</span>
         </div>
         <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#E8E4DE' }}>
           <div
-            className="h-full transition-all duration-300 rounded-full"
+            className="h-full transition-all duration-300 rounded-full bg-brand-gold"
             style={{
               width: `${(currentStep / totalSteps) * 100}%`,
-              backgroundColor: '#C8B89A',
             }}
           />
         </div>
       </div>
 
       <Card className="p-6 sm:p-8 border-0 shadow-sm" style={{ backgroundColor: '#FFFFFF' }}>
-        <h1 className="text-xl font-semibold mb-6" style={{ color: '#1A1916' }}>
+        <h1 className="text-xl font-semibold mb-6 text-brand-night">
           適合チェック（12問）
         </h1>
 
@@ -312,7 +310,7 @@ function FitGateForm() {
           {/* Q1–Q10 radio questions */}
           {questions.map((q, qi) => (
             <div key={q.key} className="space-y-3">
-              <Label className="text-base font-semibold" style={{ color: '#5A5550' }}>
+              <Label className="text-base font-semibold text-brand-stone">
                 {q.label}
               </Label>
               <RadioGroup
@@ -324,7 +322,7 @@ function FitGateForm() {
                 {q.options.map((opt, oi) => (
                   <div key={oi} className="flex items-center space-x-2">
                     <RadioGroupItem value={opt} id={`${q.key}-${oi}`} />
-                    <Label htmlFor={`${q.key}-${oi}`} className="font-normal cursor-pointer" style={{ color: '#5A5550' }}>
+                    <Label htmlFor={`${q.key}-${oi}`} className="font-normal cursor-pointer text-brand-stone">
                       {opt}
                     </Label>
                   </div>
@@ -338,7 +336,7 @@ function FitGateForm() {
 
           {/* Q11: Privacy consent */}
           <div className="space-y-3">
-            <Label className="text-base font-semibold" style={{ color: '#5A5550' }}>
+            <Label className="text-base font-semibold text-brand-stone">
               11. 情報の取り扱い（確認）
             </Label>
             <div className="flex items-start space-x-2">
@@ -350,7 +348,7 @@ function FitGateForm() {
                   setCurrentStep(Math.max(currentStep, 11))
                 }}
               />
-              <Label htmlFor="q11" className="font-normal cursor-pointer leading-relaxed" style={{ color: '#5A5550' }}>
+              <Label htmlFor="q11" className="font-normal cursor-pointer leading-relaxed text-brand-stone">
                 入力情報を目的外に利用しないことに同意する
               </Label>
             </div>
@@ -361,7 +359,7 @@ function FitGateForm() {
 
           {/* Q12: Budget */}
           <div className="space-y-3">
-            <Label className="text-base font-semibold" style={{ color: '#5A5550' }}>
+            <Label className="text-base font-semibold text-brand-stone">
               12. 予算感
             </Label>
             <RadioGroup
@@ -373,7 +371,7 @@ function FitGateForm() {
               {['3万円未満なら検討', '3万〜4.9万なら検討', '5万円以上でも意思決定が進むなら払う', '未定'].map((opt, i) => (
                 <div key={i} className="flex items-center space-x-2">
                   <RadioGroupItem value={opt} id={`q12-${i}`} />
-                  <Label htmlFor={`q12-${i}`} className="font-normal cursor-pointer" style={{ color: '#5A5550' }}>
+                  <Label htmlFor={`q12-${i}`} className="font-normal cursor-pointer text-brand-stone">
                     {opt}
                   </Label>
                 </div>
@@ -387,14 +385,14 @@ function FitGateForm() {
           {/* Invitation token — only shown when ?token= is in URL */}
           {hasTokenParam && (
             <div className="space-y-2 pt-4 border-t">
-              <Label htmlFor="token" style={{ color: '#5A5550' }}>招待トークン（任意）</Label>
+              <Label htmlFor="token" className="text-brand-stone">招待トークン（任意）</Label>
               <Input
                 id="token"
                 type="text"
                 placeholder="INV-XXXXXX"
                 {...register('invitationToken')}
               />
-              <p className="text-xs" style={{ color: '#8A7A62' }}>
+              <p className="text-xs text-brand-bronze">
                 招待トークンをお持ちの場合は入力してください
               </p>
             </div>
@@ -405,8 +403,7 @@ function FitGateForm() {
             <Button
               type="submit"
               size="lg"
-              className="w-full text-white"
-              style={{ backgroundColor: '#C8B89A' }}
+              className="w-full text-white bg-brand-gold"
               disabled={isSubmitting}
             >
               次へ

@@ -38,7 +38,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
+import { cn, CHART_COLORS } from '@/lib/utils';
 
 // --- 色定数 ---
 const RENT_COLOR = '#2563EB';
@@ -430,7 +430,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
             <Button
               variant="outline"
               size="sm"
-              className="w-full min-h-[44px] gap-1.5 text-[#C8B89A] border-[#C8B89A]/30 hover:bg-[#C8B89A]/10"
+              className="w-full min-h-[44px] gap-1.5 text-brand-gold border-brand-gold/30 hover:bg-brand-gold/10"
               onClick={addPlan}
             >
               <Plus className="h-3.5 w-3.5" />
@@ -497,7 +497,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
                 label={{
                   value: '60歳',
                   position: 'top',
-                  fill: '#9ca3af',
+                  fill: CHART_COLORS.secondary,
                   fontSize: 10,
                 }}
               />
@@ -530,7 +530,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
         {/* 結論テキスト */}
         <p className={cn(
           "text-sm font-medium text-center",
-          bestPlanId === 'rent' ? 'text-[#4A7C59]' : 'text-[#4A6FA5]'
+          bestPlanId === 'rent' ? 'text-safe' : 'text-[#4A6FA5]'
         )}>{conclusionText}</p>
 
         {/* 比較テーブル */}
@@ -552,7 +552,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
                 <TableRow
                   key={s.id}
                   className={cn(
-                    s.id === bestPlanId && bestPlanId === 'rent' && 'bg-[#4A7C59]/10',
+                    s.id === bestPlanId && bestPlanId === 'rent' && 'bg-safe/10',
                     s.id === bestPlanId && bestPlanId !== 'rent' && 'bg-[#4A6FA5]/10',
                   )}
                 >
@@ -588,7 +588,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
       <DialogContent className="max-w-sm text-center">
         <DialogHeader>
           <div className="flex justify-center mb-2">
-            <Sparkles className="h-10 w-10 text-[#C8B89A]" />
+            <Sparkles className="h-10 w-10 text-brand-gold" />
           </div>
           <DialogTitle>複数プラン比較は Pro 機能です</DialogTitle>
         </DialogHeader>
@@ -596,7 +596,7 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
           最大3つの購入プランを同時に比較して、最適な住宅選択を見つけましょう。
         </p>
         <Link href="/pricing">
-          <Button className="w-full bg-[#C8B89A] text-[#1A1916] hover:bg-[#C8B89A]/90">
+          <Button className="w-full bg-brand-gold text-brand-night hover:bg-brand-gold/90">
             Pro を始める
           </Button>
         </Link>

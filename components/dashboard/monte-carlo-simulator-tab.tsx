@@ -28,7 +28,7 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import type { Profile, SimulationPath } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { cn, CHART_COLORS } from '@/lib/utils';
 
 interface MonteCarloSimulatorTabProps {
   profile: Profile;
@@ -83,24 +83,24 @@ function CustomTooltip({ active, payload, label }: any) {
   };
 
   return (
-    <div className="rounded border border-[#F0ECE4] bg-white px-3 py-2 shadow-sm dark:border-[#8A7A62] dark:bg-[#1A1916]">
-      <p className="text-xs font-medium text-[#1A1916] dark:text-[#F0ECE4]">{label}歳</p>
+    <div className="rounded border border-brand-linen bg-white px-3 py-2 shadow-sm dark:border-brand-bronze dark:bg-brand-night">
+      <p className="text-xs font-medium text-brand-night dark:text-brand-linen">{label}歳</p>
       <div className="mt-1 space-y-0.5 text-xs">
         <div className="flex justify-between gap-4">
-          <span className="text-[#8A7A62]">楽観</span>
-          <span className="tabular-nums text-[#5A5550] dark:text-[#C8B89A]/40">
+          <span className="text-brand-bronze">楽観</span>
+          <span className="tabular-nums text-brand-stone dark:text-brand-gold/40">
             {formatValue(optimisticEntry?.value)}
           </span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-[#8A7A62]">中央</span>
-          <span className="tabular-nums font-medium text-[#1A1916] dark:text-[#F0ECE4]">
+          <span className="text-brand-bronze">中央</span>
+          <span className="tabular-nums font-medium text-brand-night dark:text-brand-linen">
             {formatValue(medianEntry?.value)}
           </span>
         </div>
         <div className="flex justify-between gap-4">
-          <span className="text-[#8A7A62]">悲観</span>
-          <span className="tabular-nums text-[#5A5550] dark:text-[#C8B89A]/40">
+          <span className="text-brand-bronze">悲観</span>
+          <span className="tabular-nums text-brand-stone dark:text-brand-gold/40">
             {formatValue(pessimisticEntry?.value)}
           </span>
         </div>
@@ -330,7 +330,7 @@ export function MonteCarloSimulatorTab({
           </CardDescription>
         </CardHeader>
         {/* Graph interpretation guide - テキストのみ、背景なし */}
-        <p className="mx-6 mb-4 text-xs text-[#8A7A62]/60">
+        <p className="mx-6 mb-4 text-xs text-brand-bronze/60">
           実線が最もありそうな推移。帯が広いほど不確実性が高い。下限が0を下回らなければ資産枯渇リスクは低い。
         </p>
         <CardContent>
@@ -350,13 +350,13 @@ export function MonteCarloSimulatorTab({
                 />
                 <YAxis
                   domain={yAxisDomain}
-                  label={{ 
-                    value: yAxisLabel, 
-                    angle: -90, 
+                  label={{
+                    value: yAxisLabel,
+                    angle: -90,
                     position: 'insideLeft',
-                    style: { textAnchor: 'middle', fontSize: 11, fill: '#9ca3af' }
+                    style: { textAnchor: 'middle', fontSize: 11, fill: CHART_COLORS.secondary }
                   }}
-                  tick={{ fill: '#9ca3af', fontSize: 11 }}
+                  tick={{ fill: CHART_COLORS.secondary, fontSize: 11 }}
                   tickFormatter={yAxisTickFormatter}
                   width={50}
                 />
@@ -387,7 +387,7 @@ export function MonteCarloSimulatorTab({
                 <Line
                   type="monotone"
                   dataKey="pessimistic"
-                  stroke="#9ca3af"
+                  stroke={CHART_COLORS.secondary}
                   strokeWidth={1.5}
                   dot={false}
                   strokeDasharray="4 4"
@@ -395,14 +395,14 @@ export function MonteCarloSimulatorTab({
                 <Line
                   type="monotone"
                   dataKey="median"
-                  stroke="#4b5563"
+                  stroke={CHART_COLORS.median}
                   strokeWidth={2.5}
                   dot={false}
                 />
                 <Line
                   type="monotone"
                   dataKey="optimistic"
-                  stroke="#9ca3af"
+                  stroke={CHART_COLORS.secondary}
                   strokeWidth={1.5}
                   dot={false}
                   strokeDasharray="4 4"
@@ -411,13 +411,13 @@ export function MonteCarloSimulatorTab({
                 {/* Retirement age reference line - グレーで控えめに */}
                 <ReferenceLine
                   x={profile.targetRetireAge}
-                  stroke="#6b7280"
+                  stroke={CHART_COLORS.tertiary}
                   strokeWidth={1.5}
                   strokeDasharray="4 4"
                   label={{
                     value: `目標 ${profile.targetRetireAge}歳`,
                     position: 'top',
-                    fill: '#6b7280',
+                    fill: CHART_COLORS.tertiary,
                     fontSize: 11,
                   }}
                 />
@@ -437,7 +437,7 @@ export function MonteCarloSimulatorTab({
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（楽観）</p>
-                <p className="mt-1 text-2xl font-bold text-[#5A5550] sm:text-3xl">
+                <p className="mt-1 text-2xl font-bold text-brand-stone sm:text-3xl">
                   {spreadAtRetirement.optimistic.toFixed(2)}億円
                 </p>
                 <Badge variant="secondary" className="mt-2">
@@ -447,14 +447,14 @@ export function MonteCarloSimulatorTab({
             </CardContent>
           </Card>
 
-          <Card className="border-[#F0ECE4]">
+          <Card className="border-brand-linen">
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（中央値）</p>
-                <p className="mt-1 text-2xl font-bold text-[#5A5550] sm:text-3xl">
+                <p className="mt-1 text-2xl font-bold text-brand-stone sm:text-3xl">
                   {spreadAtRetirement.median.toFixed(2)}億円
                 </p>
-                <Badge className="mt-2 bg-[#5A5550]">
+                <Badge className="mt-2 bg-brand-stone">
                   最も可能性の高い結果
                 </Badge>
               </div>
@@ -465,7 +465,7 @@ export function MonteCarloSimulatorTab({
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">退職時資産（悲観）</p>
-                <p className="mt-1 text-2xl font-bold text-[#8A7A62] sm:text-3xl">
+                <p className="mt-1 text-2xl font-bold text-brand-bronze sm:text-3xl">
                   {spreadAtRetirement.pessimistic.toFixed(2)}億円
                 </p>
                 <Badge variant="secondary" className="mt-2">
@@ -479,14 +479,14 @@ export function MonteCarloSimulatorTab({
 
       {/* Risk Warning */}
       {spreadAtRetirement && spreadAtRetirement.spread > 1 && (
-        <Card className="border-[#F0ECE4] bg-[#FAF9F7]/50 dark:border-[#8A7A62] dark:bg-[#1A1916]/20">
+        <Card className="border-brand-linen bg-brand-canvas/50 dark:border-brand-bronze dark:bg-brand-night/20">
           <CardContent className="flex items-start gap-3 pt-6">
-            <AlertTriangle className="h-5 w-5 shrink-0 text-[#8A7A62]" />
+            <AlertTriangle className="h-5 w-5 shrink-0 text-brand-bronze" />
             <div>
-              <p className="font-medium text-[#5A5550] dark:text-[#C8B89A]/40">
+              <p className="font-medium text-brand-stone dark:text-brand-gold/40">
                 シナリオ間の差が大きい
               </p>
-              <p className="mt-1 text-sm text-[#8A7A62] dark:text-[#8A7A62]/60">
+              <p className="mt-1 text-sm text-brand-bronze dark:text-brand-bronze/60">
                 楽観と悲観の差が{spreadAtRetirement.spread.toFixed(2)}億円あります。
                 ボラティリティを下げるか、より保守的な資産配分を検討することで
                 将来の不確実性を減らせる可能性があります。

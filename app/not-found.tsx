@@ -17,7 +17,7 @@ export default function NotFound() {
           <line x1="90" y1="94" x2="42" y2="34" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
           <line x1="90" y1="94" x2="138" y2="34" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
           <line x1="90" y1="94" x2="90" y2="156" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-          <circle cx="90" cy="94" r="9" fill="#C8B89A" />
+          <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
           <circle cx="42" cy="34" r="6" fill="currentColor" />
           <circle cx="138" cy="34" r="6" fill="currentColor" />
         </svg>

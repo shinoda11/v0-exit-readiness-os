@@ -30,15 +30,14 @@ export function LPClient() {
   return (
     <Accordion type="single" collapsible className="w-full">
       {faqs.map((faq, i) => (
-        <AccordionItem key={i} value={`faq-${i}`} style={{ borderColor: '#E8E4DE' }}>
+        <AccordionItem key={i} value={`faq-${i}`} className="border-brand-sand">
           <AccordionTrigger
-            className="text-left text-sm sm:text-base font-medium hover:no-underline"
-            style={{ color: '#1A1916' }}
+            className="text-left text-sm sm:text-base font-medium hover:no-underline text-brand-night"
           >
             {faq.q}
           </AccordionTrigger>
           <AccordionContent>
-            <p className="text-sm leading-relaxed" style={{ color: '#5A5550' }}>
+            <p className="text-sm leading-relaxed text-brand-stone">
               {faq.a}
             </p>
           </AccordionContent>

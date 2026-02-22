@@ -28,7 +28,7 @@ function YSymbol() {
       <line x1="90" y1="94" x2="42" y2="34" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
       <line x1="90" y1="94" x2="138" y2="34" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
       <line x1="90" y1="94" x2="90" y2="156" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-      <circle cx="90" cy="94" r="9" fill="#C8B89A" />
+      <circle cx="90" cy="94" r="9" fill="var(--brand-gold)" />
       <circle cx="42" cy="34" r="6" fill="currentColor" />
       <circle cx="138" cy="34" r="6" fill="currentColor" />
     </svg>
@@ -86,7 +86,7 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
         <div
           key={i}
           className={`h-2 w-2 rounded-full transition-colors ${
-            i + 1 <= current ? 'bg-[#C8B89A]' : 'bg-muted-foreground/20'
+            i + 1 <= current ? 'bg-brand-gold' : 'bg-muted-foreground/20'
           }`}
         />
       ))}
@@ -150,7 +150,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
                     key={s.label}
                     className="flex flex-row sm:flex-col items-center gap-3 sm:gap-2 rounded-lg border p-3 sm:p-4 sm:text-center"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C8B89A]/15 text-[#C8B89A]">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-gold/15 text-brand-gold">
                       {s.icon}
                     </div>
                     <div className="sm:space-y-1">
@@ -166,8 +166,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
 
               <div className="flex flex-col items-center gap-2">
                 <Button
-                  className="w-full sm:w-auto px-8"
-                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  className="w-full sm:w-auto px-8 bg-brand-gold text-brand-night"
                   onClick={() => setStep(1)}
                 >
                   はじめる
@@ -218,7 +217,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
                         type="button"
                         className={`flex-1 rounded-md border px-4 py-2.5 text-sm min-h-[44px] transition-colors ${
                           formData.mode === m
-                            ? 'border-[#C8B89A] bg-[#C8B89A]/15 text-foreground font-medium'
+                            ? 'border-brand-gold bg-brand-gold/15 text-foreground font-medium'
                             : 'border-border text-muted-foreground hover:border-foreground/30'
                         }`}
                         onClick={() => update('mode', m)}
@@ -245,7 +244,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
               <div className="flex justify-between pt-2">
                 <Button variant="ghost" onClick={() => setStep(0)}>戻る</Button>
                 <Button
-                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  className="bg-brand-gold text-brand-night"
                   onClick={() => setStep(2)}
                 >
                   次へ
@@ -310,7 +309,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
               <div className="flex justify-between pt-2">
                 <Button variant="ghost" onClick={() => setStep(1)}>戻る</Button>
                 <Button
-                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  className="bg-brand-gold text-brand-night"
                   onClick={() => setStep(3)}
                 >
                   次へ
@@ -356,7 +355,7 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
               <div className="flex justify-between pt-2">
                 <Button variant="ghost" onClick={() => setStep(2)}>戻る</Button>
                 <Button
-                  style={{ backgroundColor: '#C8B89A', color: '#1A1916' }}
+                  className="bg-brand-gold text-brand-night"
                   onClick={handleComplete}
                 >
                   結果を見る

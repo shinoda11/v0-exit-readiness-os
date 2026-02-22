@@ -71,7 +71,7 @@ export function OnboardingSteps({ profile }: OnboardingStepsProps) {
       )}
     >
       {allComplete ? (
-        <p className="text-sm text-center text-[#C8B89A] font-medium">
+        <p className="text-sm text-center text-brand-gold font-medium">
           セットアップ完了！ シミュレーション結果を確認しましょう
         </p>
       ) : (
@@ -79,8 +79,8 @@ export function OnboardingSteps({ profile }: OnboardingStepsProps) {
           {stepLabels.map((label, i) => (
             <div key={label} className="flex items-center gap-2">
               {completed[i] ? (
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#C8B89A]">
-                  <Check className="h-3.5 w-3.5 text-[#1A1916]" />
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-gold">
+                  <Check className="h-3.5 w-3.5 text-brand-night" />
                 </div>
               ) : (
                 <div className="flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/30 text-muted-foreground text-xs font-medium">

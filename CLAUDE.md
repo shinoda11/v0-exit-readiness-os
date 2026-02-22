@@ -377,6 +377,42 @@ docs/
   - カード内（フォーム要素間）: space-y-6（入力フィールドの視覚的分離）
   - カード内（情報表示要素間）: space-y-4
 
+## デザイントークン
+
+### カラートークン（`globals.css` で定義、Tailwind ユーティリティとして使用可能）
+
+| トークン | Tailwind クラス例 | 用途 |
+|---------|------------------|------|
+| `--brand-gold` / `brand-gold` | `text-brand-gold`, `bg-brand-gold` | CTA、ブランドアクセント |
+| `--brand-bronze` / `brand-bronze` | `text-brand-bronze` | サブテキスト、キャプション |
+| `--brand-stone` / `brand-stone` | `text-brand-stone` | 本文テキスト |
+| `--brand-canvas` / `brand-canvas` | `bg-brand-canvas` | 静かな背景 |
+| `--brand-sand` / `brand-sand` | `border-brand-sand` | 細いボーダー |
+| `--brand-night` / `brand-night` | `text-brand-night` | 見出し |
+| `--brand-linen` / `brand-linen` | `bg-brand-linen` | 背景（= background） |
+| `--safe` / `safe` | `text-safe`, `bg-safe` | スコア良好（生存率高い等） |
+| `--danger` / `danger` | `text-danger`, `bg-danger` | スコア危険（資金不足等） |
+
+### safe/danger vs success/destructive の使い分け
+- `safe` / `danger`: YOHACKスコア・指標の状態表示（生存率、流動性、リスクバー等）
+- `success` / `destructive`: shadcn/ui 標準（Toast、フォームバリデーション等のUI状態）
+- 混在禁止: スコア表示に `success` を使わない、UI状態に `safe` を使わない
+
+### チャートカラー（`CHART_COLORS` 定数）
+- Recharts / Canvas は CSS 変数を直接読めないため、`lib/utils.ts` の `CHART_COLORS` 定数を使用
+- `import { CHART_COLORS } from '@/lib/utils'` で参照
+- SVG インライン要素では `fill="var(--brand-gold)"` のように CSS 変数を直接使用可能
+
+### トランジション duration
+- `--duration-fast` (150ms): hover、collapsible
+- `--duration-base` (300ms): 数値変化（デザイン哲学: 0.3s ease）
+- `--duration-slow` (600ms): スコアアニメーション
+
+### やらないこと（デザイントークン）
+- カスタム typography トークン（Tailwind 標準で十分）
+- カスタム spacing トークン（Tailwind 標準で十分）
+- shadcn/ui 原本（card.tsx, button.tsx 等）の改変
+
 ## やらないことリスト
 - 物件紹介・保険紹介・投資商品紹介の機能
 - アフィリエイトリンク・広告表示

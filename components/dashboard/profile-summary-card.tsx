@@ -60,7 +60,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
           </div>
           <Link
             href="/app/profile"
-            className="text-xs text-[#C8B89A] hover:text-[#8A7A62] transition-colors inline-flex items-center min-h-[44px] px-2"
+            className="text-xs text-brand-gold hover:text-brand-bronze transition-colors inline-flex items-center min-h-[44px] px-2"
           >
             編集 →
           </Link>
@@ -97,7 +97,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
                       if (e.key === 'Enter') commitRent();
                       if (e.key === 'Escape') setEditingRent(false);
                     }}
-                    className="w-16 rounded border border-[#C8B89A] bg-transparent px-1.5 py-0.5 text-right text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#C8B89A]"
+                    className="w-16 rounded border border-brand-gold bg-transparent px-1.5 py-0.5 text-right text-sm font-medium focus:outline-none focus:ring-1 focus:ring-brand-gold"
                     min={0}
                     max={100}
                   />
@@ -107,7 +107,7 @@ export function ProfileSummaryCard({ profile, onUpdate }: ProfileSummaryCardProp
                 <button
                   type="button"
                   onClick={() => onUpdate && setEditingRent(true)}
-                  className="border-b border-dashed border-[#C8B89A] hover:border-[#8A7A62] transition-colors cursor-pointer"
+                  className="border-b border-dashed border-brand-gold hover:border-brand-bronze transition-colors cursor-pointer"
                   title="クリックして編集"
                 >
                   月{monthlyRent}万

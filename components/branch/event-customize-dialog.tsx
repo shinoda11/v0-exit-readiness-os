@@ -180,7 +180,7 @@ export function EventCustomizeDialog({
                 className={cn(
                   'flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors min-h-[44px]',
                   certainty === 'planned'
-                    ? 'bg-[#4A7C59] text-white'
+                    ? 'bg-safe text-white'
                     : 'bg-accent/50 text-muted-foreground hover:bg-accent'
                 )}
               >
@@ -192,7 +192,7 @@ export function EventCustomizeDialog({
                 className={cn(
                   'flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors min-h-[44px]',
                   certainty === 'uncertain'
-                    ? 'bg-[#8A7A62] text-white'
+                    ? 'bg-brand-bronze text-white'
                     : 'bg-accent/50 text-muted-foreground hover:bg-accent'
                 )}
               >
@@ -233,7 +233,7 @@ export function EventCustomizeDialog({
           )}
           <Button
             onClick={handleSave}
-            className="bg-[#1A1916] text-[#F0ECE4] hover:bg-[#1A1916]/90"
+            className="bg-brand-night text-brand-linen hover:bg-brand-night/90"
           >
             {isEditing ? '保存' : '追加'}
           </Button>

@@ -142,10 +142,10 @@ export function useMargin(
  */
 export function getHealthColor(health: 'excellent' | 'good' | 'fair' | 'poor' | null): string {
   switch (health) {
-    case 'excellent': return 'text-emerald-700 dark:text-emerald-400';
-    case 'good': return 'text-emerald-600 dark:text-emerald-500';
-    case 'fair': return 'text-amber-700 dark:text-amber-400';
-    case 'poor': return 'text-red-700 dark:text-red-400';
+    case 'excellent': return 'text-safe';
+    case 'good': return 'text-safe';
+    case 'fair': return 'text-brand-gold';
+    case 'poor': return 'text-danger';
     default: return 'text-muted-foreground';
   }
 }
@@ -155,10 +155,10 @@ export function getHealthColor(health: 'excellent' | 'good' | 'fair' | 'poor' | 
  */
 export function getHealthBgColor(health: 'excellent' | 'good' | 'fair' | 'poor' | null): string {
   switch (health) {
-    case 'excellent': return 'bg-emerald-50 dark:bg-emerald-950/20';
-    case 'good': return 'bg-emerald-50/70 dark:bg-emerald-950/10';
-    case 'fair': return 'bg-amber-50 dark:bg-amber-950/20';
-    case 'poor': return 'bg-red-50 dark:bg-red-950/20';
+    case 'excellent': return 'bg-safe/10';
+    case 'good': return 'bg-safe/5';
+    case 'fair': return 'bg-brand-gold/10';
+    case 'poor': return 'bg-danger/10';
     default: return 'bg-muted';
   }
 }

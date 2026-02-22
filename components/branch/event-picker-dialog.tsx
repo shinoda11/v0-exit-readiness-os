@@ -91,7 +91,7 @@ export function EventPickerDialog({
               className={cn(
                 'flex items-center gap-1 shrink-0 px-4 py-2.5 rounded-full text-xs font-medium transition-colors min-h-[44px]',
                 activeCategory === cat.key
-                  ? 'bg-[#1A1916] text-[#F0ECE4]'
+                  ? 'bg-brand-night text-brand-linen'
                   : 'bg-accent/50 text-muted-foreground hover:bg-accent'
               )}
             >

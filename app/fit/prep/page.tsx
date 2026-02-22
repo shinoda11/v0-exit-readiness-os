@@ -12,26 +12,26 @@ export default function PrepPage() {
           className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
           style={{ backgroundColor: 'rgba(138, 122, 98, 0.15)' }}
         >
-          <Mail className="w-8 h-8" style={{ color: '#8A7A62' }} />
+          <Mail className="w-8 h-8 text-brand-bronze" />
         </div>
-        <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1916' }}>
+        <h2 className="text-2xl font-bold mb-2 text-brand-night">
           Prep Mode
         </h2>
-        <p style={{ color: '#5A5550' }}>
+        <p className="text-brand-stone">
           YOHACK を使いこなすための準備ガイドです。
         </p>
       </div>
 
       {/* Email confirmation */}
       <div className="flex items-center gap-2 p-3 rounded-lg mb-6" style={{ backgroundColor: 'rgba(138, 122, 98, 0.08)' }}>
-        <Mail className="w-4 h-4 shrink-0" style={{ color: '#8A7A62' }} />
-        <p className="text-xs" style={{ color: '#8A7A62' }}>結果をメールで送信しました</p>
+        <Mail className="w-4 h-4 shrink-0 text-brand-bronze" />
+        <p className="text-xs text-brand-bronze">結果をメールで送信しました</p>
       </div>
 
       <div className="space-y-6">
         <div>
-          <h3 className="font-semibold mb-3" style={{ color: '#5A5550' }}>メールレターの内容</h3>
-          <ul className="space-y-2 text-sm" style={{ color: '#8A7A62' }}>
+          <h3 className="font-semibold mb-3 text-brand-stone">メールレターの内容</h3>
+          <ul className="space-y-2 text-sm text-brand-bronze">
             <li>・年収・資産・支出の整理方法</li>
             <li>・数字入力のコツと扱い方</li>
             <li>・よくある質問への回答</li>
@@ -40,7 +40,7 @@ export default function PrepPage() {
         </div>
 
         <div className="pt-4 border-t">
-          <p className="text-xs mb-3" style={{ color: '#8A7A62' }}>
+          <p className="text-xs mb-3 text-brand-bronze">
             条件が変わったら再診断できます。
           </p>
           <Button
@@ -55,14 +55,13 @@ export default function PrepPage() {
 
         {/* Instagram */}
         <div className="pt-4 border-t">
-          <p className="text-xs text-center" style={{ color: '#8A7A62' }}>
+          <p className="text-xs text-center text-brand-bronze">
             Instagramで問い×ケースを配信しています →{' '}
             <a
               href="https://www.instagram.com/yohack.jp"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline font-medium"
-              style={{ color: '#C8B89A' }}
+              className="underline font-medium text-brand-gold"
             >
               @yohack.jp
             </a>

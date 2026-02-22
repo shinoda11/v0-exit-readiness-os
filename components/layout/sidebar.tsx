@@ -20,7 +20,7 @@ function YohackWordmark() {
   return (
     <span className="text-base font-bold tracking-tight">
       <span className="text-sidebar-foreground">YO</span>
-      <span style={{ color: '#C8B89A' }}>HACK</span>
+      <span className="text-brand-gold">HACK</span>
     </span>
   );
 }
@@ -117,7 +117,7 @@ export function Sidebar() {
               {item.icon}
               {item.label}
               {item.badge && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#C8B89A]/20 text-[#C8B89A] font-medium">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-gold/20 text-brand-gold font-medium">
                   {item.badge}
                 </span>
               )}

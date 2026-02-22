@@ -73,19 +73,19 @@ export default function WorldlinePage() {
         <div className="container mx-auto max-w-7xl px-4 py-4 md:p-6 space-y-6">
           <div>
             <h1 className="text-xl font-bold tracking-tight text-foreground">世界線比較</h1>
-            <p className="text-sm text-[#8A7A62] mt-1">余白で比較し、次の一手を決める</p>
+            <p className="text-sm text-brand-bronze mt-1">余白で比較し、次の一手を決める</p>
           </div>
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#C8B89A]/30 bg-[#FAF9F7] p-16 text-center space-y-6">
-            <div className="rounded-full bg-[#C8B89A]/10 p-5">
-              <GitBranch className="h-10 w-10 text-[#C8B89A]" />
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-brand-gold/30 bg-brand-canvas p-16 text-center space-y-6">
+            <div className="rounded-full bg-brand-gold/10 p-5">
+              <GitBranch className="h-10 w-10 text-brand-gold" />
             </div>
             <div className="space-y-3">
-              <h2 className="text-lg font-semibold text-[#5A5550]">比較する世界線がありません</h2>
-              <p className="text-sm text-[#8A7A62] max-w-md leading-relaxed">
+              <h2 className="text-lg font-semibold text-brand-stone">比較する世界線がありません</h2>
+              <p className="text-sm text-brand-bronze max-w-md leading-relaxed">
                 まず、あなたの家の選択肢を世界線として並べてみましょう
               </p>
             </div>
-            <Button asChild className="gap-2 bg-[#1A1916] text-[#F0ECE4] hover:bg-[#1A1916]/90 h-11 px-6">
+            <Button asChild className="gap-2 bg-brand-night text-brand-linen hover:bg-brand-night/90 h-11 px-6">
               <Link href="/app/branch">
                 最初の世界線を作る →
               </Link>
@@ -134,7 +134,7 @@ export default function WorldlinePage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-foreground">世界線比較</h1>
-              <p className="text-sm text-[#8A7A62] mt-1">
+              <p className="text-sm text-brand-bronze mt-1">
                 余白で比較し、次の一手を決める
               </p>
             </div>

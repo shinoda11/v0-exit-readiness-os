@@ -217,18 +217,18 @@ export function getScoreLevel(score: number): ScoreLevel {
 
 export function getScoreColor(level: ScoreLevel): string {
   switch (level) {
-    case 'GREEN': return 'text-[#8A7A62]';
-    case 'YELLOW': return 'text-[#5A5550]';
-    case 'ORANGE': return 'text-[#5A5550]';
+    case 'GREEN': return 'text-brand-bronze';
+    case 'YELLOW': return 'text-brand-stone';
+    case 'ORANGE': return 'text-brand-stone';
     case 'RED': return 'text-red-700';
   }
 }
 
 export function getScoreBgColor(level: ScoreLevel): string {
   switch (level) {
-    case 'GREEN': return 'bg-[#C8B89A]';
-    case 'YELLOW': return 'bg-[#5A5550]';
-    case 'ORANGE': return 'bg-[#5A5550]';
+    case 'GREEN': return 'bg-brand-gold';
+    case 'YELLOW': return 'bg-brand-stone';
+    case 'ORANGE': return 'bg-brand-stone';
     case 'RED': return 'bg-red-600';
   }
 }

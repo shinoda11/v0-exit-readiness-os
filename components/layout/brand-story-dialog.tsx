@@ -90,9 +90,9 @@ function AnimatedYSymbol() {
         <line x1="90" y1="94" x2="138" y2="34" stroke="currentColor" className="draw-path d2" strokeWidth="5" strokeLinecap="round" />
         <line x1="90" y1="94" x2="90" y2="156" stroke="currentColor" className="draw-path d3" strokeWidth="5" strokeLinecap="round" />
         {/* Decision node — Gold, solid */}
-        <circle cx="90" cy="94" r="6" fill="#C8B89A" />
+        <circle cx="90" cy="94" r="6" fill="var(--brand-gold)" />
         {/* Decision node — Gold, pulsing ring */}
-        <circle cx="90" cy="94" r="5" fill="none" stroke="#C8B89A" strokeWidth="1.5" className="node-pulse" />
+        <circle cx="90" cy="94" r="5" fill="none" stroke="var(--brand-gold)" strokeWidth="1.5" className="node-pulse" />
         {/* Endpoint dots */}
         <circle cx="42" cy="34" r="5" fill="currentColor" />
         <circle cx="138" cy="34" r="5" fill="currentColor" />
@@ -119,7 +119,7 @@ export function BrandStoryDialog({ open, onOpenChange }: BrandStoryDialogProps) 
             <div className="text-center" style={{ fontFamily: 'var(--font-noto-serif-jp), serif' }}>
               <p className="text-xl font-bold tracking-tight hero-enter-d1">
                 <span className="text-foreground">YO</span>
-                <span style={{ color: '#C8B89A' }}>HACK</span>
+                <span className="text-brand-gold">HACK</span>
               </p>
               <p className="text-sm font-light tracking-[0.25em] text-muted-foreground mt-1 hero-enter-d2">人生に、余白を。</p>
             </div>
@@ -134,7 +134,7 @@ export function BrandStoryDialog({ open, onOpenChange }: BrandStoryDialogProps) 
             <p className="text-xl font-normal mb-6">
               人生は分岐の連続です。
             </p>
-            <div className="pl-4 border-l-2 border-[#C8B89A]/30 space-y-0.5 font-normal text-[#C8B89A]">
+            <div className="pl-4 border-l-2 border-brand-gold/30 space-y-0.5 font-normal text-brand-gold">
               <p>転職するか、今の会社に残るか。</p>
               <p>家を買うか、賃貸を続けるか。</p>
               <p>子どもを持つか、持たないか。</p>
@@ -161,7 +161,7 @@ export function BrandStoryDialog({ open, onOpenChange }: BrandStoryDialogProps) 
               すべての未来を見渡した上で、<br />
               自分だけの道を選ぶ。
             </p>
-            <p className="font-medium text-[#C8B89A]">
+            <p className="font-medium text-brand-gold">
               それが、YOHACKの思想です。
             </p>
           </div>
