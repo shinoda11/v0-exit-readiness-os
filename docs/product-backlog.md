@@ -49,7 +49,7 @@ const hasToken = searchParams.get('token');
 ---
 
 ### [P0-FG-2] FitGateヘッダーに「← 戻る」リンク追加
-**status:** [ ]
+**status:** [x]
 
 **意図:** FitGateからLPに戻る導線がないため、ヘッダー左上に戻るリンクを追加する。
 
