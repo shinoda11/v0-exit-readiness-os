@@ -343,28 +343,67 @@ estimate: L
 6. pnpm build && git add -A && git commit -m "feat: add supabase auth foundation"
 ```
 
-## P2-2: LP改修（Instagram流入最適化）
+## P2-2: LP改修（ヒーロービジュアル + リズム再設計）
 status: todo
-priority: 2
-estimate: M
-
-### context
-yohack-lp-design.md の7セクション構成に沿ってLPを改修する。
+priority: P2
+estimate: L
 
 ### instructions
+デザイン哲学 docs/YOHACK_DESIGN_PHILOSOPHY.md を必ず読んでから実装すること。
+LP設計書 docs/yohack-lp-design.md も参照すること。
+
+現状の問題:
+1. ヒーローがテキストのみ（プロダクトの実物が見えない）
+2. 全セクションが同じリズム（py-20 + 中央テキスト + カードグリッドの繰り返し）
+3. S4フラットな立場宣言の視覚的重みが弱い
+4. ケースカードに数値の差分がない
+
+改修内容:
+
+#### S1: ヒーロー
+- ヒーローテキストの下にプロダクトプレビューを追加
+- SVGで「世界線A vs B」の2本のグラフライン + 安心ラインの破線を表現
+- 数字はダミー値（ぼかし不要、架空の数値でOK）
+- 実装: SVGアニメーション（左から右へ線が描かれる、1.5s ease-out）
+- 背景: bg-white rounded-xl border border-brand-sand shadow-sm
+- プレビューサイズ: max-w-2xl mx-auto mt-12
+
+#### S2: ケースカード
+- 結論の前に「Before → After」の数値差分を追加
+  Case1: 「余白スコア: 買わない 82 → 駐在あり 91」（架空数値）
+  Case2: 「安心ライン: ペースダウン後も維持 ✓」
+- 数値はbrand-goldで大きく表示（text-2xl font-bold）
+
+#### S3: セクションリズムの変化
+- S1: 全幅、中央揃え、大きな余白（現状維持）
+- S2: max-w-3xl、左揃えに変更（h2も左揃え）
+- S3: 背景をbg-brand-canvasに変更（白から変化をつける）
+- S4: 全幅、中央揃え、bg-brand-nightに変更 + テキストをtext-white/70に
+  → ダークセクションにすることで「宣言」の重みを出す
+- S5: max-w-3xl、左揃え
+- S6: bg-brand-canvas
+- S7: 全幅、中央揃え、大きな余白
+
+#### S4: フラットな立場（ダーク背景に変更）
+```jsx
+<section className="py-24 px-4 bg-brand-night">
+  <div className="max-w-2xl mx-auto text-center space-y-3">
+    <p className="text-lg sm:text-xl leading-loose text-white/70">
+      YOHACK は、物件も保険も投資商品も売りません。
+    </p>
+    ...
+  </div>
+</section>
 ```
-1. docs/yohack-lp-design.md を読む
-2. app/page.tsx（LP）を7セクション構成に改修:
-   S1: ヒーロー（問いの再提示）
-   S2: 成果物の提示（ケース例2本）
-   S3: 3軸説明
-   S4: フラットな立場宣言
-   S5: 向いている/いない
-   S6: FAQ 4問
-   S7: CTA → FitGate
-3. 既存の不要セクションを削除
-4. pnpm build && git add -A && git commit -m "feat: redesign lp for instagram traffic"
-```
+
+#### CTA文言変更
+- 「あなたのケースで確認する」→「自分のケースで試す」
+- 「適合チェックに進む」→「12問で確認する」
+- 「よくある質問」→「気になること」
+
+完了後:
+- pnpm build
+- git add -A && git commit -m "ui: P2-2 LP hero visual + section rhythm redesign" && git push
 
 ## P2-3: Stripe決済導入
 status: todo
