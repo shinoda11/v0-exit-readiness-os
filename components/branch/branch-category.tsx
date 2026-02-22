@@ -9,17 +9,17 @@ const CATEGORY_META: Record<BranchCertainty, { symbol: string; label: string; de
   confirmed: {
     symbol: '◆',
     label: '確定',
-    description: '自動的に反映されます',
+    description: '自動で反映',
   },
   planned: {
     symbol: '●',
     label: '計画',
-    description: '実現を前提としたイベント',
+    description: '実現を前提とした分岐',
   },
   uncertain: {
     symbol: '◌',
     label: '不確定',
-    description: '起こるかもしれない未来',
+    description: '起こりうる未来',
   },
 };
 
@@ -78,7 +78,7 @@ export function BranchCategory({
         </div>
       ) : showAddButton ? (
         <p className="text-xs text-muted-foreground px-3 py-2">
-          まだイベントがありません
+          イベントなし
         </p>
       ) : null}
 

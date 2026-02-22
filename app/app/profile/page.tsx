@@ -157,14 +157,14 @@ export default function ProfilePage() {
               ダッシュボードに戻る
             </Link>
             <h1 className="text-xl font-bold tracking-tight text-foreground">プロファイル</h1>
-            <p className="text-sm text-brand-bronze">基本情報を入力します</p>
+            <p className="text-sm text-brand-bronze">シミュレーションの前提条件</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-sm">
               {isLoading ? (
                 <span className="flex items-center gap-2 text-muted-foreground">
                   <span className="h-2 w-2 animate-pulse rounded-full bg-brand-stone" />
-                  計算中...
+                  計算中
                 </span>
               ) : (
                 <span className="flex items-center gap-2 text-muted-foreground">

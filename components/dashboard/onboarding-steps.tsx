@@ -72,7 +72,7 @@ export function OnboardingSteps({ profile }: OnboardingStepsProps) {
     >
       {allComplete ? (
         <p className="text-sm text-center text-brand-gold font-medium">
-          セットアップ完了！ シミュレーション結果を確認しましょう
+          入力完了。結果が表示されています
         </p>
       ) : (
         <div className="flex items-center justify-center gap-3 sm:gap-8">

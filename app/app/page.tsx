@@ -353,7 +353,7 @@ export default function DashboardPage() {
           <div className="flex h-14 items-center px-4 sm:px-6">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-brand-night">ダッシュボード</h1>
-              <p className="text-sm text-brand-bronze">プロファイルとシミュレーション結果</p>
+              <p className="text-sm text-brand-bronze">あなたの前提と将来の見通し</p>
             </div>
           </div>
         </header>
@@ -374,12 +374,12 @@ export default function DashboardPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-brand-stone">
-                  まず、あなたの家の選択肢を世界線として並べてみましょう
+                  選択肢を世界線として並べると、比較が始まります
                 </p>
               </div>
               <Button asChild size="sm" className="flex-shrink-0 gap-1 bg-brand-night text-brand-linen hover:bg-brand-night/90">
                 <Link href="/app/branch">
-                  最初の世界線を作る →
+                  世界線を作る
                 </Link>
               </Button>
             </div>
@@ -389,8 +389,8 @@ export default function DashboardPage() {
           {showFirstVisitBanner && (
             <div className="mb-6 flex items-start gap-3 rounded-lg border-l-4 border-l-brand-gold bg-brand-gold/10 p-4 dark:bg-brand-gold/5">
               <div className="flex-1 text-sm text-brand-bronze">
-                <p className="font-medium">現在はサンプルデータでシミュレーションしています。</p>
-                <p className="mt-1 text-brand-bronze/80">あなたの条件を入力すると、結果が自動で更新されます。</p>
+                <p className="font-medium">現在はサンプルデータで表示しています</p>
+                <p className="mt-1 text-brand-bronze/80">あなたの条件に変更すると、結果が即時に反映されます</p>
               </div>
               <button
                 onClick={() => {

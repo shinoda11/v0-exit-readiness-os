@@ -174,7 +174,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
       <SectionCard
         icon={<Target className="h-5 w-5" />}
         title="余白スコア"
-        description="目標達成度の総合評価"
+        description="人生の余白を総合評価"
       >
         <div className="flex flex-col items-center py-8">
           <Skeleton className="h-32 w-32 rounded-full" />
@@ -200,7 +200,7 @@ export function ExitReadinessCard({ score, isLoading }: ExitReadinessCardProps) 
     <SectionCard
       icon={<Target className="h-5 w-5" />}
       title="余白スコア"
-      description="目標達成度の総合評価"
+      description="人生の余白を総合評価"
       className={cn(
         'transition-all duration-[600ms]',
         scoreDirection === 'up' && 'shadow-[0_4px_12px_rgba(74,124,89,0.15)]',

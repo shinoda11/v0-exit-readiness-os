@@ -101,7 +101,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
     <SectionCard
       icon={<GitCompare className="h-5 w-5" />}
       title="世界線比較"
-      description="異なる条件を並べて比較する"
+      description="異なる選択肢を並べて比較する"
     >
       <div className="space-y-4">
         {/* Save new scenario */}
@@ -262,7 +262,7 @@ export function ScenarioComparisonCard({ currentResult }: ScenarioComparisonCard
         {/* Empty state */}
         {scenarios.length === 0 && (
           <p className="text-xs text-brand-bronze/60 text-center py-2">
-            シナリオを保存して比較できます
+            世界線を保存すると、ここで比較できます
           </p>
         )}
       </div>

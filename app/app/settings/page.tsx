@@ -170,7 +170,7 @@ export default function SettingsPage() {
                 onChange={handleFileChange}
               />
               <p className="text-xs text-muted-foreground">
-                エクスポートされたJSONファイルには、プロファイルと保存済みシナリオが含まれます。
+                プロファイルと保存済みシナリオを含むJSONファイルが出力されます
               </p>
 
               <div className="pt-2 border-t">
@@ -183,7 +183,7 @@ export default function SettingsPage() {
                   すべてのデータをリセット
                 </Button>
                 <p className="text-xs text-muted-foreground mt-2">
-                  プロファイル・シナリオを含むすべてのデータを初期状態に戻します。この操作は元に戻せません。
+                  すべてのデータが初期状態に戻ります。元に戻せません
                 </p>
               </div>
             </CardContent>
@@ -212,7 +212,7 @@ export default function SettingsPage() {
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                これらの値は現在固定です。将来のアップデートで変更可能になる予定です。
+                現在は固定値です
               </p>
             </CardContent>
           </Card>
@@ -261,7 +261,7 @@ export default function SettingsPage() {
           <DialogHeader>
             <DialogTitle>すべてのデータをリセット</DialogTitle>
             <DialogDescription>
-              プロファイル、保存済みシナリオを含むすべてのデータが削除されます。この操作は元に戻せません。
+              すべてのデータが削除されます。この操作は元に戻せません。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

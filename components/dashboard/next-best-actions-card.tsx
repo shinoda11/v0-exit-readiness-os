@@ -239,8 +239,8 @@ export function NextBestActionsCard({
     return (
       <SectionCard
         icon={<Lightbulb className="h-5 w-5" />}
-        title="おすすめアクション"
-        description="計画改善のための推奨アクション"
+        title="次の一手"
+        description="次に検討できること"
       >
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
@@ -254,8 +254,8 @@ export function NextBestActionsCard({
   return (
     <SectionCard
       icon={<Lightbulb className="h-5 w-5" />}
-      title="おすすめアクション"
-      description="計画改善のための推奨アクション（効果をプレビュー可能）"
+      title="次の一手"
+      description="次に検討できること（効果をプレビュー）"
     >
       <div className="space-y-3">
         {potentialActions.map((action) => {
@@ -330,7 +330,7 @@ export function NextBestActionsCard({
                       {isCalculating ? (
                         <>
                           <Loader2 className="h-3 w-3 animate-spin" />
-                          計算中...
+                          計算中
                         </>
                       ) : (
                         <>

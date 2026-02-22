@@ -251,7 +251,7 @@ export function MonteCarloSimulatorTab({
               <circle cx="20" cy="4" r="3" fill="currentColor" opacity="0.5" />
             </svg>
             <p className="text-sm text-muted-foreground">
-              データを入力するとここにグラフが表示されます
+              プロファイルを入力すると、ここに確率分布が表示されます
             </p>
           </div>
         )}
@@ -288,7 +288,7 @@ export function MonteCarloSimulatorTab({
             </HoverCard>
           </div>
           <CardDescription>
-            市場リスクの想定を調整してシミュレーション結果を確認
+            市場リスクの前提を調整
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -323,10 +323,10 @@ export function MonteCarloSimulatorTab({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            <TermTooltip term="モンテカルロ" description={glossary['モンテカルロ']} />シミュレーション結果
+            <TermTooltip term="モンテカルロ" description={glossary['モンテカルロ']} />確率分布
           </CardTitle>
           <CardDescription>
-            1,000回のシミュレーションに基づく資産推移の予測範囲
+            1,000回のシミュレーションによる予測範囲
           </CardDescription>
         </CardHeader>
         {/* Graph interpretation guide - テキストのみ、背景なし */}
@@ -337,7 +337,7 @@ export function MonteCarloSimulatorTab({
           <div className="relative h-[300px] w-full sm:h-[400px] overflow-x-hidden">
             {isLoading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/40">
-                <span className="text-xs text-muted-foreground">計算中...</span>
+                <span className="text-xs text-muted-foreground">計算中</span>
               </div>
             )}
             <ResponsiveContainer width="100%" height="100%">

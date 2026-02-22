@@ -101,7 +101,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
       <SectionCard
         icon={<ArrowDownUp className="h-5 w-5" />}
         title="退職後キャッシュフロー"
-        description="退職後の年間収支内訳"
+        description="退職後の収支バランス"
       >
         {isLoading ? (
           <Skeleton className="h-48 w-full" />
@@ -114,7 +114,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
               <circle cx="20" cy="4" r="3" fill="currentColor" opacity="0.5" />
             </svg>
             <p className="text-sm text-muted-foreground">
-              データを入力するとここに収支が表示されます
+              プロファイルを入力すると、ここに収支が表示されます
             </p>
           </div>
         )}
@@ -181,8 +181,8 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
     <SectionCard
       icon={<ArrowDownUp className="h-5 w-5" />}
       title="退職後キャッシュフロー"
-      description="Exit後の年間収支内訳"
-      action={isLoading && <span className="text-xs text-brand-bronze/60">更新中...</span>}
+      description="退職後の収支バランス"
+      action={isLoading && <span className="text-xs text-brand-bronze/60">反映中...</span>}
     >
       <div className={cn("space-y-4", isLoading && "opacity-60")}>
         {/* Income section */}
@@ -256,7 +256,7 @@ export function CashFlowCard({ cashFlow, paths, metrics, targetRetireAge, isLoad
           {!netCashFlowPositive && (
             <p className="mt-2 text-sm text-brand-bronze">
               年間{formatCurrency(Math.abs(cashFlow.netCashFlow))}の
-              余白を使う必要があります
+              資産の取り崩しが必要です
             </p>
           )}
         </div>

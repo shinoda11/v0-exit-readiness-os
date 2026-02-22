@@ -590,19 +590,16 @@ export function HousingPlanCard({ profile, onUpdate, open, onOpenChange, complet
           <div className="flex justify-center mb-2">
             <Sparkles className="h-10 w-10 text-brand-gold" />
           </div>
-          <DialogTitle>複数プラン比較は Pro 機能です</DialogTitle>
+          <DialogTitle>複数プランの比較</DialogTitle>
         </DialogHeader>
         <p className="text-sm text-muted-foreground">
-          最大3つの購入プランを同時に比較して、最適な住宅選択を見つけましょう。
+          最大3つの購入プランを並べて比較できます。
         </p>
         <Link href="/pricing">
           <Button className="w-full bg-brand-gold text-brand-night hover:bg-brand-gold/90">
             Pro を始める
           </Button>
         </Link>
-        <p className="text-xs text-muted-foreground">
-          月額 ¥2,980 から
-        </p>
       </DialogContent>
     </Dialog>
   );

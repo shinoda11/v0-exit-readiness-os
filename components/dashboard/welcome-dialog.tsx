@@ -49,7 +49,7 @@ const introSteps = [
   {
     icon: <PiggyBank className="h-5 w-5" />,
     label: '資産',
-    description: 'あるだけでOK',
+    description: '概算で十分',
   },
 ];
 
@@ -140,8 +140,8 @@ export function WelcomeDialog({ open, onComplete, onSkip }: WelcomeDialogProps) 
               </div>
 
               <p className="text-sm text-muted-foreground text-center leading-relaxed">
-                3つのステップであなたの人生シミュレーションが始まります。<br />
-                まずは基本情報を入力してみましょう。
+                3つのステップで、あなたの余白が見えてきます。<br />
+                まずは基本情報から。
               </p>
 
               <div className="grid gap-3 sm:grid-cols-3">

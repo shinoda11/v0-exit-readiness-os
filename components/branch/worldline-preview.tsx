@@ -100,8 +100,7 @@ export function WorldlinePreview({
           <div>
             <p className="text-sm font-medium text-foreground">発見</p>
             <p className="text-xs text-muted-foreground">
-              「{impact.branch.label}」がスコアに最も影響します（{impact.scoreDiff > 0 ? '-' : '+'}{Math.abs(impact.scoreDiff)}点）。
-              この分岐を世界線比較で深掘りしましょう。
+              「{impact.branch.label}」がスコアに最も影響（{impact.scoreDiff > 0 ? '-' : '+'}{Math.abs(impact.scoreDiff)}点）
             </p>
           </div>
         </div>

@@ -80,14 +80,14 @@ export default function WorldlinePage() {
               <GitBranch className="h-10 w-10 text-brand-gold" />
             </div>
             <div className="space-y-3">
-              <h2 className="text-lg font-semibold text-brand-stone">比較する世界線がありません</h2>
+              <h2 className="text-lg font-semibold text-brand-stone">世界線がまだありません</h2>
               <p className="text-sm text-brand-bronze max-w-md leading-relaxed">
-                まず、あなたの家の選択肢を世界線として並べてみましょう
+                選択肢を世界線として並べると、比較が始まります
               </p>
             </div>
             <Button asChild className="gap-2 bg-brand-night text-brand-linen hover:bg-brand-night/90 h-11 px-6">
               <Link href="/app/branch">
-                最初の世界線を作る →
+                世界線を作る
               </Link>
             </Button>
           </div>

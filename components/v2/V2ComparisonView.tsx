@@ -59,17 +59,17 @@ const steps = [
   {
     icon: <CalendarDays className="h-5 w-5 text-brand-gold" />,
     title: '条件を変える',
-    description: 'ライフプランでイベントを追加。転職・出産・住宅購入など。',
+    description: '転職・出産・住宅購入などのイベントを追加',
   },
   {
     icon: <Save className="h-5 w-5 text-brand-gold" />,
     title: 'シナリオを保存',
-    description: '現在の条件に名前をつけて保存。いつでも戻れる。',
+    description: '現在の条件に名前をつけて保存',
   },
   {
     icon: <Columns className="h-5 w-5 text-brand-gold" />,
     title: '並べて比較',
-    description: '最大3つのシナリオを現在の状態と並べて比較。',
+    description: '最大3つのシナリオを並べて比較',
   },
 ];
 
@@ -217,7 +217,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
           世界線比較
         </CardTitle>
         <CardDescription>
-          現在の状態と保存済みシナリオを並列比較します（最大3つまで選択可能）
+          現在の状態と保存済みシナリオを並列比較
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -510,25 +510,24 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
               </div>
               <div className="space-y-3">
                 <div>
-                  <p className="font-medium text-sm">現在の条件とシナリオが同じ状態です</p>
+                  <p className="font-medium text-sm">現在の条件とシナリオが同一です</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    シナリオを保存した直後は、現在の条件と同じため差が表示されません。<br />
-                    比較するには、以下のどちらかを試してください：
+                    条件を変更するか、別パターンのシナリオを追加すると差分が表示されます
                   </p>
                 </div>
                 <div className="space-y-2 text-xs text-muted-foreground">
                   <div className="flex gap-2">
                     <span className="flex-shrink-0 font-medium text-foreground">①</span>
                     <div>
-                      <span className="font-medium text-foreground">現在の条件を変更する</span>
-                      <p className="mt-0.5">シミュレーション画面で収入や支出を変えるか、ライフプランでイベントを追加・削除すると、ここに差分が表示されます。</p>
+                      <span className="font-medium text-foreground">条件を変更する</span>
+                      <p className="mt-0.5">収入・支出・イベントを変えると差分が表示されます</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <span className="flex-shrink-0 font-medium text-foreground">②</span>
                     <div>
-                      <span className="font-medium text-foreground">別パターンのシナリオを追加する</span>
-                      <p className="mt-0.5">異なるイベントを組んで2つ目のシナリオを保存すると、シナリオ同士を並べて比較できます。</p>
+                      <span className="font-medium text-foreground">別パターンを追加する</span>
+                      <p className="mt-0.5">異なる条件のシナリオを保存して並べて比較</p>
                     </div>
                   </div>
                 </div>
@@ -593,7 +592,7 @@ export function V2ComparisonView(props: V2ComparisonViewProps) {
                 <h4 className="font-medium text-sm">余白を確認する</h4>
               </div>
               <p className="text-xs text-muted-foreground">
-                差分を確認したら、各世界線の余白を比較します
+                差分を確認したら、余白を比較
               </p>
             </div>
             <Button

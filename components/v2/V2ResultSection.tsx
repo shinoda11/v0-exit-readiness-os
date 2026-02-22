@@ -283,7 +283,7 @@ export function V2ResultSection(props: V2ResultSectionProps) {
               <div className="text-2xl font-bold text-brand-stone">
                 +{primaryStrategy.expectedOutcome.scoreImprovement}
               </div>
-              <div className="text-sm text-muted-foreground">スコア改善予測</div>
+              <div className="text-sm text-muted-foreground">予測スコア改善</div>
             </div>
             <div className="rounded-lg border p-4 text-center">
               <div className="text-2xl font-bold text-brand-stone">

@@ -142,7 +142,7 @@ export function AssetProjectionChart({
       <SectionCard
         icon={<LineChart className="h-5 w-5" />}
         title="資産推移シミュレーション"
-        description="モンテカルロシミュレーションによる将来予測"
+        description="将来の資産推移の予測範囲"
       >
         {isLoading ? (
           <Skeleton className="h-[300px] w-full sm:h-[360px]" />
@@ -155,7 +155,7 @@ export function AssetProjectionChart({
               <circle cx="20" cy="4" r="3" fill="currentColor" opacity="0.5" />
             </svg>
             <p className="text-sm text-muted-foreground">
-              データを入力するとここにグラフが表示されます
+              プロファイルを入力すると、ここに資産推移が表示されます
             </p>
           </div>
         )}
@@ -198,7 +198,7 @@ export function AssetProjectionChart({
     <SectionCard
       icon={<LineChart className="h-5 w-5" />}
       title="資産推移シミュレーション"
-      description="モンテカルロシミュレーションによる将来予測"
+      description="将来の資産推移の予測範囲"
     >
       {/* Controls */}
       <div className="flex items-center justify-between mb-4">
@@ -222,7 +222,7 @@ export function AssetProjectionChart({
       <div className="relative h-[300px] sm:h-[360px] w-full overflow-x-hidden">
         {isLoading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/40">
-            <span className="text-xs text-muted-foreground">計算中...</span>
+            <span className="text-xs text-muted-foreground">計算中</span>
           </div>
         )}
         <ResponsiveContainer width="100%" height="100%">

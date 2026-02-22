@@ -378,7 +378,7 @@ export default function BranchPage() {
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-tight text-foreground">分岐ビルダー</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          人生の分岐を選び、世界線を自動生成します
+          分岐を選び、世界線を生成します
         </p>
       </div>
 
@@ -447,7 +447,7 @@ export default function BranchPage() {
 
               {!hasUncertain && nonAutoSelectedCount > 0 && (
                 <p className="text-xs text-muted-foreground text-center py-2">
-                  不確定な分岐を選ぶとより多くの世界線を比較できます
+                  不確定な分岐を加えると、より多くの世界線が生まれます
                 </p>
               )}
 

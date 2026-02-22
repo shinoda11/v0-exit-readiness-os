@@ -78,7 +78,7 @@ export function EventPickerDialog({
         <DialogHeader className="px-6 pt-6 pb-0">
           <DialogTitle>イベントを追加</DialogTitle>
           <DialogDescription>
-            人生のイベントを選んで分岐に追加します
+            分岐に追加するイベントを選択
           </DialogDescription>
         </DialogHeader>
 

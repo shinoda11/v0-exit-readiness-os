@@ -60,7 +60,7 @@ export function ProfileCompleteness({ profile, onOpenCard }: ProfileCompleteness
       {isComplete ? (
         <div className="flex items-center justify-center gap-2 text-sm font-medium text-brand-gold">
           <Check className="h-4 w-4" />
-          入力完了！
+          入力完了
         </div>
       ) : (
         <>

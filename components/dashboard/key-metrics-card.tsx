@@ -110,8 +110,8 @@ export function KeyMetricsCard({
     return (
       <SectionCard
         icon={<Gauge className="h-5 w-5" />}
-        title="主要指標"
-        description="シミュレーション結果のサマリー"
+        title="余白の見通し"
+        description="主要な数値の概要"
       >
         {isLoading ? (
           <div className="grid gap-4 sm:grid-cols-2">
@@ -121,7 +121,7 @@ export function KeyMetricsCard({
           </div>
         ) : (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            プロファイルを入力するとシミュレーション結果が表示されます
+            プロファイルを入力すると、ここに見通しが表示されます
           </p>
         )}
       </SectionCard>
@@ -163,9 +163,9 @@ export function KeyMetricsCard({
   return (
     <SectionCard
       icon={<Gauge className="h-5 w-5" />}
-      title="主要指標"
-      description="シミュレーション結果のサマリー"
-      action={isLoading && <span className="text-xs text-brand-bronze/60">更新中...</span>}
+      title="余白の見通し"
+      description="主要な数値の概要"
+      action={isLoading && <span className="text-xs text-brand-bronze/60">反映中...</span>}
     >
       <div className={cn("grid gap-2 sm:grid-cols-2", isLoading && "opacity-60")}>
         <MetricItem

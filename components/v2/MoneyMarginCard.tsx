@@ -51,10 +51,10 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
   // 欠損理由を明確に表示（0埋め禁止）
   const missingReason = isLoading
     ? null // ローディング中は理由を表示しない
-    : !moneyMargin 
-      ? 'プロファイルデータが不足しています' 
+    : !moneyMargin
+      ? 'プロファイルの入力が必要です'
       : (isNaN(moneyMargin.monthlyNetSavings) || !isFinite(moneyMargin.monthlyNetSavings))
-        ? 'ダッシュボードでシミュレーション結果を確認してください' 
+        ? 'ダッシュボードでシミュレーションを実行してください'
         : null;
 
   const metrics = [
@@ -62,21 +62,21 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
       icon: PiggyBank,
       label: '月々の純貯蓄額',
       value: hasValidData ? `${safeDisplayNumber(moneyMargin?.monthlyNetSavings)}万円` : '—',
-      description: '手取り収入から月々の支出を引いた、貯蓄に回せるお金です。',
+      description: '手取り収入から支出を引いた月々の余剰額',
       highlight: hasValidData && (moneyMargin?.monthlyNetSavings ?? 0) > 0,
     },
     {
       icon: Shield,
       label: '緊急資金カバー月数',
       value: hasValidData ? `${safeDisplayNumber(moneyMargin?.emergencyFundCoverage, 1)}ヶ月分` : '—',
-      description: '現在の貯蓄で、収入が途絶えても何ヶ月間生活できるかを示します。6ヶ月以上が理想です。',
+      description: '収入が途絶えた場合に現在の貯蓄で生活できる月数。6ヶ月以上が目安',
       highlight: hasValidData && (moneyMargin?.emergencyFundCoverage ?? 0) >= 6,
     },
     {
       icon: TrendingUp,
       label: '年間可処分所得',
       value: hasValidData ? `${safeDisplayNumber(moneyMargin?.annualDisposableIncome)}万円` : '—',
-      description: '税金や社会保険料を引いた後の、1年間で自由に使えるお金の総額です。',
+      description: '税・社会保険料控除後の年間手取り総額',
       highlight: hasValidData,
     },
   ];
@@ -110,7 +110,7 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
               key={metric.label}
               className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted/50"
             >
-              <div className={`rounded-full p-2 ${metric.highlight ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400' : 'bg-muted text-muted-foreground'}`}>
+              <div className={`rounded-full p-2 ${metric.highlight ? 'bg-safe/10 text-safe' : 'bg-muted text-muted-foreground'}`}>
                 <metric.icon className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
@@ -138,11 +138,11 @@ export function MoneyMarginCard({ moneyMargin, health, isLoading }: MoneyMarginC
         {/* サマリーメッセージ */}
         <div className={`mt-4 rounded-lg p-3 ${hasValidData ? getHealthBgColor(health) : 'bg-brand-canvas'}`}>
           <p className={`text-sm ${hasValidData ? getHealthColor(health) : 'text-brand-bronze'}`}>
-            {!hasValidData && 'ダッシュボードでシミュレーションを実行すると、お金の余白が計算されます。'}
-            {hasValidData && health === 'excellent' && '素晴らしい状態です。このペースで資産形成を続けましょう。'}
-            {hasValidData && health === 'good' && '良好な状態です。さらなる改善の余地があります。'}
-            {hasValidData && health === 'fair' && '改善の余地があります。支出の見直しを検討しましょう。'}
-            {hasValidData && health === 'poor' && '注意が必要です。収支のバランスを見直しましょう。'}
+            {!hasValidData && 'シミュレーション実行後に表示されます'}
+            {hasValidData && health === 'excellent' && '余裕のある収支バランスです'}
+            {hasValidData && health === 'good' && '安定した収支バランスです'}
+            {hasValidData && health === 'fair' && '収支の改善余地があります'}
+            {hasValidData && health === 'poor' && '収支バランスの見直しが有効です'}
           </p>
         </div>
       </CardContent>
