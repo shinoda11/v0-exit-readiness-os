@@ -20,6 +20,7 @@ import {
   type PresetEvent,
   type BundlePreset,
 } from '@/lib/event-catalog';
+import { EventIcon, CATEGORY_BORDER_COLORS } from './event-icon';
 import { cn } from '@/lib/utils';
 
 interface EventPickerDialogProps {
@@ -33,7 +34,7 @@ interface EventPickerDialogProps {
 }
 
 const ALL_CATEGORIES = [
-  { key: 'all' as const, label: 'すべて', icon: '📋' },
+  { key: 'all' as const, label: 'すべて', icon: 'Users' },
   ...Object.entries(CATEGORIES).map(([key, meta]) => ({
     key: key as EventCategory,
     label: meta.label,
@@ -95,7 +96,7 @@ export function EventPickerDialog({
                   : 'bg-accent/50 text-muted-foreground hover:bg-accent'
               )}
             >
-              <span>{cat.icon}</span>
+              <EventIcon iconName={cat.icon} className="h-3.5 w-3.5 stroke-[1.5]" />
               <span>{cat.label}</span>
             </button>
           ))}
@@ -110,13 +111,14 @@ export function EventPickerDialog({
                 <div
                   key={preset.id}
                   className={cn(
-                    'flex items-center gap-4 min-h-[44px] px-3 py-2 rounded-lg transition-colors',
+                    'flex items-center gap-4 min-h-[44px] pl-4 pr-3 py-2 rounded-lg border-l-2 transition-colors',
                     isAdded ? 'opacity-50' : 'hover:bg-accent/50'
                   )}
+                  style={{ borderLeftColor: CATEGORY_BORDER_COLORS[preset.category] }}
                 >
-                  <span className="text-lg shrink-0" aria-hidden="true">
-                    {preset.icon}
-                  </span>
+                  <div className="shrink-0" aria-hidden="true">
+                    <EventIcon iconName={preset.icon} />
+                  </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-normal text-foreground">
@@ -160,13 +162,14 @@ export function EventPickerDialog({
                     <div
                       key={bundle.id}
                       className={cn(
-                        'flex items-center gap-4 min-h-[44px] px-3 py-2 rounded-lg transition-colors',
+                        'flex items-center gap-4 min-h-[44px] pl-4 pr-3 py-2 rounded-lg border-l-2 transition-colors',
                         isAdded ? 'opacity-50' : 'hover:bg-accent/50'
                       )}
+                      style={{ borderLeftColor: CATEGORY_BORDER_COLORS[bundle.category] }}
                     >
-                      <span className="text-lg shrink-0" aria-hidden="true">
-                        {bundle.icon}
-                      </span>
+                      <div className="shrink-0" aria-hidden="true">
+                        <EventIcon iconName={bundle.icon} />
+                      </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-normal text-foreground">

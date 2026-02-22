@@ -18,6 +18,7 @@ import type { Branch, BranchCertainty } from '@/lib/branch';
 import { presetToBranch } from '@/lib/branch';
 import type { PresetEvent } from '@/lib/event-catalog';
 import { getDefaultAmount } from '@/lib/event-catalog';
+import { EventIcon } from './event-icon';
 import { cn } from '@/lib/utils';
 
 interface EventCustomizeDialogProps {
@@ -101,7 +102,7 @@ export function EventCustomizeDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>
-            <span className="mr-2">{activePreset.icon}</span>
+            <span className="mr-2 inline-flex"><EventIcon iconName={activePreset.icon} className="h-5 w-5 text-brand-bronze stroke-[1.5]" /></span>
             {activePreset.name}
           </DialogTitle>
           <DialogDescription>{activePreset.description}</DialogDescription>

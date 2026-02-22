@@ -1,50 +1,6 @@
 import Link from 'next/link'
 import { LPClient } from './lp-client'
 
-const cases = [
-  {
-    label: '30歳・ソロ・年収 900万',
-    situation: '堅実会社員。3,500万の1LDKを検討中。',
-    conclusion: '購入しても安心ラインを維持。ただしFIRE年齢は12年後退。',
-    scoreDiff: -1,
-    scoreLabel: '賃貸 78 → 購入 77',
-  },
-  {
-    label: '28歳・DINK・年収 3,200万',
-    situation: '外資IT×コンサル。1.4億のタワマンを検討。',
-    conclusion: '購入で生存率-8%。高額物件はリターンの前提に大きく依存。',
-    scoreDiff: -3,
-    scoreLabel: '賃貸 73 → 購入 70',
-  },
-  {
-    label: '32歳・DINK・年収 2,400万',
-    situation: '家賃月40万のハイパフォーマー。8,250万を検討。',
-    conclusion: '高家賃からの購入で生存率+18%。100歳資産差は4.9億。',
-    scoreDiff: +12,
-    scoreLabel: '賃貸 67 → 購入 79',
-  },
-  {
-    label: '38歳・子ども2人・年収 1,200万',
-    situation: '共働き中堅。郊外 4,500万の戸建てを検討。',
-    conclusion: '堅実な物件価格で安心ラインを確保。購入後も余白あり。',
-    scoreDiff: -1,
-    scoreLabel: '賃貸 83 → 購入 82',
-  },
-  {
-    label: '35歳・フリーランス＋会社員・年収 2,000万',
-    situation: '収入変動が大きい。7,250万のマンションを検討。',
-    conclusion: '購入でスコア+3。固定費圧縮が収入変動リスクを吸収。',
-    scoreDiff: +3,
-    scoreLabel: '賃貸 80 → 購入 83',
-  },
-  {
-    label: '42歳・購入済み・年収 2,100万',
-    situation: '残債6,000万。売却して賃貸に戻すか迷っている。',
-    conclusion: '売却→賃貸で60歳資産+5,000万。ただしスコア差はわずか+1。',
-    scoreDiff: +1,
-    scoreLabel: '持ち家 82 → 売却 83',
-  },
-];
 
 export default function LandingPage() {
   return (
@@ -153,32 +109,103 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* S2: Cases — left aligned */}
+      {/* S2: Decision chain — 6000万 vs 8000万 */}
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
+          <p className="text-xs tracking-widest text-brand-bronze mb-6">— 問いの奥にある問い</p>
           <h2
-            className="text-xl sm:text-2xl font-bold text-left mb-12 text-brand-night"
+            className="text-xl sm:text-2xl font-bold text-left mb-12 leading-relaxed text-brand-night"
+            style={{ fontFamily: 'var(--font-noto-serif-jp), serif' }}
           >
-            何が見えるようになるか
+            35歳の選択が、
+            <br />
+            45歳の子どもの
+            <br className="sm:hidden" />
+            選択肢を決めていた。
           </h2>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {cases.map((c, i) => (
-              <div
-                key={i}
-                className="rounded-xl p-6 bg-white border border-brand-sand"
-              >
-                <p className="text-xs text-brand-bronze mb-2">{c.label}</p>
-                <p className="text-sm text-brand-stone mb-4 leading-relaxed">{c.situation}</p>
-                <p className="text-2xl font-bold text-brand-gold tabular-nums mb-2">
-                  {c.scoreDiff > 0 ? '+' : ''}{c.scoreDiff}
-                </p>
-                <p className="text-xs text-brand-bronze mb-4">{c.scoreLabel}</p>
-                <p className="text-sm font-normal leading-relaxed text-brand-stone">
-                  {c.conclusion}
-                </p>
+          {/* Two-column chain comparison */}
+          <div className="grid grid-cols-2 gap-4 sm:gap-8">
+            {/* Column A */}
+            <div className="space-y-0">
+              <div className="text-xs tracking-widest text-brand-bronze mb-4">世界線 A</div>
+              {[
+                { age: '35歳', text: '物件 6,000万を選ぶ' },
+                { age: '42歳', text: '転職のオファーを受けた', sub: '返済に余裕があったから' },
+                { age: '45歳', text: '子どもを私立に入れた' },
+              ].map((step, i) => (
+                <div key={i}>
+                  <div className="rounded-lg border border-brand-sand bg-white p-3 sm:p-4">
+                    <p className="text-[10px] sm:text-xs text-brand-bronze mb-1">{step.age}</p>
+                    <p className="text-xs sm:text-sm font-normal text-brand-night">{step.text}</p>
+                    {step.sub && <p className="text-[10px] sm:text-xs text-brand-stone mt-1">（{step.sub}）</p>}
+                  </div>
+                  {i < 2 && (
+                    <div className="flex justify-center py-1.5 text-brand-bronze/40">
+                      <svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0v12M2 8l4 5 4-5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div className="mt-3 rounded-lg bg-safe/10 px-3 py-2 sm:px-4 sm:py-3 text-center">
+                <p className="text-xs text-safe mb-0.5">余白スコア</p>
+                <p className="text-2xl font-bold text-safe font-[family-name:var(--font-dm-sans)] tabular-nums">78</p>
               </div>
-            ))}
+            </div>
+
+            {/* Column B */}
+            <div className="space-y-0">
+              <div className="text-xs tracking-widest text-brand-bronze mb-4">世界線 B</div>
+              {[
+                { age: '35歳', text: '物件 8,000万を選ぶ' },
+                { age: '42歳', text: '転職のオファーを断った', sub: '返済がきつかったから' },
+                { age: '45歳', text: '子どもの進路を妥協した' },
+              ].map((step, i) => (
+                <div key={i}>
+                  <div className="rounded-lg border border-brand-sand bg-white p-3 sm:p-4">
+                    <p className="text-[10px] sm:text-xs text-brand-bronze mb-1">{step.age}</p>
+                    <p className="text-xs sm:text-sm font-normal text-brand-night">{step.text}</p>
+                    {step.sub && <p className="text-[10px] sm:text-xs text-brand-stone mt-1">（{step.sub}）</p>}
+                  </div>
+                  {i < 2 && (
+                    <div className="flex justify-center py-1.5 text-brand-bronze/40">
+                      <svg width="12" height="16" viewBox="0 0 12 16"><path d="M6 0v12M2 8l4 5 4-5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div className="mt-3 rounded-lg bg-danger/10 px-3 py-2 sm:px-4 sm:py-3 text-center">
+                <p className="text-xs text-danger mb-0.5">余白スコア</p>
+                <p className="text-2xl font-bold text-danger font-[family-name:var(--font-dm-sans)] tabular-nums">54</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Gap highlight */}
+          <div className="mt-8 rounded-xl border border-brand-sand bg-white p-6 text-center">
+            <p className="text-sm text-brand-stone">
+              月々の返済差: <span className="font-bold text-brand-night">約 4.5万円</span>
+            </p>
+            <p className="text-sm text-brand-stone mt-1">
+              10年で: <span className="font-bold text-brand-night">540万円</span>
+            </p>
+            <p className="text-sm text-brand-stone mt-3 leading-relaxed">
+              その540万円が、転職の自由と
+              <br className="sm:hidden" />
+              教育費の選択肢になった。
+            </p>
+          </div>
+
+          {/* Insight */}
+          <div className="mt-8 space-y-2">
+            <p className="text-sm sm:text-base leading-relaxed text-brand-stone">
+              「買えるか」より「買った後も動けるか」。
+            </p>
+            <p className="text-sm sm:text-base leading-relaxed text-brand-stone">
+              YOHACKは、今の決断が将来の選択肢にどう連鎖するかを
+              <br className="hidden sm:block" />
+              数字で並べて見せる。
+            </p>
           </div>
         </div>
       </section>
